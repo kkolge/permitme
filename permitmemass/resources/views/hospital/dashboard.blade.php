@@ -43,7 +43,7 @@
         </div>
         <p><b>Normal Temperature < 94.5, SPO2 > 93, Pulse Rate < 120</b></p>
     @else
-        <h1><font size="+2">No Beds defined for your location yet!</font></h1>        
+        <h1><font size="+2">No Beds defined for your location or No Data available!</font></h1>        
     @endif
     <p>
         <div class="flex">

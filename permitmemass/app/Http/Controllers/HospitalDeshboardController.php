@@ -41,7 +41,6 @@ class HospitalDeshboardController extends Controller
 
         //dd($link);
         $data = collect([]);
-
         foreach($link as $lnk){
             //dd($lnk);
             $iData = IotData::where('identifier','=',$lnk->userId)
@@ -49,8 +48,10 @@ class HospitalDeshboardController extends Controller
                 ->take(1)
                 ->first();
             //dd($iData);
-            $data->push([$lnk->name, $lnk->bedNo, date_format(date_create($lnk->admitDate),'d-m-Y'),
-                $iData->temp, $iData->spo2, $iData->hbcount, $iData->created_at]);
+            if($iData != null){
+                $data->push([$lnk->name, $lnk->bedNo, date_format(date_create($lnk->admitDate),'d-m-Y'),
+                    $iData->temp, $iData->spo2, $iData->hbcount, $iData->created_at]);
+            }
         }
         //dd($data);
         return view('/hospital/dashboard', compact('data'));
