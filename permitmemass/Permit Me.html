@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSRF Token -->
+<meta name="csrf-token" content="SeIvCjIxCsS7KE7X89XfH1aFFnV95KtFlu5aDVyP">
+<title>Permit Me</title>
+
+<!-- Scripts -->
+<script src="Permit%20Me_files/app.js" defer="defer"></script>
+
+<!-- Fonts -->
+<link rel="dns-prefetch" href="https://fonts.gstatic.com/">
+<link href="Permit%20Me_files/css.css" rel="stylesheet">
+
+<!-- Styles -->
+<link href="Permit%20Me_files/app.css" rel="stylesheet">
+<link href="Permit%20Me_files/tailwind.css" rel="stylesheet">
+<link href="Permit%20Me_files/custom-app.css" rel="stylesheet">
+
+<!-- Generate Menu -->
+
+<!-- End generate Menu -->
+</head>
+<body>
+<div id="app">
+  <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+    <div class="container"><a href="https://permitmemass.ko-aaham.com/" class="navbar-brand"> Permit Me </a>
+      <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+      <div id="navbarSupportedContent" class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a href="https://permitmemass.ko-aaham.com/about" class="nav-link">About</a></li>
+          <li class="nav-item"><a href="https://permitmemass.ko-aaham.com/support" class="nav-link">Support</a></li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <form class="form-inline">
+            <input type="text" placeholder="Search" aria-label="Search" class="form-control">
+          </form>
+          <li class="nav-item dropdown"><a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> UI update <span class="caret"></span></a>
+            <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right"><a href="https://permitmemass.ko-aaham.com/home" class="dropdown-item">Home</a> <a href="https://permitmemass.ko-aaham.com/logout" onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();" class="dropdown-item"> Logout </a>
+              <form id="logout-form" action="https://permitmemass.ko-aaham.com/logout" method="POST" style="display: none;">
+                <input type="hidden" name="_token" value="SeIvCjIxCsS7KE7X89XfH1aFFnV95KtFlu5aDVyP">
+              </form>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div id="main" class="row">
+    <div id="sidebar" class="col-md-3">
+      <nav id="sidebar-nav ">
+        <li class="nav-item dropdown"><a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Roles &amp; Permissions <span class="caret"></span></a>
+          <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right"><a href="https://permitmemass.ko-aaham.com/perms" class="dropdown-item">Permissions Details</a> <a href="https://permitmemass.ko-aaham.com/perms/create" class="dropdown-item">Add Permission</a> <a href="https://permitmemass.ko-aaham.com/roles" class="dropdown-item">Role Details</a> <a href="https://permitmemass.ko-aaham.com/roles/create" class="dropdown-item">Add Role</a></div>
+        </li>
+        <li class="nav-item dropdown"><a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> User Mgmt <span class="caret"></span></a>
+          <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right"><a href="https://permitmemass.ko-aaham.com/usr" class="dropdown-item">System Users</a> <a href="https://permitmemass.ko-aaham.com/usr/create" class="dropdown-item">Add System User</a> <a href="https://permitmemass.ko-aaham.com/aur" class="dropdown-item">User Role</a> <a href="https://permitmemass.ko-aaham.com/aur/create" class="dropdown-item">Link User Role</a></div>
+        </li>
+        <li class="nav-item dropdown"><a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Location <span class="caret"></span></a>
+          <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right"><a href="https://permitmemass.ko-aaham.com/location" class="dropdown-item">Location Details</a> <a href="https://permitmemass.ko-aaham.com/location/create" class="dropdown-item">Add Location</a> <a href="https://permitmemass.ko-aaham.com/linkUser" class="dropdown-item">User Location</a> <a href="https://permitmemass.ko-aaham.com/linkUser/create" class="dropdown-item">Link User Location</a></div>
+        </li>
+        <li class="nav-item dropdown"><a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Device <span class="caret"></span></a>
+          <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right"><a href="https://permitmemass.ko-aaham.com/device" class="dropdown-item">Device Details</a> <a href="https://permitmemass.ko-aaham.com/device/create" class="dropdown-item">Add Device</a> <a href="https://permitmemass.ko-aaham.com/linkLoc" class="dropdown-item">Device Location</a> <a href="https://permitmemass.ko-aaham.com/linkLoc/create" class="dropdown-item">Link Device Location</a></div>
+        </li>
+        <li class="nav-item dropdown"><a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Admin Reports <span class="caret"></span></a>
+          <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right"><a href="https://permitmemass.ko-aaham.com/adminReports/sReport" class="dropdown-item">Admin Reports</a></div>
+        </li>
+        <li class="nav-item dropdown"><a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Registered Users <span class="caret"></span></a>
+          <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right"><a href="https://permitmemass.ko-aaham.com/reguser" class="dropdown-item">User List</a> <a href="https://permitmemass.ko-aaham.com/reguser/create" class="dropdown-item">Add User</a></div>
+        </li>
+        <li class="nav-item dropdown"><a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Reports <span class="caret"></span></a>
+          <div aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right"><a href="https://permitmemass.ko-aaham.com/reports/allDataReport" class="dropdown-item">All Data</a> <a href="https://permitmemass.ko-aaham.com/reports/SPO2Report" class="dropdown-item">Low SPO2</a> <a href="https://permitmemass.ko-aaham.com/reports/TempReport" class="dropdown-item">High Temperature</a></div>
+        </li>
+      </nav>
+    </div>
+    <div class="col-md-9">
+      <main class="py-4">
+        <div><h1>Welcome UI update, &nbsp; 
+          Other, &nbsp;
+  Ko-Aaham Technologies LLP </h1>
+        </div>
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-6 h-100 mb-3">
+                  <div class="card border-primary text-center ">
+                    <div class="card-header text-primary">Location Name</div>
+                    <div class="card-body text-primary">Ko-Aaham Technologies LLP</div>
+                  </div>
+                </div>
+                <div class="col-6 h-100 mb-3">
+                  <div class="card border-primary text-center">
+                    <div class="card-header text-primary">No. of Residents</div>
+                    <div class="card-body text-primary">20 </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row ">
+                <div class="col-6 h-100 mb-3">
+                  <div class="card border-success text-center">
+                    <div class="card-header text-success">Total Scanned Till Date</div>
+                    <div class="card-body text-success">124</div>
+                  </div>
+                </div>
+                <div class="col-6 h-100 mb-3">
+                  <div class="card border-success text-center">
+                    <div class="card-header text-success">Total Scanned Today</div>
+                    <div class="card-body text-success">6 </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 h-100 mb-3">
+                  <div class="card border-danger text-center">
+                    <div class="card-header text-danger">Total Scanned - SPO2 below 93%</div>
+                    <div class="card-body text-danger">58</div>
+                  </div>
+                </div>
+                <div class="col-6 h-100 mb-3">
+                  <div class="card border-danger text-center">
+                    <div class="card-header text-danger">Total Scanned Today - SPO2 below 93%</div>
+                    <div class="card-body text-danger">1 </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 h-100 mb-3">
+                  <div class="card border-danger text-center">
+                    <div class="card-header text-danger">Total Scanned - Temp above 99F</div>
+                    <div class="card-body text-danger">5</div>
+                  </div>
+                </div>
+                <div class="col-6 h-100 mb-3">
+                  <div class="card border-danger text-center">
+                    <div class="card-header text-danger">Total Scanned Today - Temp above 99F</div>
+                    <div class="card-body text-danger">0 </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+      </main>
+    </div>
+  </div>
+  <nav class="navbar fixed-bottom navbar-expand-md navbar-light bg-white shadow-sm">
+    <div class="container"><a href="https://permitmemass.ko-aaham.com/" class="navbar-brand"> Permit Me </a>
+      <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+      <div id="navbarSupportedContent" class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a href="http://www.ko-aaham.com/" class="nav-link">© Copyright - Ko-Aaham Technologies LLP</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Social Media links</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
+<script src="Permit%20Me_files/Chart.js"></script>
+</body>
+</html>

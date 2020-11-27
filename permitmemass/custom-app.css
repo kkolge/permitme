@@ -1,0 +1,41 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+.row{margin-right: 15px; margin-left: 15px;}
+#sidebar{margin-top:25px;}
+.nav-item{list-style:outside none none;}
+.card{border-radius:0;}
+.card-header{font-weight:600;}
+.card-body{font-size:16px;}
+
+.form-group table{margin-top:1rem;}
+.form-group .table td{border-top:0;}
+
+h1{font-size:24px; font-weight:600; margin-bottom:30px;}
+
+.table-bordered{border:0}
+.table-bordered th {border:0; background-color:#fff; font-size:16px;}
+.table-bordered td{border:0;}
+.table-bordered th{border-top: 2px solid rgba(120,130,140,.13);}
+.table-bordered td{border-top: 2px solid rgba(120,130,140,.13);}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    color: #ffffff;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid;
+	background-color: #2cabe3;
+    border-color: #2cabe3;
+    box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+    padding: .375rem .75rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: 2px;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.form-control{border-radius:0;}
+.dropdown-menu{border-radius:0;}
