@@ -1,0 +1,41 @@
+Id,Designator,Package,Quantity,Designation
+1,BZ1,Buzzer_12x9.5RM7.6,1,5V Buzzer 
+2,C1,CP_Radial_D8.0mm_P3.50mm,1,100uf 16V
+3,C2,CP_Radial_D8.0mm_P3.50mm,1,470uf 16V
+4,D1,LED_D5.0mm,1,IR_TX
+5,D2,LED_D5.0mm,1,IR_RX
+6,D4,LED_D5.0mm,1,RED LED 5MM
+7,D5,LED_D5.0mm,1,GREEN LED 5MM
+8,J1,BarrelJack_Horizontal,1,DC Barrel_Jack_Switch
+9,J11,PinHeader_1x05_P2.54mm_Vertical,1,Female Burg Strip
+10,J12,PinHeader_1x05_P2.54mm_Vertical,1,Male Burg Strip
+11,J2,NODEMCU_LOLIN_V3,1,ESP8266 Module
+12,J5,MLX90614,1,MLX90614
+13,J6,WC1602A_I2C,1,I2C LCD
+14,J7,MAX30102,1,MAX30102
+15,"JP2,JP3",PinHeader_1x02_P2.54mm_Vertical,2,Jumper
+16,Q1,TO-92L_Inline_Wide,1,BC548
+17,R1,R_1206_3216Metric,1,100E
+18,"R11,R10",R_1206_3216Metric,2,220E
+19,R12,R_1206_3216Metric,1,1K
+20,R2,R_1206_3216Metric,1,10K
+21,"R7,R3,R9,R5,R4,R6",R_1206_3216Metric,6,330E
+22,REF**,Heatsink16by35,1,Heatsink16by35
+23,RV1,"Potentiometer_ACP_CA6-H2,5_Horizontal",1,10K
+24,U2,SOIC-8_3.9x4.9mm_P1.27mm,1,LM358
+,,,,
+25,P1,Connector_Mini-DIN_Female_6Pin_2rows,1,PS2 FEMALE – 6pins
+,,OR,,
+,J4,RFID_MFRC522,1,MFRC522
+,,,,
+26,U1,TO-220-3_Vertical,1,LM1117-5.0
+,,OR,,
+,U3,SOT-223-3_TabPin2,1,LM1117-5.0
+,,,,
+,,,,
+,,,,
+,Optinal,,,
+27,"D3,D6",LED_D5.0mm,2,LED
+28,"R14,R13,R15",R_1206_3216Metric,3,1K
+29,"Q4,Q1,Q3,Q2",TO-92L_Inline_Wide,3,BC548
+30,J8,DSUB-9_Female_Horizontal,1,DB9_Female_MountingHoles
