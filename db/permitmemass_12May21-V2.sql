@@ -9,7 +9,7 @@
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET time_zone = "+05:30";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -25,7 +25,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`phpmyadmin`@`localhost` PROCEDURE `getCountByCity` (IN `inVal` VARCHAR(255))  BEGIN
+CREATE PROCEDURE `getCountByCity` (IN `inVal` VARCHAR(255))  BEGIN
 		        declare done int default false;
                 declare qVal int ;
                 declare curForLoop cursor for 
@@ -64,7 +64,7 @@ DELIMITER ;
 
 CREATE TABLE `bedMaster` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `bedNo` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bedNo` varchar(10) NOT NULL,
   `locationId` bigint(20) NOT NULL,
   `isactive` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -96,8 +96,8 @@ INSERT INTO `bedMaster` (`id`, `bedNo`, `locationId`, `isactive`, `created_at`, 
 
 CREATE TABLE `devauth` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `deviceid` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deviceid` varchar(12) NOT NULL,
+  `token` varchar(32) NOT NULL,
   `devupdated` tinyint(1) NOT NULL,
   `isactive` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -112,8 +112,8 @@ CREATE TABLE `devauth` (
 
 CREATE TABLE `device` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `serial_no` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `devtype` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'KEYBOARD',
+  `serial_no` varchar(24) NOT NULL,
+  `devtype` varchar(255) NOT NULL DEFAULT 'KEYBOARD',
   `isactive` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -194,10 +194,10 @@ INSERT INTO `device` (`id`, `serial_no`, `devtype`, `isactive`, `created_at`, `u
 
 CREATE TABLE `failed_jobs` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text NOT NULL,
+  `queue` text NOT NULL,
+  `payload` longtext NOT NULL,
+  `exception` longtext NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -209,8 +209,8 @@ CREATE TABLE `failed_jobs` (
 
 CREATE TABLE `iotdata` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `identifier` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `deviceid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `identifier` varchar(255) NOT NULL,
+  `deviceid` varchar(255) NOT NULL,
   `temp` double(8,2) NOT NULL,
   `spo2` int(11) NOT NULL,
   `hbcount` int(11) NOT NULL,
@@ -23433,8 +23433,8 @@ INSERT INTO `iotdata` (`id`, `identifier`, `deviceid`, `temp`, `spo2`, `hbcount`
 
 CREATE TABLE `jobs` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` varchar(255) NOT NULL,
+  `payload` longtext NOT NULL,
   `attempts` tinyint(3) UNSIGNED NOT NULL,
   `reserved_at` int(10) UNSIGNED DEFAULT NULL,
   `available_at` int(10) UNSIGNED NOT NULL,
@@ -23485,7 +23485,7 @@ CREATE TABLE `LinkLocDev` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `locationid` bigint(20) NOT NULL,
   `deviceid` bigint(20) NOT NULL,
-  `name` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Main Door',
+  `name` varchar(150) NOT NULL DEFAULT 'Main Door',
   `isactive` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -23556,8 +23556,8 @@ CREATE TABLE `linklocusers` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `locationid` bigint(20) NOT NULL,
   `userid` bigint(20) NOT NULL,
-  `designation` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phoneno1` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `designation` varchar(255) NOT NULL,
+  `phoneno1` varchar(255) NOT NULL,
   `isactive` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -23594,16 +23594,16 @@ INSERT INTO `linklocusers` (`id`, `locationid`, `userid`, `designation`, `phonen
 
 CREATE TABLE `location` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `noofresidents` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `address1` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `address2` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pincode` varchar(6) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `landmark` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'NOT KNOWN',
-  `city` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `taluka` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `district` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `state` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `noofresidents` varchar(255) NOT NULL,
+  `address1` varchar(255) NOT NULL,
+  `address2` varchar(255) NOT NULL,
+  `pincode` varchar(6) NOT NULL,
+  `landmark` varchar(150) NOT NULL DEFAULT 'NOT KNOWN',
+  `city` varchar(255) NOT NULL,
+  `taluka` varchar(255) DEFAULT NULL,
+  `district` varchar(255) DEFAULT NULL,
+  `state` varchar(255) NOT NULL,
   `isactive` tinyint(1) NOT NULL,
   `parent` int(11) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -23660,7 +23660,7 @@ INSERT INTO `location` (`id`, `name`, `noofresidents`, `address1`, `address2`, `
 
 CREATE TABLE `migrations` (
   `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -24002,7 +24002,7 @@ CREATE TABLE `vlocdev` (
 --
 DROP TABLE IF EXISTS `vlocdev`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`phpmyadmin`@`localhost` SQL SECURITY DEFINER VIEW `vlocdev`  AS SELECT `l`.`id` AS `locationid`, `l`.`name` AS `name`, `l`.`pincode` AS `pincode`, `l`.`city` AS `city`, `l`.`taluka` AS `taluka`, `l`.`district` AS `district`, `l`.`state` AS `state`, `l`.`isactive` AS `locactive`, `l`.`created_at` AS `created_at`, `lld`.`deviceid` AS `deviceid`, `lld`.`isactive` AS `linkactive`, `d`.`serial_no` AS `serial_no`, `d`.`isactive` AS `devactive`, `l`.`smsnotification` AS `smsnotification` FROM ((`location` `l` join `LinkLocDev` `lld` on((`l`.`id` = `lld`.`locationid`))) join `device` `d` on((`lld`.`deviceid` = `d`.`id`))) ;
+CREATE VIEW `vlocdev`  AS SELECT `l`.`id` AS `locationid`, `l`.`name` AS `name`, `l`.`pincode` AS `pincode`, `l`.`city` AS `city`, `l`.`taluka` AS `taluka`, `l`.`district` AS `district`, `l`.`state` AS `state`, `l`.`isactive` AS `locactive`, `l`.`created_at` AS `created_at`, `lld`.`deviceid` AS `deviceid`, `lld`.`isactive` AS `linkactive`, `d`.`serial_no` AS `serial_no`, `d`.`isactive` AS `devactive`, `l`.`smsnotification` AS `smsnotification` FROM ((`location` `l` join `LinkLocDev` `lld` on((`l`.`id` = `lld`.`locationid`))) join `device` `d` on((`lld`.`deviceid` = `d`.`id`))) ;
 
 --
 -- Indexes for dumped tables
