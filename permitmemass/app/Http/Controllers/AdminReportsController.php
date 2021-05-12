@@ -15,6 +15,7 @@ use PdfReport;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 //use App\Helpers;
 //use App\Location;
 
@@ -23,6 +24,7 @@ class AdminReportsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        
     }
     /**
      * This controller is used to generate reports for Administrator 
@@ -31,50 +33,88 @@ class AdminReportsController extends Controller
 
 
      public function sReport() {
+
+        if(!Auth::user()->hasRole(['Super Admin', 'Location Admin'])){
+            abort(403);
+        }
         
-        $loc = Society::where('isactive','=','1')
-            ->select (DB::raw("CONCAT(state,'.',district,'.',taluka,'.',city,'.',pincode,'.',name) AS name"))
+        $loc = Society::where('location.isactive','=',true)
+            ->join('LinkLocDev','location.id','LinkLocDev.locationid')
+            ->join('device', 'device.id', 'LinkLocDev.deviceid')
+            ->where('device.isactive','=',true)
+            ->where('LinkLocDev.isactive','=',true)
+            ->whereIn('device.serial_no',session('GDevId')->toArray())
+            ->select (DB::raw("CONCAT(location.state,'.',location.district,'.',location.taluka,'.',location.city,'.',location.pincode,'.',location.name) AS name"))
             ->orderBy('name','asc')
             ->pluck('name','name')
             ->filter();
          
-        $pin = Society::where('isactive','=','1')
+        $pin = Society::where('location.isactive','=',true)
+            ->join('LinkLocDev','location.id','LinkLocDev.locationid')
+            ->join('device', 'device.id', 'LinkLocDev.deviceid')
+            ->where('device.isactive','=',true)
+            ->where('LinkLocDev.isactive','=',true)
+            ->whereIn('device.serial_no',session('GDevId')->toArray())
             ->distinct('pincode')
-            ->select (DB::raw("CONCAT(state,'.',district,'.',taluka,'.',city,'.',pincode) AS name"))
+            ->select (DB::raw("CONCAT(location.state,'.',location.district,'.',location.taluka,'.',location.city,'.',location.pincode) AS name"))
             ->orderBy('name','asc')
             ->pluck('name','name')
             ->filter();
 
-        $city = Society::where('isactive','=','1')
+        $city = Society::where('location.isactive','=',true)
+            ->join('LinkLocDev','location.id','LinkLocDev.locationid')
+            ->join('device', 'device.id', 'LinkLocDev.deviceid')
+            ->where('device.isactive','=',true)
+            ->where('LinkLocDev.isactive','=',true)
+            ->whereIn('device.serial_no',session('GDevId')->toArray())
             ->distinct('city')
-            ->select (DB::raw("CONCAT(state,'.',district,'.',taluka,'.',city) AS name"))
+            ->select (DB::raw("CONCAT(location.state,'.',location.district,'.',location.taluka,'.',location.city) AS name"))
             ->pluck('name','name')
             ->filter();
 
-        $taluka = Society::where('isactive','=','1')
+        $taluka = Society::where('location.isactive','=',true)
+            ->join('LinkLocDev','location.id','LinkLocDev.locationid')
+            ->join('device', 'device.id', 'LinkLocDev.deviceid')
+            ->where('device.isactive','=',true)
+            ->where('LinkLocDev.isactive','=',true)
+            ->whereIn('device.serial_no',session('GDevId')->toArray())
             ->distinct('taluka')
-            ->select (DB::raw("CONCAT(state,'.',district,'.',taluka) AS name"))
+            ->select (DB::raw("CONCAT(location.state,'.',location.district,'.',location.taluka) AS name"))
             ->orderBy('name','asc')
             ->pluck('name')
             ->filter();
         
-        $district = Society::where('isactive','=','1')
+        $district = Society::where('location.isactive','=',true)
+            ->join('LinkLocDev','location.id','LinkLocDev.locationid')
+            ->join('device', 'device.id', 'LinkLocDev.deviceid')
+            ->where('device.isactive','=',true)
+            ->where('LinkLocDev.isactive','=',true)
+            ->whereIn('device.serial_no',session('GDevId')->toArray())
             ->distinct('district')
-            ->select (DB::raw("CONCAT(state,'.',district) AS name"))
+            ->select (DB::raw("CONCAT(location.state,'.',location.district) AS name"))
             ->orderBy('name','asc')
             ->pluck('name')
             ->filter();
 
-        $state = Society::where('isactive','=','1')
-            ->distinct('state')
-            ->orderBy('state','asc')
-            ->pluck('state','state')
+        $state = Society::where('location.isactive','=','1')
+            ->join('LinkLocDev','location.id','LinkLocDev.locationid')
+            ->join('device', 'device.id', 'LinkLocDev.deviceid')
+            ->where('device.isactive','=',true)
+            ->where('LinkLocDev.isactive','=',true)
+            ->whereIn('device.serial_no',session('GDevId')->toArray())
+            ->distinct('location.state')
+            ->orderBy('location.state','asc')
+            ->pluck('location.state','location.state')
             ->filter();
-
+        //dd($state);
         return view ('adminReports/sReport',compact('loc','pin','city','taluka','district','state'));
      }
 
      public function sLocationReport(Request $request){
+         //echo ($request);
+        if(!Auth::user()->hasRole(['Super Admin', 'Location Admin'])){
+            abort(403);
+        }
          //return 'in sLocationReport';
         $source = $request->input('source');
         $type = $request->input('type');
@@ -87,7 +127,7 @@ class AdminReportsController extends Controller
         $pincode = '';
         $location = '';
          
-        if(count($src) >1){
+        if(count($src) == 6){
             $state = $src[0];
             $district = $src[1];
             $taluka = $src[2];
@@ -96,11 +136,12 @@ class AdminReportsController extends Controller
             $location = $src[5];
         }
         else{
-            redirect ('adminReports.sReport')->with('error','No Data for this location.');
+            
+            abort(403);
         }
 
        
-         $devs = vlocdev::where('state','=',$state)
+         /*$devs = vlocdev::where('state','=',$state)
             ->where('district','=',$district)
             ->where('taluka','=',$taluka)
             ->where('city','=',$city)
@@ -113,54 +154,80 @@ class AdminReportsController extends Controller
             ->pluck('serial_no')
             ->toArray();
         //dd($devs);
+        */
 
-        $iotData = (iotData::wherein('deviceid', $devs)
-            ->where('created_at','>=',Carbon::today()->subDays(15))
-            ->where('created_at','<=',Carbon::today()->addDays(1))
-            ->orderBy('identifier','asc')
-            ->select('identifier', 'temp', 'spo2','hbcount', 'created_at')
-            ->get())
-            ->unique('identifier');
+        //changed for V2
+        $devs = Society::distinct('location.name')
+            ->join('LinkLocDev','location.id','LinkLocDev.locationid')
+            ->join('device', 'device.id', 'LinkLocDev.deviceid')
+            ->where('device.isactive','=',true)
+            ->where('LinkLocDev.isactive','=',true)
+            ->where('location.isactive','=',true)
+            ->whereIn('device.serial_no',session('GDevId')->toArray())  
+            ->select('device.serial_no')
+            ->where('location.name','=',$location)
+            ->where('location.pincode','=',$pincode)
+            ->where('location.city','=',$city)
+            ->where('location.taluka','=',$taluka)
+            ->where('location.state','=', $state)
+            ->where('location.district','=',$district)
+            ->orderBy('device.serial_no', 'asc')
+            ->get();
+        //dd($devs);
 
-            $this->paginate($iotData,50,$pageNo=0);
-        
-            if(count($iotData) == 0){
-            redirect ('adminReports.sReport')->with('error','No Data for this location.');
-        }
+        //V2 - we are making 4 tabs on the page that will show following data 
+        // Tab 1 - all abnormal parameters
+        // Tab 2 - High temperature 
+        // Tab 3 - Low SPO2
+        // Tab 4 - High Heart Rate
 
-         
-            $lbl = collect([]);
-            $valuesTemp = collect([]);
-            $valuesSpo2 = collect([]);
-            foreach($iotData as $data){
-                $lbl->push($data->created_at->format('Y-m-d h:i:s'));
-                $valuesTemp->push($data->temp);
-                $valuesSpo2->push($data->spo2);
-            }
-        //dd($lbl);
-        //dd($values);
+        //Data for Tab 1 All abnormal
+/*        $messages = Message::where('to', Auth::id())
+                ->orderBy('created_at', 'DESC')
+                ->distinct('from')
+                ->paginate(10);
+*/
+        $iotAllData = iotData::wherein('deviceid', $devs)
+        ->where('created_at','>=',Carbon::today()->subDays(15))
+        ->where('flagstatus','=',true)
+        ->orderBy('created_at','desc')
+        ->orderBy('identifier','asc')
+        ->select('identifier', 'temp', 'spo2','hbcount', 'created_at')
+        ->get();
 
+        $iotDataAllAbnormal1 = ($iotAllData->where('hbcount','>',env('CUTOFF_PULSE'))
+        ->where('spo2','<',env('CUTOFF_SPO2'))
+        ->where('temp','>',env('CUTOFF_TEMP')))->unique('identifier');
+        $iotDataAllAbnormal = $this->paginate($iotDataAllAbnormal1,20,$pageNo=0);
+        $iotDataAllAbnormal->setPath('/adminReports/sLocationReport');
 
-            $spo2Chart = new ReportChartLine();
-            //get array for labels
-            $spo2Chart->labels($lbl);
-        //dd($spo2Chart);
-            $spo2Chart->dataset('SPO2 data', 'bar',$valuesSpo2)
-                ->backgroundColor('red');
-            
-            $tempChart = new ReportChartLine();
-            $tempChart->labels($lbl);
-            $tempChart->dataset('Temperature data','bar',$valuesTemp)
-                ->backgroundColor('blue');
-         return view ('adminReports.sLocationReport',compact('iotData','location','spo2Chart','tempChart'));
+        //Data for Tab 2 - High Temperature
+        $iotDataHighTemp1 = ($iotAllData->where('temp','>',env('CUTOFF_TEMP')))->unique('identifier');
+        $iotDataHighTemp = $this->paginate($iotDataHighTemp1,20,$pageNo=0);
+        $iotDataHighTemp->setPath('/adminReports/sLocationReport');
 
+        // Data for Tab 3 - Low SPO2
+        $iotDataLowSpo21 = ($iotAllData->where('spo2','<',env('CUTOFF_SPO2')))->unique('identifier');
+        $iotDataLowSpo2 =$this->paginate($iotDataLowSpo21,20,$pageNo=0);
+        $iotDataLowSpo2->setPath('/adminReports/sLocationReport');
+
+        // Data for Tab 4 - High Heart Rate
+        $iotDataHighHbcount1 = ($iotAllData->where('hbcount','>',env('CUTOFF_PULSE')))->unique('identifier');
+        $iotDataHighHbcount = $this->paginate($iotDataHighHbcount1,20,$pageNo=0);
+        $iotDataHighHbcount->setPath('/adminReports/sLocationReport');
+
+        return view ('adminReports.sLocationReport',compact('iotDataAllAbnormal','iotDataHighTemp','iotDataLowSpo2','iotDataHighHbcount','location'));
+       
      }
 
     public function paginate($items, $perPage = 15, $page = null, $options = [])
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
-        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+        //dd('in paginate',$page, $items);
+        $k =new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+        //dd($k);
+        return($k);
     }
 
      /**
@@ -168,6 +235,9 @@ class AdminReportsController extends Controller
       */
    
       public function sPincodeReport(Request $request){
+        if(!Auth::user()->hasRole(['Super Admin','Location Admin'])){
+            abort(403);
+        }
         $source = $request->input('source');
         //dd($source);
         //$type = $request->input('type');
@@ -177,7 +247,7 @@ class AdminReportsController extends Controller
         $taluka= '';
         $city = '';
         $pincode = '';
-        if(count($src) >1){
+        if(count($src) == 5){
             $state = $src[0];
             $district = $src[1];
             $taluka = $src[2];
@@ -185,58 +255,77 @@ class AdminReportsController extends Controller
             $pincode = $src[4];
         }
         else{
-            redirect ('adminReports.sReport')->with('error','No Data for this pincode.');
+            abort(403);
         }
         //dd($source, $state, $district, $taluka, $city, $pincode);
 
         $repCollect = collect();
 
-        $lname = Society::distinct('name')
-            ->select('name')
-            ->where('state','=', $state)
-            ->where('district','=',$district)
-            ->where('taluka','=', $taluka)
-            ->where('city','=', $city)
-            ->where('pincode','=',$pincode)
-            ->where('isactive','=',true)
-            ->orderBy('name', 'asc')
-            ->paginate(15);
+       
+        //changed for V2
+        $lname = Society::distinct('location.name')
+            ->join('LinkLocDev','location.id','LinkLocDev.locationid')
+            ->join('device', 'device.id', 'LinkLocDev.deviceid')
+            ->where('device.isactive','=',true)
+            ->where('LinkLocDev.isactive','=',true)
+            ->where('location.isactive','=',true)
+            ->whereIn('device.serial_no',session('GDevId')->toArray())  
+            ->select('location.name')
+            ->where('location.pincode','=',$pincode)
+            ->where('location.city','=',$city)
+            ->where('location.taluka','=',$taluka)
+            ->where('location.state','=', $state)
+            ->where('location.district','=',$district)
+            ->orderBy('location.name', 'asc')
+            ->get();
         //dd($lname);
 
         foreach ($lname as $n){
-            $devs = vlocdev::where('state','=',$state)
-            ->where('district','=',$district)
-            ->where('taluka','=',$taluka)
-            ->where('city','=',$city)
-            ->where('pincode','=',$pincode)
-            ->where('name','=',$n->name)
-            ->where('locactive','=',true)
-            ->where('linkactive','=',true)
-            ->where('devactive','=',true)
-            ->select('serial_no')
-            ->pluck('serial_no')
-            ->toArray();
-        //dd($devs);
-        
-                        $iotDataTemp = count(IotData::whereIn('deviceid',$devs)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->where('temp','>=',94.5)
-                            ->get());
+           
+            $devNameList = vLocDev::whereIn('vlocdev.serial_no',session('GDevId')->toArray())
+                ->where('vlocdev.name','=',$n->name)
+                ->where('vlocdev.pincode','=',$pincode)
+                ->where('vlocdev.city','=',$city)
+                ->where('vlocdev.taluka','=',$taluka)
+                ->where('vlocdev.district','=',$district)
+                ->where('vlocdev.state','=',$state)
+                ->where('vlocdev.locactive','=',true)
+                ->where('vlocdev.linkactive','=',true)
+                ->where('vlocdev.devactive','=',true)
+                ->select('vlocdev.serial_no')
+                ->get();
+        //dd($devNameList);
 
-                        $iotDataSpo2 = count(IotData::whereIn('deviceid',$devs)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->where('spo2','<=',93)
-                            ->get());
-
-                        $iotData = count(IotData::whereIn('deviceid',$devs)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->get());
-
+                //All data for last 15 days with against devices assigned to that location(s)
+                $iotDataAll = IotData::whereIn('deviceid',$devNameList)
+                ->where('created_at','>=',Carbon::today()->subDays(15))
+                ->get();
+               
+                //Filter all abnormal scans
+                $iotDataAbnormal = $iotDataAll->where('flagstatus','=',true);
+    
+                //Total scanned records 
+                $iotData = $iotDataAll->count();
+    
+                //Total records with high temp
+                $iotDataTemp = $iotDataAbnormal->where('temp','>',env('CUTOFF_TEMP'))->count();
+    
+                //Total records for Low SPO2
+                $iotDataSpo2 = $iotDataAbnormal->where('spo2','<',env('CUTOFF_SPO2'))->count();
+    
+                //Total records for high Pulse Rate
+                $iotDataHbcount = $iotDataAbnormal->where('hbcount','<',env('CUTOFF_PULSE'))->count();
+    
+    
+                //Total all abnormal records
+                $iotDataAllAbnormal = $iotDataAbnormal
+                ->where('hbcount','>',env('CUTOFF_PULSE'))
+                ->where('spo2','<',env('CUTOFF_SPO2'))
+                ->where('temp','>',env('CUTOFF_TEMP'))
+                ->count();
+    
             //now filling in the table 
-            $f = array('name'=>$n->name, 'tempCount'=>$iotDataTemp, 'spo2Count'=>$iotDataSpo2, 'totalScan'=>$iotData);
+            $f = array('name'=>$n->name, 'tempCount'=>$iotDataTemp, 'spo2Count'=>$iotDataSpo2, 'hbCount' => $iotDataHbcount, 'allAbnormal' => $iotDataAllAbnormal,'totalScan'=>$iotData);
             $repCollect ->push($f);
         }
         //dd($repCollect);
@@ -244,11 +333,15 @@ class AdminReportsController extends Controller
         $lbl = collect([]);
         $valuesTemp = collect([]);
         $valuesSpo2 = collect([]);
+        $valuesHbcount = collect([]);
+        $valuesAllAbnormal = collect([]);
         
         foreach($repCollect as $data){
             $lbl->push($data['name']);
             $valuesTemp->push($data['tempCount']);
             $valuesSpo2->push($data['spo2Count']);
+            $valuesHbcount->push($data['hbCount']);
+            $valuesAllAbnormal->push($data['allAbnormal']);
         }
         //dd($lbl);
         //dd($values);
@@ -259,20 +352,26 @@ class AdminReportsController extends Controller
         }
 
         $TempChart = new ReportChartLine();
-        //get array for labels
         $TempChart->labels($lbl);
-    //dd($spo2Chart);
-        $TempChart->dataset('Data for Pincode '.$pincode. "with High Temperature by Location", 'pie',$valuesTemp)
+        $TempChart->dataset($pincode.": High Temperature by Location", 'doughnut',$valuesTemp)
             ->backgroundColor($col);
         
 
         $Spo2Chart = new ReportChartLine();
-        //get array for labels
         $Spo2Chart->labels($lbl);
-    //dd($spo2Chart);
-        $Spo2Chart->dataset('Data for Pincode '.$pincode. "with Low Spo2 by Location", 'pie',$valuesSpo2)
+        $Spo2Chart->dataset($pincode.": Low Spo2 by Location", 'doughnut',$valuesSpo2)
             ->backgroundColor($col);
-        return view('adminReports.sPincodeReport', compact('repCollect','state','district','taluka','city','pincode','TempChart','Spo2Chart'));
+
+        $HbcountChart = new ReportChartLine();
+        $HbcountChart->labels($lbl);
+        $HbcountChart->dataset($pincode.": High Pulse Rate by Location", 'doughnut',$valuesHbcount)
+            ->backgroundColor($col);
+
+        $AllAbnormalChart = new ReportChartLine();
+        $AllAbnormalChart->labels($lbl);
+        $AllAbnormalChart->dataset($pincode.": High Pulse Rate by Location", 'doughnut',$valuesAllAbnormal)
+            ->backgroundColor($col);
+        return view('adminReports.sPincodeReport', compact('repCollect','state','district','taluka','city','pincode','TempChart','Spo2Chart', 'HbcountChart','AllAbnormalChart'));
         
       }
 
@@ -281,6 +380,9 @@ class AdminReportsController extends Controller
       */
 
       public function sCityReport(Request $request){
+        if(!Auth::user()->hasRole(['Super Admin','Location Admin'])){
+            abort(403);
+        }
         $source = $request->input('source');
         $type = $request->input('type');
         $src = explode('.',$source);
@@ -288,75 +390,84 @@ class AdminReportsController extends Controller
         $district = '';
         $taluka= '';
         $city = '';
-        if(count($src) >1){
+        if(count($src) == 4){
             $state = $src[0];
             $district = $src[1];
             $taluka = $src[2];
             $city = $src[3];
         }
         else{
-            $city = $src[0];
+            abort(400);
         }
 
         //dd($source, $state, $district, $taluka, $city, $type);
 
         $repCollect = collect();
 
-        $pincodes = Society::distinct('pincode')
-            ->select('pincode')
-            ->where('state','=', $state)
-            ->where('district','=',$district)
-            ->where('taluka','=', $taluka)
-            ->where('city','=', $city)
-            ->where('isactive','=',true)
-            ->orderBy('pincode', 'asc')
-            ->paginate(15);
+        //changed for V2
+        $pincodes = Society::distinct('location.pincode')
+            ->join('LinkLocDev','location.id','LinkLocDev.locationid')
+            ->join('device', 'device.id', 'LinkLocDev.deviceid')
+            ->where('device.isactive','=',true)
+            ->where('LinkLocDev.isactive','=',true)
+            ->where('location.isactive','=',true)
+            ->whereIn('device.serial_no',session('GDevId')->toArray())  
+            ->select('location.pincode')
+            ->where('location.city','=',$city)
+            ->where('location.taluka','=',$taluka)
+            ->where('location.state','=', $state)
+            ->where('location.district','=',$district)
+            ->orderBy('location.pincode', 'asc')
+            ->get();
+
         //dd($pincodes);
 
         foreach ($pincodes as $p){
-            //get the list of location id's attached to each location 
-            $lIDs = Society::where('pincode','=',$p->pincode)
-                ->select ('id')
-                ->where('state', '=', $state)
-                ->where('district','=',$district)
-                ->where('taluka','=',$taluka)
-                ->where('city','=',$city)
-                ->where ('isactive','=',true)
-                ->get()->toArray();
-                //This is the list of devices that are attached to Taluka
+            
+            //now lets get the devices attached to all these locations 
+            $devNameList = vLocDev::whereIn('vlocdev.serial_no',session('GDevId')->toArray())
+                ->where('vlocdev.pincode','=',$p->pincode)
+                ->where('vlocdev.city','=',$city)
+                ->where('vlocdev.taluka','=',$taluka)
+                ->where('vlocdev.district','=',$district)
+                ->where('vlocdev.state','=',$state)
+                ->where('vlocdev.locactive','=',true)
+                ->where('vlocdev.linkactive','=',true)
+                ->where('vlocdev.devactive','=',true)
+                ->select('vlocdev.serial_no')
+                ->get();
 
-                //now lets get the devices attached to all these locations 
-                $devLocList = LinkLocDev::whereIn('locationid',$lIDs)
-                    ->where('isactive','=',true)
-                    ->select('deviceid')
-                    ->get()->toArray();
-                    //here i have the list of all the location id's
 
-                    $devNameList = Device::whereIn('id',$devLocList)
-                        ->where('isactive','=',true)
-                        ->select('serial_no')
-                        ->get()->toArray();
-                        //have the list of device names here 
+                //All data for last 15 days with against devices assigned to that location(s)
+            $iotDataAll = IotData::whereIn('deviceid',$devNameList)
+            ->where('created_at','>=',Carbon::today()->subDays(15))
+            ->get();
+           
+            //Filter all abnormal scans
+            $iotDataAbnormal = $iotDataAll->where('flagstatus','=',true);
 
-                        $iotDataTemp = count(IotData::whereIn('deviceid',$devNameList)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->where('temp','>=',94.5)
-                            ->get());
+            //Total scanned records 
+            $iotData = $iotDataAll->count();
 
-                        $iotDataSpo2 = count(IotData::whereIn('deviceid',$devNameList)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->where('spo2','<=',93)
-                            ->get());
+            //Total records with high temp
+            $iotDataTemp = $iotDataAbnormal->where('temp','>',env('CUTOFF_TEMP'))->count();
 
-                        $iotData = count(IotData::whereIn('deviceid',$devNameList)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->get());
+            //Total records for Low SPO2
+            $iotDataSpo2 = $iotDataAbnormal->where('spo2','<',env('CUTOFF_SPO2'))->count();
+
+            //Total records for high Pulse Rate
+            $iotDataHbcount = $iotDataAbnormal->where('hbcount','<',env('CUTOFF_PULSE'))->count();
+
+
+            //Total all abnormal records
+            $iotDataAllAbnormal = $iotDataAbnormal
+            ->where('hbcount','>',env('CUTOFF_PULSE'))
+            ->where('spo2','<',env('CUTOFF_SPO2'))
+            ->where('temp','>',env('CUTOFF_TEMP'))
+            ->count();
 
             //now filling in the table 
-            $f = array('pincode'=>$p->pincode, 'tempCount'=>$iotDataTemp, 'spo2Count'=>$iotDataSpo2, 'totalScan'=>$iotData);
+            $f = array('pincode'=>$p->pincode, 'tempCount'=>$iotDataTemp, 'spo2Count'=>$iotDataSpo2, 'hbCount'=> $iotDataHbcount, 'allAbnormal' => $iotDataAllAbnormal,'totalScan'=>$iotData);
             $repCollect ->push($f);
         }
         //dd($repCollect);
@@ -364,11 +475,15 @@ class AdminReportsController extends Controller
         $lbl = collect([]);
         $valuesTemp = collect([]);
         $valuesSpo2 = collect([]);
+        $valuesHbcount = collect([]);
+        $valuesAllAbnormal = collect([]);
         
         foreach($repCollect as $data){
             $lbl->push($data['pincode']);
             $valuesTemp->push($data['tempCount']);
             $valuesSpo2->push($data['spo2Count']);
+            $valuesHbcount->push($data['hbCount']);
+            $valuesAllAbnormal->push($data['allAbnormal']);
         }
         //dd($lbl);
         //dd($values);
@@ -379,20 +494,27 @@ class AdminReportsController extends Controller
         }
 
         $TempChart = new ReportChartLine();
-        //get array for labels
         $TempChart->labels($lbl);
-    //dd($spo2Chart);
-        $TempChart->dataset('Data for City of '.$city. "with High Temperature by Pincode", 'pie',$valuesTemp)
+        $TempChart->dataset($city. ": High Temperature by Pincode", 'doughnut',$valuesTemp)
             ->backgroundColor($col);
         
 
         $Spo2Chart = new ReportChartLine();
-        //get array for labels
         $Spo2Chart->labels($lbl);
-    //dd($spo2Chart);
-        $Spo2Chart->dataset('Data for City of '.$city. "with Low Spo2 by Pincode", 'pie',$valuesSpo2)
+        $Spo2Chart->dataset($city. ": Low SPO2 by Pincode", 'doughnut',$valuesSpo2)
             ->backgroundColor($col);
-        return view('adminReports.sCityReport', compact('repCollect','state','type','district','taluka','city','TempChart','Spo2Chart'));
+
+        $HbcountChart = new ReportChartLine();
+        $HbcountChart->labels($lbl);
+        $HbcountChart->dataset($city. ": High Pulse Rate by Pincode", 'doughnut',$valuesHbcount)
+                ->backgroundColor($col);
+
+        $AllAbnormalChart = new ReportChartLine();
+        $AllAbnormalChart->labels($lbl);
+        $AllAbnormalChart->dataset($city. ": High Pulse Rate by Pincode", 'doughnut',$valuesAllAbnormal)
+                ->backgroundColor($col);
+
+        return view('adminReports.sCityReport', compact('repCollect','state','type','district','taluka','city','TempChart','Spo2Chart', 'HbcountChart','AllAbnormalChart'));
 
     }
 
@@ -401,25 +523,28 @@ class AdminReportsController extends Controller
       * Function to get data for Taluka
       */
     public function sTalukaReport(Request $request){
+        if(!Auth::user()->hasRole(['Super Admin','Location Admin'])){
+            abort(403);
+        }
         $source = $request->input('source');
         $type = $request->input('type');
         $src = explode('.',$source);
         $state = '';
         $district = '';
         $taluka='';
-        if(count($src) >1){
+        if(count($src) == 3){
             $state = $src[0];
             $district = $src[1];
             $taluka = $src[2];
         }
         else{
-            $taluka = $src[0];
+            abort(403);
         }
         //dd($source, $state, $district, $taluka, $type);
 
         $repCollect = collect();
 
-        $city = Society::distinct('city')
+        /*$city = Society::distinct('city')
             ->select('city')
             ->where('state','=', $state)
             ->where('district','=',$district)
@@ -427,51 +552,71 @@ class AdminReportsController extends Controller
             ->where('isactive','=',true)
             ->orderBy('city', 'asc')
             ->paginate(15);
+        */
+        //changed for V2
+        $city = Society::distinct('location.city')
+            ->join('LinkLocDev','location.id','LinkLocDev.locationid')
+            ->join('device', 'device.id', 'LinkLocDev.deviceid')
+            ->where('device.isactive','=',true)
+            ->where('LinkLocDev.isactive','=',true)
+            ->where('location.isactive','=',true)
+            ->whereIn('device.serial_no',session('GDevId')->toArray())  
+            ->select('location.city')
+            ->where('location.taluka','=',$taluka)
+            ->where('location.state','=', $state)
+            ->where('location.district','=',$district)
+            ->orderBy('location.city', 'asc')
+            ->get();
         //dd($city);
 
         foreach ($city as $c){
             //get the list of location id's attached to each location 
-            $lIDs = Society::where('city','=',$c->city)
-                ->select ('id')
-                ->where('state', '=', $state)
-                ->where('district','=',$district)
-                ->where('taluka','=',$taluka)
-                ->where ('isactive','=',true)
-                ->get()->toArray();
-                //This is the list of devices that are attached to Taluka
+            
+            //Changed for V2
 
-                //now lets get the devices attached to all these locations 
-                $devLocList = LinkLocDev::whereIn('locationid',$lIDs)
-                    ->where('isactive','=',true)
-                    ->select('deviceid')
-                    ->get()->toArray();
-                    //here i have the list of all the location id's
+            $devNameList = vLocDev::whereIn('vlocdev.serial_no',session('GDevId')->toArray())
+                ->where('vlocdev.city','=',$c->city)
+                ->where('vlocdev.taluka','=',$taluka)
+                ->where('vlocdev.district','=',$district)
+                ->where('vlocdev.state','=',$state)
+                ->where('vlocdev.locactive','=',true)
+                ->where('vlocdev.linkactive','=',true)
+                ->where('vlocdev.devactive','=',true)
+                ->select('vlocdev.serial_no')
+                ->get();
+            //dd($devNameList);
 
-                    $devNameList = Device::whereIn('id',$devLocList)
-                        ->where('isactive','=',true)
-                        ->select('serial_no')
-                        ->get()->toArray();
-                        //have the list of device names here 
+            //All data for last 15 days with against devices assigned to that location(s)
+            $iotDataAll = IotData::whereIn('deviceid',$devNameList)
+                ->where('created_at','>=',Carbon::today()->subDays(15))
+                ->get();
+               
 
-                        $iotDataTemp = count(IotData::whereIn('deviceid',$devNameList)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->where('temp','>=',94.5)
-                            ->get());
+            //Filter all abnormal scans
+            $iotDataAbnormal = $iotDataAll->where('flagstatus','=',true);
 
-                        $iotDataSpo2 = count(IotData::whereIn('deviceid',$devNameList)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->where('spo2','<=',93)
-                            ->get());
+            //Total scanned records 
+            $iotData = $iotDataAll->count();
 
-                        $iotData = count(IotData::whereIn('deviceid',$devNameList)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->get());
+            //Total records with high temp
+            $iotDataTemp = $iotDataAbnormal->where('temp','>',env('CUTOFF_TEMP'))->count();
+
+            //Total records for Low SPO2
+            $iotDataSpo2 = $iotDataAbnormal->where('spo2','<',env('CUTOFF_SPO2'))->count();
+
+            //Total records for high Pulse Rate
+            $iotDataHbcount = $iotDataAbnormal->where('hbcount','<',env('CUTOFF_PULSE'))->count();
+
+
+            //Total all abnormal records
+            $iotDataAllAbnormal = $iotDataAbnormal
+            ->where('hbcount','>',env('CUTOFF_PULSE'))
+            ->where('spo2','<',env('CUTOFF_SPO2'))
+            ->where('temp','>',env('CUTOFF_TEMP'))
+            ->count();
 
             //now filling in the table 
-            $f = array('city'=>$c->city, 'tempCount'=>$iotDataTemp, 'spo2Count'=>$iotDataSpo2, 'totalScan'=>$iotData);
+            $f = array('city'=>$c->city, 'tempCount'=>$iotDataTemp, 'spo2Count'=>$iotDataSpo2, 'hbCount'=>$iotDataHbcount , 'allAbnormal'=> $iotDataAllAbnormal, 'totalScan'=>$iotData);
             $repCollect ->push($f);
         }
         //dd($repCollect);
@@ -479,11 +624,15 @@ class AdminReportsController extends Controller
         $lbl = collect([]);
         $valuesTemp = collect([]);
         $valuesSpo2 = collect([]);
+        $valuesHbcount = collect([]);
+        $valuesAllAbnormal = collect([]);
         
         foreach($repCollect as $data){
             $lbl->push($data['city']);
             $valuesTemp->push($data['tempCount']);
             $valuesSpo2->push($data['spo2Count']);
+            $valuesHbcount->push($data['hbCount']);
+            $valuesAllAbnormal->push($data['allAbnormal']);
         }
         //dd($lbl);
         //dd($values);
@@ -494,20 +643,27 @@ class AdminReportsController extends Controller
         }
 
         $TempChart = new ReportChartLine();
-        //get array for labels
         $TempChart->labels($lbl);
-    //dd($spo2Chart);
-        $TempChart->dataset('Data for Taluka of '.$taluka. "with High Temperature by City", 'pie',$valuesTemp)
+        $TempChart->dataset($taluka. ": High Temperature by City", 'doughnut',$valuesTemp)
             ->backgroundColor($col);
         
 
         $Spo2Chart = new ReportChartLine();
-        //get array for labels
         $Spo2Chart->labels($lbl);
-    //dd($spo2Chart);
-        $Spo2Chart->dataset('Data for Taluka of '.$taluka. "with Low Spo2 by City", 'pie',$valuesSpo2)
+        $Spo2Chart->dataset($taluka. ": Low Spo2 by City", 'doughnut',$valuesSpo2)
             ->backgroundColor($col);
-        return view('adminReports.sTalukaReport', compact('repCollect','state','type','district','taluka','TempChart','Spo2Chart'));
+
+        $HbcountChart = new ReportChartLine();
+        $HbcountChart->labels($lbl);
+        $HbcountChart->dataset($taluka. ": Low Spo2 by City", 'doughnut',$valuesHbcount)
+            ->backgroundColor($col);
+
+        $AllAbnormalChart = new ReportChartLine();
+        $AllAbnormalChart->labels($lbl);
+        $AllAbnormalChart->dataset($taluka. ": Low Spo2 by City", 'doughnut',$valuesAllAbnormal)
+            ->backgroundColor($col);
+
+        return view('adminReports.sTalukaReport', compact('repCollect','state','type','district','taluka','TempChart','Spo2Chart', 'HbcountChart','AllAbnormalChart'));
 
     }
 
@@ -515,77 +671,95 @@ class AdminReportsController extends Controller
       * function to get data for a district 
       */
      public function sDistrictReport(Request $request){
+        if(!Auth::user()->hasRole(['Super Admin','Location Admin'])){
+            abort(403);
+        }
          //dd($request->all());
         $source = $request->input('source');
         $type = $request->input('type');
         $src = explode('.',$source);
         $state = '';
         $district = '';
-        if (count($src) > 1){
+        if (count($src) == 2){
             //this is from report
             $state = $src[0];
             $district = $src[1];
         }
         else{
-            //This is from sReport
-            $district = $src[0];
+            abort(403);
         }
+        //V2 - This else is not needed as the data is coming in the form of state.district
+        //else{
+            //This is from sReport -- This needs to me seamless. Cannot work in pieces.
+            //$district = $src[0];
+        //}
         //dd($source, $type, $state, $district);
 
         //getting list of Talukas under that state 
         $repCollect = collect();
 
-        $taluka = Society::distinct('taluka')
-            ->select('taluka')
-            ->where('state','=', $state)
-            ->where('district','=',$district)
-            ->where('isactive','=',true)
-            ->orderBy('taluka', 'asc')
-            ->paginate(15);
+ 
+        $taluka = Society::distinct('location.taluka')
+            ->join('LinkLocDev','location.id','LinkLocDev.locationid')
+            ->join('device', 'device.id', 'LinkLocDev.deviceid')
+            ->where('device.isactive','=',true)
+            ->where('LinkLocDev.isactive','=',true)
+            ->where('location.isactive','=',true)
+            ->whereIn('device.serial_no',session('GDevId')->toArray())  
+            ->select('location.taluka')
+            ->where('location.state','=', $state)
+            ->where('location.district','=',$district)
+            ->orderBy('location.taluka', 'asc')
+            ->get();
         //dd($taluka);
 
         foreach ($taluka as $t){
-            //get the list of location id's attached to each location 
-            $lIDs = Society::where('taluka','=',$t->taluka)
-                ->select ('id')
-                ->where('state', '=', $state)
-                ->where('district','=',$district)
-                ->where ('isactive','=',true)
-                ->get()->toArray();
-                //This is the list of devices that are attached to Taluka
+            //writing for V2
+            $devNameList = vLocDev::whereIn('vlocdev.serial_no',session('GDevId')->toArray())
+                ->where('vlocdev.taluka','=',$t->taluka)
+                ->where('vlocdev.district','=',$district)
+                ->where('vlocdev.state','=',$state)
+                ->where('vlocdev.locactive','=',true)
+                ->where('vlocdev.linkactive','=',true)
+                ->where('vlocdev.devactive','=',true)
+                ->select('vlocdev.serial_no')
+                ->get();
 
-                //now lets get the devices attached to all these locations 
-                $devLocList = LinkLocDev::whereIn('locationid',$lIDs)
-                    ->where('isactive','=',true)
-                    ->select('deviceid')
-                    ->get()->toArray();
-                    //here i have the list of all the location id's
+                //dd($devNameList->toArray(),session('GDevId'));
+           
 
-                    $devNameList = Device::whereIn('id',$devLocList)
-                        ->where('isactive','=',true)
-                        ->select('serial_no')
-                        ->get()->toArray();
-                        //have the list of device names here 
+            //Getting all relevant data for the location. We can filter the data based on this one 
+            //All data for last 15 days with against devices assigned to that location(s)
+            $iotDataAll = IotData::whereIn('deviceid',$devNameList)
+                ->where('created_at','>=',Carbon::today()->subDays(15))
+                ->get();
 
-                        $iotDataTemp = count(IotData::whereIn('deviceid',$devNameList)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->where('temp','>=',94.5)
-                            ->get());
+            //Filter all abnormal scans
+            $iotDataAbnormal = $iotDataAll->where('flagstatus','=',true);
 
-                        $iotDataSpo2 = count(IotData::whereIn('deviceid',$devNameList)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->where('spo2','<=',93)
-                            ->get());
+            //Total scanned records 
+            $iotData = $iotDataAll->count();
 
-                        $iotData = count(IotData::whereIn('deviceid',$devNameList)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->get());
+            //Total records with high temp
+            $iotDataTemp = $iotDataAbnormal->where('temp','>',env('CUTOFF_TEMP'))->count();
+
+            //Total records for Low SPO2
+            $iotDataSpo2 = $iotDataAbnormal->where('spo2','<',env('CUTOFF_SPO2'))->count();
+
+            //Total records for high Pulse Rate
+            $iotDataHbcount = $iotDataAbnormal->where('hbcount','<',env('CUTOFF_PULSE'))->count();
+
+
+            //Total all abnormal records
+            $iotDataAllAbnormal = $iotDataAbnormal
+            ->where('hbcount','>',env('CUTOFF_PULSE'))
+            ->where('spo2','<',env('CUTOFF_SPO2'))
+            ->where('temp','>',env('CUTOFF_TEMP'))
+            ->count();
+
 
             //now filling in the table 
-            $f = array('taluka'=>$t->taluka, 'tempCount'=>$iotDataTemp, 'spo2Count'=>$iotDataSpo2, 'totalScan'=>$iotData);
+            $f = array('taluka'=>$t->taluka, 'tempCount'=>$iotDataTemp, 'spo2Count'=>$iotDataSpo2, 'hbCount'=> $iotDataHbcount, 'allAbnormal'=> $iotDataAllAbnormal ,'totalScan'=>$iotData);
             $repCollect ->push($f);
         }
         //dd($repCollect);
@@ -593,14 +767,18 @@ class AdminReportsController extends Controller
         $lbl = collect([]);
         $valuesTemp = collect([]);
         $valuesSpo2 = collect([]);
+        $valuesHbcount = collect([]);
+        $valuesAllAbnormal = collect([]);
         
         foreach($repCollect as $data){
             $lbl->push($data['taluka']);
             $valuesTemp->push($data['tempCount']);
             $valuesSpo2->push($data['spo2Count']);
+            $valuesHbcount->push($data['hbCount']);
+            $valuesAllAbnormal->push($data['allAbnormal']);
         }
     //dd($lbl);
-    //dd($values);
+    //dd($valuesAllAbnormal);
         //getting count of taluka to generate colors 
         $col = array(count($repCollect));
         for ( $i = 0; $i<count($repCollect); $i++){
@@ -608,63 +786,100 @@ class AdminReportsController extends Controller
         }
 
         $TempChart = new ReportChartLine();
-        //get array for labels
         $TempChart->labels($lbl);
-    //dd($spo2Chart);
-        $TempChart->dataset('Data for District of '.$district. "with High Temperature by Taluka", 'pie',$valuesTemp)
+        $TempChart->dataset($district. ": High Temperature by Taluka", 'doughnut',$valuesTemp)
             ->backgroundColor($col);
         
 
         $Spo2Chart = new ReportChartLine();
-        //get array for labels
         $Spo2Chart->labels($lbl);
-    //dd($spo2Chart);
-        $Spo2Chart->dataset('Data for District of '.$district. "with Low Spo2 by Taluka", 'pie',$valuesSpo2)
+        $Spo2Chart->dataset($district. ": Low SPO2 by Taluka", 'doughnut',$valuesSpo2)
             ->backgroundColor($col);
-        return view('adminReports.sDistrictReport', compact('repCollect','state','type','district','taluka','TempChart','Spo2Chart'));
+
+        $HbcountChart = new ReportChartLine();
+        $HbcountChart->labels($lbl);
+        $HbcountChart->dataset($district. ": High Pulse Rate by Taluka", 'doughnut',$valuesHbcount)
+            ->backgroundColor($col);
+
+        $AllAbnormalChart = new ReportChartLine();
+        $AllAbnormalChart->labels($lbl);
+        $AllAbnormalChart->dataset($district. ": High Pulse Rate by Taluka", 'doughnut',$valuesAllAbnormal)
+            ->backgroundColor($col);
+        
+        return view('adminReports.sDistrictReport', compact('repCollect','state','type','district','taluka','TempChart','Spo2Chart','HbcountChart','AllAbnormalChart'));
 
 
      }
 
      public function sUserReport(Request $request) {
-
+        
         //return ('in user report');
+        if(!Auth::user()->hasRole(['Super Admin', 'Location Admin'])){
+            abort(403);
+        }
 
         $identifier = $request->input('identifier');
         $this -> validate($request, [
-            'identifier' => 'required|gt:0'
+            'identifier' => 'required|digits:10'
         ]);
-
-        $iotData = IotData::where('identifier','=',$identifier)
+        
+        if(Auth::user()->hasRole(['Super Admin', 'Location Admin'])){
+        $iotData = IotData::where('iotdata.identifier','=',$identifier)
+            ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
+            ->whereIn('iotdata.deviceid',session('GDevId'))
+            ->join('vlocdev','iotdata.deviceid','vlocdev.serial_no')
+            ->select('iotdata.identifier','iotdata.temp','iotdata.spo2', 'iotdata.hbcount','iotdata.created_at', 'iotdata.flagstatus', 'vlocdev.name as name')
             ->orderBy('created_at','desc')
-            ->paginate(10);
+            ->orderBy('vlocdev.name','desc')
+            ->paginate(50);
+        }
+        elseif(Auth::user()->hasRole('Site Admin')){
+            abort(403);
+
+            $iotData = IotData::where('iotdata.identifier','=',$identifier)
+            ->whereIn('iotdata.deviceid',session('GDevId'))
+            ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
+            ->select('iotdata.identifier','iotdata.temp','iotdata.spo2', 'iotdata.hbcount','iotdata.created_at', 'iotdata.flagstatus', 'iotdata.deviceid as name')
+            ->orderBy('created_at','desc')
+            ->orderBy('iotdata.deviceid','desc')
+            ->paginate(50);
+        }
         //dd($iotData);
 
         if(count($iotData) > 0){
             $lbl = collect([]);
             $valuesTemp = collect([]);
             $valuesSpo2 = collect([]);
+            $valuesHbcount = collect([]);
+
             foreach($iotData as $data){
                 $lbl->push($data->created_at->format('Y-m-d h:i:s'));
                 $valuesTemp->push($data->temp);
                 $valuesSpo2->push($data->spo2);
+                $valuesHbcount->push($data->hbcount);
             }
         //dd($lbl);
         //dd($values);
 
-
+            //Generating SPO2 Chart
             $spo2Chart = new ReportChartLine();
-            //get array for labels
             $spo2Chart->labels($lbl);
-        //dd($spo2Chart);
             $spo2Chart->dataset('SPO2 data', 'bar',$valuesSpo2)
                 ->backgroundColor('red');
             
+            //Generating Temperature chart
             $tempChart = new ReportChartLine();
             $tempChart->labels($lbl);
             $tempChart->dataset('Temperature data','bar',$valuesTemp)
                 ->backgroundColor('blue');
-            return view('adminReports.sUserReportv',compact('identifier','iotData','spo2Chart','tempChart'));
+
+            //Generating HB Count chart
+            $hbcountChart = new ReportChartLine();
+            $hbcountChart->labels($lbl);
+            $hbcountChart->dataset('Pulse Rate data','bar',$valuesHbcount)
+                ->backgroundColor('orange');
+
+            return view('adminReports.sUserReportv',compact('identifier','iotData','spo2Chart','tempChart', 'hbcountChart'));
         }
         else{
             return view('adminReports.sUserReportv',compact('identifier','iotData'))->with('error','No data available for this user');
@@ -673,61 +888,72 @@ class AdminReportsController extends Controller
 
      //function to get report by state 
      public function sStateReport(Request $request){
+        if(!Auth::user()->hasRole(['Super Admin','Location Admin'])){
+            abort(403);
+        }
         $state = $request->input('state');
-        $type = $request->input('type');
+        //$type = $request->input('type');
         //dd($state);
         //getting list of Districts under that state 
         $repCollect = collect();
 
-        $district = Society::distinct('district')
-            ->select('district')
-            ->where('state','=', $state)
-            ->where('isactive','=',true)
-            ->orderBy('district', 'asc')
-            ->paginate(15);
-        //dd($city);
+        $district = Society::distinct('location.district')
+            ->join('LinkLocDev','location.id','LinkLocDev.locationid')
+            ->join('device', 'device.id', 'LinkLocDev.deviceid')
+            ->where('device.isactive','=',true)
+            ->where('LinkLocDev.isactive','=',true)
+            ->where('location.isactive','=',true)
+            ->whereIn('device.serial_no',session('GDevId')->toArray())
+            ->select('location.district')
+            ->where('location.state','=', $state)
+            ->orderBy('location.district', 'asc')
+            ->get();
+        //dd($district);
 
         foreach ($district as $c){
-            //get the list of location id's attached to each location 
-            $lIDs = Society::where('district','=',$c->district)
-                ->select ('id')
-                ->where('state', '=', $state)
-                ->where ('isactive','=',true)
-                ->get()->toArray();
-                //This is the list of devices that are attached to city
+            //writing for V2
+            $devNameList = vLocDev::where('vlocdev.district','=',$c->district)
+                ->whereIn('vlocdev.serial_no',session('GDevId')->toArray())
+                ->where('vlocdev.locactive','=',true)
+                ->where('vlocdev.linkactive','=',true)
+                ->where('vlocdev.devactive','=',true)
+                ->select('vlocdev.serial_no')
+                ->get();
 
-                //now lets get the devices attached to all these locations 
-                $devLocList = LinkLocDev::whereIn('locationid',$lIDs)
-                    ->where('isactive','=',true)
-                    ->select('deviceid')
-                    ->get()->toArray();
-                    //here i have the list of all the location id's
+                //dd($devNameList->toArray(),session('GDevId'));
 
-                    $devNameList = Device::whereIn('id',$devLocList)
-                        ->where('isactive','=',true)
-                        ->select('serial_no')
-                        ->get()->toArray();
-                        //have the list of device names here 
+            //Getting all relevant data for the location. We can filter the data based on this one 
+            //All data for last 15 days with against devices assigned to that location(s)
+            $iotDataAll = IotData::whereIn('deviceid',$devNameList)
+                ->where('created_at','>=',Carbon::today()->subDays(15))
+                ->get();
 
-                        $iotDataTemp = count(IotData::whereIn('deviceid',$devNameList)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->where('temp','>=',94.5)
-                            ->get());
+            //Filter all abnormal scans
+            $iotDataAbnormal = $iotDataAll->where('flagstatus','=',true);
 
-                        $iotDataSpo2 = count(IotData::whereIn('deviceid',$devNameList)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->where('spo2','<=',93)
-                            ->get());
+            //Total scanned records 
+            $iotData = $iotDataAll->count();
 
-                        $iotData = count(IotData::whereIn('deviceid',$devNameList)
-                            ->where('created_at','>=',Carbon::today()->subDays(15))
-                            ->where('created_at','<=',Carbon::today()->addDays(1))
-                            ->get());
+            //Total records with high temp
+            $iotDataTemp = $iotDataAbnormal->where('temp','>',env('CUTOFF_TEMP'))->count();
+
+            //Total records for Low SPO2
+            $iotDataSpo2 = $iotDataAbnormal->where('spo2','<',env('CUTOFF_SPO2'))->count();
+
+            //Total records for high Pulse Rate
+            $iotDataHbcount = $iotDataAbnormal->where('hbcount','<',env('CUTOFF_PULSE'))->count();
+
+
+            //Total all abnormal records
+            $iotDataAllAbnormal = $iotDataAbnormal
+            ->where('hbcount','>',env('CUTOFF_PULSE'))
+            ->where('spo2','<',env('CUTOFF_SPO2'))
+            ->where('temp','>',env('CUTOFF_TEMP'))
+            ->count();
+                        
 
             //now filling in the table 
-            $f = array('district'=>$c->district, 'tempCount'=>$iotDataTemp, 'spo2Count'=>$iotDataSpo2, 'totalScan'=>$iotData);
+            $f = array('district'=>$c->district, 'tempCount'=>$iotDataTemp, 'spo2Count'=>$iotDataSpo2, 'hbCount'=>$iotDataHbcount, 'allAbnormal'=>$iotDataAllAbnormal, 'totalScan'=>$iotData);
             $repCollect ->push($f);
 
         }
@@ -736,11 +962,15 @@ class AdminReportsController extends Controller
         $lbl = collect([]);
         $valuesTemp = collect([]);
         $valuesSpo2 = collect([]);
+        $valuesHbcount = collect([]);
+        $valuesAllAbnormal = collect([]);
         
         foreach($repCollect as $data){
             $lbl->push($data['district']);
             $valuesTemp->push($data['tempCount']);
             $valuesSpo2->push($data['spo2Count']);
+            $valuesHbcount->push($data['hbCount']);
+            $valuesAllAbnormal->push($data['allAbnormal']);
         }
     //dd($lbl);
     //dd($values);
@@ -751,276 +981,27 @@ class AdminReportsController extends Controller
         }
 
         $TempChart = new ReportChartLine();
-        //get array for labels
         $TempChart->labels($lbl);
-    //dd($spo2Chart);
-        $TempChart->dataset('Data for state of '.$state. "with High Temperature by District", 'pie',$valuesTemp)
+        $TempChart->dataset($state.': High Temperature by District', 'doughnut',$valuesTemp)
             ->backgroundColor($col);
         
 
         $Spo2Chart = new ReportChartLine();
-        //get array for labels
         $Spo2Chart->labels($lbl);
-    //dd($spo2Chart);
-        $Spo2Chart->dataset('Data for state of '.$state. "with Low Spo2 by Distict", 'pie',$valuesSpo2)
+        $Spo2Chart->dataset($state.': Low Spo2 by Distict', 'doughnut',$valuesSpo2)
             ->backgroundColor($col);
-        return view('adminReports.sStateReport', compact('repCollect','state','TempChart','Spo2Chart'));
 
+        $HbcountChart = new ReportChartLine();
+        $HbcountChart->labels($lbl);
+        $HbcountChart->dataset($state.': High Pulse Rate by Distict', 'doughnut',$valuesHbcount)
+            ->backgroundColor($col);
 
+        $AllAbnormalChart = new ReportChartLine();
+            $AllAbnormalChart->labels($lbl);
+            $AllAbnormalChart->dataset($state.': All Abnormal by Distict', 'doughnut',$valuesAllAbnormal)
+                ->backgroundColor($col);
+
+            return view('adminReports.sStateReport', compact('repCollect','state','TempChart','Spo2Chart','HbcountChart','AllAbnormalChart'));
     }
 
-    /*
-     public function sPincodeReport(Request $request){
-
-        $pin = $request->input('pincode');
-        if($pin == 'Select Pincode'){
-            redirect ('adminReports.sReport')->with('error','Please select a Pincode');
-        }       
-
-        //getting locations with this pincode 
-        $locations = Society::where('pincode','=',$pin)
-            ->where ('isactive','=',true)
-            ->pluck('id');
-            //->toArray();
-        //dd($locations);
-        if(count($locations) == 0){
-            redirect ('adminReports.sReport')->with('error','No active location for this pincode');
-        }
-
-        //looping thru location list
-        $repData = collect();
-                            
-        //get list of devices linked to this location
-        $devices = LinkLocDev::whereIn('locationid',$locations)->pluck('deviceid')->toArray();
-        //dd($devices);
-
-        if(count($devices) == 0){
-            redirect('adminReports.sReport')->with('error','No Devices Linked to this Pincode.');
-        }
-        
-        //get the list of device names for these locations
-        $devNames = Device::whereIn('id',$devices)->pluck('serial_no')->toArray();
-        //dd($devNames);
-        
-        //All Data
-   /*     $iotDataAll = IotData::whereIn('iotdata.deviceid',$devNames)
-            ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
-            ->where('iotdata.created_at','<=',Carbon::today()->addDays(1))
-            ->join('device','device.serial_no','=','iotdata.deviceid')
-            ->where('device.isactive','=',true)
-            ->join('LinkLocDev','LinkLocDev.deviceid','=','device.id')
-            ->where ('LinkLocDev.isactive','=',true)
-            ->join('location','location.id','=','LinkLocDev.locationid')
-            ->where('location.isactive','=',true)
-            ->select('location.name',DB::raw('count(*) as allRec'))
-            ->groupBy('location.name')
-            ->get();
-            //->toArray();
-        
-        dd($iotDataAll);
-
-        //Low SPO2 Data
-        $iotDataLowSPO2 = IotData::whereIn('iotdata.deviceid',$devNames)
-            ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
-            ->where('iotdata.created_at','<=',Carbon::today()->addDays(1))
-            ->where ('iotdata.spo2','<',93)
-            ->join('device','device.serial_no','=','iotdata.deviceid')
-            ->where('device.isactive','=',true)
-            ->join('LinkLocDev','LinkLocDev.deviceid','=','device.id')
-            ->where ('LinkLocDev.isactive','=',true)
-            ->join('location','location.id','=','LinkLocDev.locationid')
-            ->where('location.isactive','=',true)
-            ->select('location.name',DB::raw('count(*) as allRec'))
-            ->groupBy('location.name')
-            ->get();
-            //->toArray();
-        
-        dd($iotDataSPO2);
-        
-        //All Temp Data
-        $iotDataHighTemp = IotData::whereIn('iotdata.deviceid',$devNames)
-            ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
-            ->where('iotdata.created_at','<=',Carbon::today()->addDays(1))
-            ->where ('iotdata.temp','>',99.6)
-            ->join('device','device.serial_no','=','iotdata.deviceid')
-            ->where('device.isactive','=',true)
-            ->join('LinkLocDev','LinkLocDev.deviceid','=','device.id')
-            ->where ('LinkLocDev.isactive','=',true)
-            ->join('location','location.id','=','LinkLocDev.locationid')
-            ->where('location.isactive','=',true)
-            ->select('location.name',DB::raw('count(*) as allRec'))
-            ->groupBy('location.name')
-            ->get();
-            //->toArray();
-        
-        dd($iotDataAllTemp);
-        
-
-        
-        $iotData = IotData::whereIn('iotdata.deviceid',$devNames)
-                ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
-                ->where('iotdata.created_at','<=',Carbon::today()->addDays(1))
-                ->join('device','device.serial_no','=','iotdata.deviceid')
-                ->where('device.isactive','=',true)
-                ->join('LinkLocDev','LinkLocDev.deviceid','=','device.id')
-                ->where ('LinkLocDev.isactive','=',true)
-                ->join('location','location.id','=','LinkLocDev.locationid')
-                ->where('location.isactive','=',true)
-                ->select('location.pincode as pincode', 'location.name as name',
-                    'iotdata.identifier as identifier','iotdata.deviceid as device',
-                    'iotdata.temp as temperature', 'iotdata.spo2 as spo2',
-                    'iotdata.hbcount as heartbeat', 'iotdata.created_at as date' )
-                ->orderBy('location.pincode', 'asc')
-                ->orderBy('location.name','asc')
-                ->orderBy('iotdata.identifier','asc')
-                ->orderBy('iotdata.created_at','desc')
-                //->groupBy('location.pincode','location.name','iotdata.deviceid','iotdata.identifier',
-                //    'iotdata.temp', 'iotdata.spo2', 'iotdata.hbcount', 'iotdata.created_at')
-                ->get();
-            
-            dd($iotData);
-        $title = "Screening data by Pincode";
-        $meta = [
-            'Data for Pincode ' => $pin
-        ];
-        $columns = [
-            'Pincode' => 'pincode',
-            'Location Name' => 'name', 
-            'Identifier' => 'identifier',
-            'Device ID' => 'device',
-            'Temperature' => 'temperature',
-            'SPO2' => 'spo2',
-            'Heart beat' => 'heartbeat',
-            'Captured at' => 'date',
-            'Status' => function($iotData){
-                $ret = '';
-                if($iotData->spo2 < 93){
-                    $ret = $ret.'Low SpO2';
-                }
-                if($iotData->temperature > 99.6){
-                    if($ret != ''){
-                        $ret = $ret.'/n';
-                    }
-                    $ret = $ret.'High Temp';
-                }
-                return $ret;
-            }
-        ];
-           
-       return PdfReport::of($title, $meta, $iotData, $columns)
-            ->editColumn('Captured at', [
-                'displayAs' => function($iotData){
-                    return Carbon::create($iotData->date)->format('d-M-Y');
-                },
-                'class' => 'left'
-            ])
-            ->editColumn('Status', [
-                'class' => 'right bold red'
-            ])
-            ->groupBy('Pincode')
-            //->limit (50)
-            ->stream();
-
-        /*
-        
-        //get list of devices linked to that location
-        
-
-        
-
-        $iotData = IotData::whereIn('deviceid',$devNameList)->paginate(50);
-        //dd($iotData);
-        if(count($iotData) == 0){
-            redirect('adminReports.sReport')->with('error','No Data for this Pincode.');
-        }
-
-         
-        $lbl = collect([]);
-        $valuesTemp = collect([]);
-        $valuesSpo2 = collect([]);
-        foreach($iotData as $data){
-            $lbl->push($data->created_at->format('Y-m-d h:i:s'));
-            $valuesTemp->push($data->temp);
-            $valuesSpo2->push($data->spo2);
-        }
-        
-        $spo2Chart = new ReportChartLine();
-        //get array for labels
-        $spo2Chart->labels($lbl);
-    //dd($spo2Chart);
-        $spo2Chart->dataset('SPO2 data', 'bar',$valuesSpo2)
-            ->backgroundColor('red');
-        
-        $tempChart = new ReportChartLine();
-        $tempChart->labels($lbl);
-        $tempChart->dataset('Temperature data','bar',$valuesTemp)
-            ->backgroundColor('blue');
-        return view ('adminReports.sPincodeReport',compact('iotData','pin','spo2Chart','tempChart'));
-        
-     }
-*/
-
-
-
-    /*public function sCityReport(Request $request){
-        $city = $request->input('city');
-        if($city == 'Select City'){
-            redirect ('adminReports.sReport')->with('error','Please select a City');
-        }       
-
-        //getting location name
-        $lName = Society::where('city','=',$city)->pluck('name');
-        //dd($lName);
-        if(count($lName) == 0){
-            redirect ('adminReports.sReport')->with('error','No active location for this City');
-        }
-
-        $loc = Society::where('city','=',$city)->pluck('id')->toArray();
-        if(count($loc) == 0){
-            redirect ('adminReports.sReport')->with('error','No active location for this City');
-        }
-
-        //get list of devices linked to that location
-        $devList = LinkLocDev::whereIn('locationid',$loc)->pluck('deviceid')->toArray();
-        //dd($devList);
-        if(count($devList) == 0){
-            redirect('adminReports.sReport')->with('error','No Data for this City.');
-        }
-
-        $devNameList = Device::whereIn('id',$devList)->pluck('serial_no')->toArray();
-        //dd($devNameList);
-        if(count($devNameList) == 0){
-            redirect('adminReports.sReport')->with('error','No Data for this City.');
-        }
-
-        $iotData = IotData::whereIn('deviceid',$devNameList)->paginate(50);
-        //dd($iotData);
-        if(count($iotData) == 0){
-            redirect('adminReports.sReport')->with('error','No Data for this City.');
-        }
-
-         
-        $lbl = collect([]);
-        $valuesTemp = collect([]);
-        $valuesSpo2 = collect([]);
-        foreach($iotData as $data){
-            $lbl->push($data->created_at->format('Y-m-d h:i:s'));
-            $valuesTemp->push($data->temp);
-            $valuesSpo2->push($data->spo2);
-        }
-        
-        $spo2Chart = new ReportChartLine();
-        //get array for labels
-        $spo2Chart->labels($lbl);
-    //dd($spo2Chart);
-        $spo2Chart->dataset('SPO2 data', 'bar',$valuesSpo2)
-            ->backgroundColor('red');
-        
-        $tempChart = new ReportChartLine();
-        $tempChart->labels($lbl);
-        $tempChart->dataset('Temperature data','bar',$valuesTemp)
-            ->backgroundColor('blue');
-        return view ('adminReports.sCityReport',compact('iotData','pin','spo2Chart','tempChart', 'city'));
-
-    } */  
  }

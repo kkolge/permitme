@@ -21,6 +21,10 @@ class AssignUserRoleController extends Controller
      */
     public function index()
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $lur = DB::table('model_has_roles')
             -> join('users','users.id','=','model_has_roles.model_id')
             -> join('roles','roles.id','=','model_has_roles.role_id')
@@ -43,7 +47,9 @@ class AssignUserRoleController extends Controller
      */
     public function create()
     {
-        
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
         //this function is used to assign role to a user 
         $users = User::orderBy('name')->pluck('name','id');
         $roles = Role::orderBy('name')->pluck('name','id');
@@ -59,6 +65,10 @@ class AssignUserRoleController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+        
         $this -> validate($request, [
             'user' => 'required|numeric|gt:0',
             'role' => 'required|numeric|gt:0',

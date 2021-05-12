@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class SystemUsersController extends Controller
 {
@@ -18,6 +19,10 @@ class SystemUsersController extends Controller
      */
     public function index()
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $users = User::orderBy('name')->paginate(10);
         //dd($users);
         return view('usr.index', compact('users'));
@@ -30,6 +35,9 @@ class SystemUsersController extends Controller
      */
     public function create()
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
         return view('usr.create');
     }
 
@@ -41,6 +49,10 @@ class SystemUsersController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $this -> validate($request, [
             'name' => 'required|max:100',
             'email' => 'required|email|unique:users,email',
@@ -77,6 +89,11 @@ class SystemUsersController extends Controller
      */
     public function edit($id)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
+
         //only thing that can be done it to reset the password
         $user = User::find($id);
         return view('usr.edit',compact('user'));
@@ -91,6 +108,10 @@ class SystemUsersController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+        
         $this -> validate($request, [
             'password' => ['required','min:6',
             'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/'],

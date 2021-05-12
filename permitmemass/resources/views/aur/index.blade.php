@@ -5,7 +5,7 @@
 <?php $counter = 1; ?>
     
     @if (count($lur) > 0)
-    <h1> <font size="+2">Users Linked to Roles</font> </h1>
+    <p class="h1">Users Linked to Roles</p>
     <br/>
         <table class="table table-striped table-bordered">
             <tr>
@@ -29,7 +29,7 @@
         </table>
         {{$lur->links()}}
     @else
-        <h1><font size="+2">No Users linked to Role!</font></h1>        
+        <p class="h1">No Users linked to Role!</p>        
     @endif
     <p>
         <div class="flex">

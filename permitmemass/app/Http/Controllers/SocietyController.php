@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\LinkLocUser;
 use Illuminate\Http\Request;
 use App\Society;
+use \DB;
+use Auth;
 
 class SocietyController extends Controller
 {
@@ -18,11 +21,36 @@ class SocietyController extends Controller
      */
     public function index()
     {
-        $locations = Society::orderBy('state')
-        ->orderBy('city')
-        ->orderBy('pincode')
-        ->orderBy('name')
-        ->paginate(10);
+        if(Auth::user()->hasRole(['Super Admin'])){
+            $locations = Society::orderBy('state')
+            ->orderBy('landmark')
+            ->orderBy('city')
+            ->orderBy('pincode')
+            ->orderBy('name')
+            ->paginate(20);
+        }
+        else if(Auth::user()->hasRole('Location Admin')){
+           
+            $locations = Society::where('id',session('GlocationId'))->orWhere('parent',session('GlocationId'))
+            ->orderBy('state')
+            ->orderBy('landmark')
+            ->orderBy('city')
+            ->orderBy('pincode')
+            ->orderBy('name')
+            ->paginate(20);
+
+            //dd($locations);
+        }else if(Auth::user()->hasRole('Site Admin')){
+            $locations = Society::where('id','=', session('GlocationId'))          
+            ->orderBy('state')
+            ->orderBy('landmark')
+            ->orderBy('city')
+            ->orderBy('pincode')
+            ->orderBy('name')
+            ->paginate(20);
+            
+        }
+
         return view('location.index', compact("locations"));
     }
 
@@ -33,7 +61,26 @@ class SocietyController extends Controller
      */
     public function create()
     {
-        return view('location.create');
+        //Only Super Admin can do this
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
+        $locations = Society::where('isactive','=',true)
+            ->select (DB::raw("id,CONCAT(name,':',pincode,':',city,':',taluka,':',district,':',state) AS name"))
+            ->orderBy('name','asc')
+            ->pluck('name','id')
+            ->toArray();
+        $locations[0] = 'Parent Location';
+        //dd($locations);
+        /*$locations = Society::where('parent','=',0)
+        ->orderBy('state')
+        ->orderBy('city')
+        ->orderBy('pincode')
+        ->orderBy('name')
+        ->pluck('name');
+        */
+        return view('location.create', compact("locations"));
     }
 
     /**
@@ -44,13 +91,23 @@ class SocietyController extends Controller
      */
     public function store(Request $request)
     {
+        //Only Super Admin can do this
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
+        //dd($request);
         $this -> validate($request, [
             'name' => 'required',
             'noofresidents' => 'required',
             'address1'=>'required',
             'pincode' => 'required',
             'city' => 'required',
-            'state' => 'required'
+            'state' => 'required',
+            'location' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'altitude' => 'required',
         ]);
 
         $loc = new Society();
@@ -71,6 +128,10 @@ class SocietyController extends Controller
         $loc->state = $request->input('state');
         $loc->isactive = $request->input('isactive');
         $loc->smsnotification = $request->input('sms');
+        $loc->parent = $request->input('location');
+        $loc->latitude = $request->input('latitude');
+        $loc->longitude = $request->input('longitude');
+        $loc->altitude = $request->input('altitude');
         $loc->save();
 
         return redirect('/location')->with('success', 'Location added successfully');
@@ -84,9 +145,19 @@ class SocietyController extends Controller
      */
     public function show($id)
     {
+        //Only Super Admin can do this
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
         //dd('in controller');
         $location = Society::find($id);
-        return view('location.show')->with('location',$location);
+        $allLocations = Society::where('isactive','=',true)
+            ->select (DB::raw("id,CONCAT(name,':',pincode,':',city,':',taluka,':',district,':',state) AS name"))
+            ->orderBy('name','asc')
+            ->pluck('name','id')
+            ->toArray();
+        $allLocations[0] = 'Parent Location';
+        return view('location.show', compact('location','allLocations'));
     }
 
     /**
@@ -97,8 +168,18 @@ class SocietyController extends Controller
      */
     public function edit($id)
     {
+        //Only Super Admin can do this
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
         $location = Society::find($id);
-        return view('location.edit')->with('location',$location);
+        $allLocations = Society::where('isactive','=',true)
+            ->select (DB::raw("id,CONCAT(name,':',pincode,':',city,':',taluka,':',district,':',state) AS name"))
+            ->orderBy('name','asc')
+            ->pluck('name','id')
+            ->toArray();
+        $allLocations[0] = 'Parent Location';
+        return view('location.edit', compact('location','allLocations'));
     }
 
     /**
@@ -110,13 +191,21 @@ class SocietyController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //Only Super Admin can do this
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
         $this -> validate($request, [
             'name' => 'required',
             'noofresidents' => 'required',
             'address1'=>'required',
             'pincode' => 'required',
             'city' => 'required',
-            'state' => 'required'
+            'state' => 'required',
+            'location' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'altitude' => 'required',
         ]);
 
         $loc = Society::find($id);
@@ -137,6 +226,10 @@ class SocietyController extends Controller
         $loc->state = $request->input('state');
         $loc->isactive = $request->input('isactive');
         $loc->smsnotification = $request->input('sms');
+        $loc->parent = $request->input('location');
+        $loc->latitude = $request->input('latitude');
+        $loc->longitude = $request->input('longitude');
+        $loc->altitude = $request->input('altitude');
 
         if($loc->isDirty()){
             $loc->update();

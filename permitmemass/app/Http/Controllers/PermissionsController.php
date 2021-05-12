@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionsController extends Controller
 {
@@ -19,6 +20,10 @@ class PermissionsController extends Controller
      */
     public function index()
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $perms = Permission::paginate(10);
         return view('perms.index',compact('perms'));
     }
@@ -30,6 +35,10 @@ class PermissionsController extends Controller
      */
     public function create()
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         return view ('perms.create');
     }
 
@@ -41,6 +50,11 @@ class PermissionsController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
+
         $perm = new Permission();
         $perm->name = $request->input('name');
         if($request->input('guard') != ""){
@@ -69,6 +83,10 @@ class PermissionsController extends Controller
      */
     public function edit($id)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $perm = Permission::find($id)->first();
         return view ('perms.edit',compact('perm'));
     }
@@ -82,6 +100,10 @@ class PermissionsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $perm = Permission::find($id);
         /*$checkName = Permission::where('name','=',$request->input('name'))
             ->select(DB::raw('count(*) as cnt'))
@@ -107,6 +129,9 @@ class PermissionsController extends Controller
      */
     public function destroy($id)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
         
         $perm = Permission::find($id);
         $perm->delete();

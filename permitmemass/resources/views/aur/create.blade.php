@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Add permanent users for your location</font></h1><br/>
+    <p class="h1">Add permanent users for your location</p>
     {!! Form::open(['action' => 'AssignUserRoleController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
         <div class="form-group">
             <div class="px-md-5">

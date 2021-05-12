@@ -11,6 +11,8 @@ use App\Charts\ReportChartLine;
 use App\IotData;
 use Carbon\Carbon;
 use App\User;
+use App\vLocDev;
+use DB;
 
 class RegUsersController extends Controller
 {
@@ -25,12 +27,12 @@ class RegUsersController extends Controller
      */
     public function index()
     {
-        $userId = Auth::user()->id;
-        $lLoc =LinkLocUser::where('userid','=',$userId)->get();
-        $lLoc = $lLoc[0]->locationid;
-        //dd($lLoc);
 
-        $regUser = RegUser::where('locationid','=',$lLoc)->paginate(10);
+        $regUser = RegUser::join('location', 'reguser.locationid','=','location.id')
+        ->whereIn('location.id', vLocDev::whereIn('serial_no',session('GDevId'))->pluck('locationid'))
+        ->select('reguser.id','reguser.name', 'reguser.phoneno', 'reguser.tagid', 'reguser.resiarea', 'reguser.resilandmark', 'reguser.vaccinated', 'reguser.isactive', 'location.name as lname')
+        ->paginate(20);
+        
         if(count($regUser) != 0){
             return view('regusers.index', compact('regUser'));
         }
@@ -46,6 +48,9 @@ class RegUsersController extends Controller
      */
     public function create()
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
 
         return view('regusers.create');
     }
@@ -58,12 +63,20 @@ class RegUsersController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $this -> validate($request, [
             'name' => 'required|max:100',
             'phoneno' => 'required|digits:10|gt:0',
             'tagid' => 'required|max:20',
             'coverimage' => 'image|nullable|max:1999',
-            'aadharno' => 'max:16'
+            'aadharno' => 'max:16',
+            'resiarea' => 'required|min:5|max:100',
+            'resilandmark' => 'required|min:5|max:150',
+            'firstvaccin' => 'date|sometimes',
+            'secondvaccin' => 'date|sometimes',
         ]);
 
         //handling the file upload 
@@ -89,6 +102,17 @@ class RegUsersController extends Controller
         $user->tagid = $request->input('tagid');
         $user->AadharNo = $request->input('aadharno');
         $user->isactive = $request->input('isactive');
+        $user->resiarea = $request->input('resiarea');
+        $user->resilandmark = $request->input('resilandmark');
+        if($request->input('vaccinated') == 1){
+            $user->vaccinated = true;
+        }
+        else{
+            $user->vaccinated = false;
+        }
+        
+        $user->firstvaccin = $request->input('firstvaccin');
+        $user->secondvaccin = $request->input('secondvaccin');
 
         //getting location id of the logged in user
         $linkLocId = LinkLocUser::where('userid','=',Auth::user()->id)->first();
@@ -111,13 +135,17 @@ class RegUsersController extends Controller
      */
     public function show($id)
     {
-        //dd("I am in show");
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+        //dd("I am in show", $id);
         $stf = RegUser::find($id);
+        //dd($stf);
         
         
         $idata = iotdata::where('identifier',$id)
-            ->where('created_at','>=',Carbon::today()->subDays(15))
-            ->where('created_at','<=',Carbon::today())
+            //->where('created_at','>=',Carbon::today()->subDays(15))
+            ->where('created_at','<=',Carbon::today()->addDays(1))
             ->orderBy('created_at')->get();
         //dd($idata);
         $lbl = collect([]);
@@ -154,6 +182,9 @@ class RegUsersController extends Controller
      */
     public function edit($id)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
         //return ('I am here');
 
         $user = RegUser::find($id);
@@ -171,12 +202,17 @@ class RegUsersController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //dd($request);
         $this -> validate($request, [
             'name' => 'required|max:100',
             'phoneno' => 'required|digits:10',
             'tagid' => 'required|max:20',
             'coverimage' => 'image|nullable|max:1999',
-            'aadharno' => 'max:16'
+            'aadharno' => 'max:16',
+            'resiarea' => 'required|min:5|max:100',
+            'resilandmark' => 'required|min:5|max:150',
+            'firstvaccin' => 'date|sometimes',
+            'secondvaccin' => 'date|sometimes',
         ]);
 
         //handling the file upload 
@@ -202,6 +238,17 @@ class RegUsersController extends Controller
         $user->tagid = $request->input('tagid');
         $user->AadharNo = $request->input('aadharno');
         $user->isactive = $request->input('isactive');
+        $user->resiarea = $request->input('resiarea');
+        $user->resilandmark = $request->input('resilandmark');
+        if($request->input('vaccinated') == 1){
+            $user->vaccinated = true;
+        }
+        else{
+            $user->vaccinated = false;
+        }
+        
+        $user->firstvaccin = $request->input('firstvaccin');
+        $user->secondvaccin = $request->input('secondvaccin');
         //getting location id of the logged in user
         $linkLocId = LinkLocUser::where('userid','=',Auth::user()->id)->first();
         //dd ($linkLocId);

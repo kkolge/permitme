@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size=+2>Edit Bed Details</font></h1>
+    <p class="h1">Edit Bed Details</p>
     <br/>
     <?php
         if($act == 'discharge'){

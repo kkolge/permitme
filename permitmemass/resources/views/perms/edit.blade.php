@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Edit permission</font></h1><br/>
+    <p class="h1">Edit permission</p>
     {!! Form::open(['action' => ['PermissionsController@update',$perm->id], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
         <div class="form-group">
             <div class="px-md-5">

@@ -5,13 +5,13 @@
 <?php $counter = 1; ?>
     
     @if (count($data) > 0)
-        <h1> <font size="+2">Hospital Dashboard</font> </h1>
+        <p class="h1">Hospital Dashboard</p>
         <br/>
         
         <div class="card-columns">
             @foreach($data as $cardData)
                 <?php 
-                    if ($cardData[3] >=94.5 || $cardData[4] < 93 || $cardData[5] > 120)
+                    if ($cardData[3] >=env('CUTOFF_TEMP') || $cardData[4] < env('CUTOFF_SPO2') || $cardData[5] > env('CUTOFF_PULSE'))
                         $bg = 'bg-danger';                    
                     else
                         $bg = 'border-success';
@@ -41,9 +41,9 @@
                 </div>
             @endforeach
         </div>
-        <p><b>Normal Temperature < 94.5, SPO2 > 93, Pulse Rate < 120</b></p>
+        <p><b>Normal Temperature < {{env('CUTOFF_TEMP')}}, SPO2 > {{env('CUTOFF_SPO2')}}, Pulse Rate < env('CUTOFF_PULSE')</b></p>
     @else
-        <h1><font size="+2">No Beds defined for your location or No Data available!</font></h1>        
+        <p class="h1">No Beds defined for your location or No Data available!</p>        
     @endif
     <p>
         <div class="flex">

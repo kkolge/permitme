@@ -1,4 +1,5 @@
-<nav class="navbar fixed-bottom navbar-expand-md navbar-light bg-white shadow-sm">
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-bottom bg-primary font-weight-bold">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('app.name', 'Permit Me Mass') }}
@@ -15,7 +16,8 @@
               </li>
               <!-- Removed for sidebad -->
               <li class="nav-item">
-                <a class="nav-link" href="#">Social Media links</a>
+                <!-- <a class="nav-link" href="#">Social Media links</a> -->
+
               </li>
             </ul>
         </div>

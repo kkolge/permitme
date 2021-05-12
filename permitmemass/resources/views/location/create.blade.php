@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Add Location</font></h1>
+    <p class="h1">Add Location</p>
     {!! Form::open(['action' => 'SocietyController@store', 'method' => 'POST']) !!}
         <div class="form-group">
             <div class="flex ">
@@ -53,14 +53,34 @@
                     {{Form::label('state', 'State')}}
                     {{Form::text('state', '', ['class' => 'form-control', 'placeholder' => 'State'])}}
                 </div>
+                
+                <div class="px-md-5">
+                    {{Form::label('location','Location')}}
+                    {{Form::select('location', $locations, 0, ['class'=>'form-control', 'placeholder' => 'Parent Location'])}}
+                </div>
+            </div>
+            <br/>
+            <div class="flex">
+                <div class="w-1/3 px-md-5">
+                    {{Form::label('latitude', 'Latitude')}}
+                    {{Form::text('latitude', '', ['class' => 'form-control', 'placeholder' => 'Latitude (xxxxxxx.xxxx)'])}}
+                </div>
+                <div class="w-1/3 px-md-5">
+                    {{Form::label('longitude', 'Longitude')}}
+                    {{Form::text('longitude', '', ['class' => 'form-control', 'placeholder' => 'Longitude (xxxxxxx.xxxx)'])}}</div>
+                <div class="w-1/3 px-md-5">
+                    {{Form::label('altitude', 'Altitude')}}
+                    {{Form::text('altitude', '', ['class' => 'form-control', 'placeholder' => 'Altitude (xxxxxxx.xxxx)'])}}
+                </div>
+            </div>
+            <br/>
+            <div class="flex">
                 <div class="w-1/2 px-md-5">
                     {{Form::label('isactive', 'Status')}}<br/>
                     {{Form::radio('isactive',1, false, ['placeholder' => 'Status'])}} Yes &nbsp; &nbsp; &nbsp; &nbsp;
                     {{Form::radio('isactive',0, true, ['placeholder' => 'Status', 'checked' => 'true'])}} No
                 </div>
-            </div>
-            <br/>
-            <div class="flex">
+            
                 <div class="w-1/2 px-md-5">
                     {{Form::label('sms', 'Send SMS')}}<br/>
                     {{Form::radio('sms',1, false, ['placeholder' => 'Status'])}} Yes &nbsp; &nbsp; &nbsp; &nbsp;

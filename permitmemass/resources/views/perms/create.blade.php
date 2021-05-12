@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Create Permissions</font></h1><br/>
+    <p class="h1">Create Permissions</p>
     {!! Form::open(['action' => 'PermissionsController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
         <div class="form-group">
             <div class="px-md-5">

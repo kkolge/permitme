@@ -5,7 +5,7 @@
 <?php $counter = 1; ?>
     
     @if (count($users) > 0)
-    <h1><font size="+2"> List of System Users </font></h1><br/>
+    <p class="h1"> List of System Users </p>
         <table class="table table-striped table-bordered">
             <font size="+1">
                 <tr>
@@ -30,7 +30,7 @@
         </table>
         {{$users->links()}}
     @else
-        <h1><font size="+2">No Users added!</font></h1>  <br/>      
+        <p class="h1">No Users added!</p>      
     @endif
     
     <p>

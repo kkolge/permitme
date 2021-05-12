@@ -5,7 +5,7 @@
 <?php $counter = 1; ?>
     
     @if (count($perms) > 0)
-    <h1><font size="+2"> List of Permissions </font></h1><br/>
+    <p class="h1"> List of Permissions </p>
         <table class="table table-striped table-bordered">
             <font size="+1">
                 <tr>
@@ -32,7 +32,7 @@
         {{$perms->links()}}
         
     @else
-        <h1><font size="+2">No Permissions added!</font></h1>  <br/>      
+        <p class="h1">No Permissions added!</p>      
     @endif
     
     <p>

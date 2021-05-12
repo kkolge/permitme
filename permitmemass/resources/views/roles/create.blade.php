@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Create Role</font></h1><br/>
+    <p class="h1">Create Role</p>
     {!! Form::open(['action' => 'RolesController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
         <div class="form-group">
             <div class="px-md-5">
@@ -10,11 +10,11 @@
             </div><br/>
             <div class="px-md-5">
                 {{Form::label('guard', 'Guard Name (optional)')}}
-                {{Form::text('guard', '', ['class' => 'form-control', 'placeholder' => 'Guard Name'])}}
+                {{Form::text('guard', 'web', ['class' => 'form-control', 'placeholder' => 'Guard Name'])}}
             </div><br/>
         </div>
         <!-- adding list of permissions-->
-        @if(count($perms) > 0)
+        <!--@if(count($perms) > 0)
             <div class="px-md-5">
             <table class="table table-striped table-bordered">
                 <tr>
@@ -34,7 +34,7 @@
             </table>
             </div>
         @endif
-        <!-- permissions end -->
+         permissions end -->
         <div class="flex">
             <div class="mx-auto">
                 {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}

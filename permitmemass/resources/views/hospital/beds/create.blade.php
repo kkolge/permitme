@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Add Bed for <?php $locName ?></font></h1>
+    <p class="h1">Add Bed for <?php $locName ?></p>
     <br/>
     {!! Form::open(['action' => 'BedsController@store', 'method' => 'POST']) !!}
         <div class="form-group">

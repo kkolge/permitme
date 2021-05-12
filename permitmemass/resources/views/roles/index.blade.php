@@ -5,34 +5,39 @@
 <?php $counter = 1; ?>
     
     @if (count($roles) > 0)
-    <h1><font size="+2"> List of Roles </font></h1><br/>
+    <p class="h1"> List of Roles </p>
         <table class="table table-striped table-bordered">
-            <font size="+1">
-                <tr>
-                    <th>Serial No </th>
-                    <th>Name</th>
-                    <th>Guard name</th>
-                    <th>Created at</th>
-                    <th>Actions</th>
-                </tr>
-            </font>
+            <tr>
+                <th class="cols-1">Serial No </th>
+                <th class="cols-2">Name</th>
+                <th class="cols-1">Guard name</th>
+                <th class="cols-2">Created at</th>
+                <th class="cols-3">Actions</th>
+            </tr>
+           
         @foreach($roles as $role)
             <tr>
-                <td>{{$counter++}} </td>
-                <td>{{$role->name}}</td>
-                <td>{{$role->guard_name}}</td>
-                <td>{{$role->created_at}}</td>
-                <td>
-                    <a href='/roles/{{$role->id}}/show' class="btn btn-link">Show</a>
-                    <a href='/roles/{{$role->id}}/show' class="btn btn-link">Edit</a>
-                    
+                <td class="cols-1"> {{$counter++}} </td>
+                <td class="cols-2">{{$role->name}}</td>
+                <td class="cols-1">{{$role->guard_name}}</td>
+                <td class="cols-2">{{$role->created_at}}</td>
+                <td class="cols-3">
+                    <span>
+                        <span><a href='/roles/{{$role->id}}/edit' class="btn btn-link">Edit</a></span>
+                        <span><form action="{{ route('roles.destroy', $role->id)}}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger" onclick="return confirm('Are you sure?')" type="submit">Delete</button>
+                        </form>
+                        </span>
+                    </span>
                 </td>
             </tr>
         @endforeach
         </table>
         {{$roles->links()}}
     @else
-        <h1><font size="+2">No Roles added!</font></h1>  <br/>      
+        <p class="h1">No Roles added!</p>     
     @endif
     
     <p>

@@ -1,13 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Add device</font></h1>
+    <p class="h1">Add device</p>
     <br/>
     {!! Form::open(['action' => 'DeviceController@store', 'method' => 'POST']) !!}
         <div class="form-group">
             <div class="px-md-5">
                 {{Form::label('serialno', 'Serial No')}}
                 {{Form::text('serialno', '', ['class' => 'form-control', 'placeholder' => 'Serial No'])}}
+            </div>
+            <br/>
+            <div class="px-md-5">
+                {{Form::label('deviceType', 'Device Type')}}
+                {{Form::select('deviceType', $devType, null,['class' => 'form-control', 'placeholder' => 'Device Type'])}}
             </div>
             <br/>
             <div class="px-md-5">

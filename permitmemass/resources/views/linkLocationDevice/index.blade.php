@@ -14,7 +14,7 @@ $(document).ready(function(){
 <?php $counter = 1; ?>
     
     @if (count($link) > 0)
-    <h1> <font size="+2">List of Devices Linked to Locations</font> </h1>
+    <p class="h1">List of Devices Linked to Locations</p>
     <br/>
         <table class="table table-striped table-bordered table-sm">
             <tr>
@@ -22,6 +22,7 @@ $(document).ready(function(){
                 <th >Serial No </th>
                 <th >Location</th>
                 <th >Device</th>
+                <th> Position </th>
                 <th >Status </th>
                 <th >Actions</th>
                 </font>
@@ -31,6 +32,7 @@ $(document).ready(function(){
                 <td>{{$counter++}} </td>
                 <td>{{$lnk->name}}</td>
                 <td>{{$lnk->serial_no}}</td>
+                <td>{{$lnk->devName}}</td>
                 <td>
                  @if ($lnk->isactive == true)
                     Active
@@ -50,7 +52,7 @@ $(document).ready(function(){
         </table>
         {{$link->links()}}
     @else
-        <h1><font size="+2">No Devices Linked to Location!</font></h1>  
+        <p class="h1">No Devices Linked to Location!</p>  
               
     @endif
     <p>

@@ -1,22 +1,20 @@
 @extends('layouts.appCenter')
 
 @section('content')
-
-<h1 ><font size="+3">Plan your war strategy against COVID-19 with <font color="orange"> Permit Me </font></font></h1>
-<br/>
-<h2 > <font size="+2"><i> "prevention is better than cure"</i></font></h2>
+<br/><br/>
+<p class="h1">Plan your war strategy against COVID-19 with <span class="text-primary font-weight-bold"> Permit Me </span> </p>
+<p class="h2 text-primary font-italic">"prevention is better than cure"</p>
 <br><br>
 
-<p>
-<font size="+1">
+<p class="font-weight-normal">
 In the current COVID-19 pandemic that has severely impacted the economies across the world, there is a limitation in 
 funds available for healthcare. 
-Ko-Aaham introduces <font color="orange"><strong><i>Permit Me</i></strong></font> a screening device to monitor 2 most important early 
-indicators of COVID-19 – <font color="orange"><i>Temperature</i></font> and <font color="orange"><i>SPO2</i></font>. 
+Ko-Aaham introduces <span class="text-primary font-weight-bold font-italic">Permit Me</span> a screening device to monitor 3 most important early 
+indicators of COVID-19 – <span class="text-primary font-weight-bold font-italic">Pulse Rate</span>, <span class="text-primary font-weight-bold font-italic">SPO2</span> and <span class="text-primary font-weight-bold font-italic">Temperature</span>. 
 </p>
-<br/>
-<p>
-This screen data is combined with a unique identity provided using the mobile number of the user. This allows us to store this information on the cloud and retrieve it later for analysis in case of any person found suffering with COVID-19.
+
+<p class="font-weight-normal">
+This captured data is combined with a unique identity provided using the mobile number of the user. This allows us to store this information on the cloud and retrieve it later for analysis in case of any person found suffering with COVID-19.
 </p>
 <br/>
 <p>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class RolesController extends Controller
 {
@@ -20,6 +21,10 @@ class RolesController extends Controller
      */
     public function index()
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $roles = Role::paginate(10);
 
         return view('roles.index',compact('roles'));
@@ -32,9 +37,13 @@ class RolesController extends Controller
      */
     public function create()
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $perms = Permission::all();
         //dd($perms);
-        return view ('roles.create', compact('perms'));
+        return view ('roles.create', compact('perms')); 
     }
 
     /**
@@ -45,12 +54,20 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $role = new Role();
         $role->name = $request->input('name');
         if($request->input('guard') != ""){
             $role->guard_name = $request->input('guard');
         }
+        else{
+            $role->guard_name = 'web';
+        }
         $role->save();
+        /*
         //getting the new role id 
         $roleid = $role->id;
 
@@ -66,6 +83,7 @@ class RolesController extends Controller
         else {
             $role->syncPermissions($perms);
         }
+        */
 
         return redirect('/roles')->with('success', 'Role created successfully');
     }
@@ -78,10 +96,14 @@ class RolesController extends Controller
      */
     public function show($id)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $role = Role::where('id','=',$id);
-        $allPerms = Permission::all();
-        $perms = $role->getAllPermissions();
-        $permMap = collect([]);
+        //$allPerms = Permission::all();
+        //$perms = $role->getAllPermissions();
+        //$permMap = collect([]);
 
         //TO-DO
         /*foreach($allPerms as $p){
@@ -91,7 +113,7 @@ class RolesController extends Controller
             }
         }*/
 
-        return view('roles.show', compact('role','perms','allPerms'));
+        return view('roles.show', compact('role'));
     }
 
     /**
@@ -102,23 +124,15 @@ class RolesController extends Controller
      */
     public function edit($id)
     {
-        $role = Role::find($id);
-        //getting all permissions 
-        $allPerms = Permission::all();
-        //getting permissions for the role
-        $perms = $role->getAllPermissions();
-        //dd($perms);
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
 
-        //Testing the looping
-         
-        /*foreach($allPerms as $ap){
-            foreach ($perms as $p){
-                if($ap->id == $p->id){
-                    dd("match fount");
-                }
-            }
-        }*/
-        return view('roles.edit',compact('role','perms','allPerms'));
+        $role = Role::find($id);
+        //dd($role);
+        //getting all permissions 
+       
+        return view('roles.edit',compact('role'));
     }
 
     /**
@@ -141,7 +155,17 @@ class RolesController extends Controller
      */
     public function destroy($id)
     {
-        //
+
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+        
+        $role = Role::find($id);
+        $role->delete();
+
+        $roles = Role::paginate(10);
+
+        return view('roles.index',compact('roles'));
     }
 
     

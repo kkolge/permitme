@@ -41,6 +41,7 @@ class HospitalDeshboardController extends Controller
 
         //dd($link);
         $data = collect([]);
+
         foreach($link as $lnk){
             //dd($lnk);
             $iData = IotData::where('identifier','=',$lnk->userId)

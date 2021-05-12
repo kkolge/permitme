@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Edit permanent user</font></h1><br/>
+    <p class="h1">Edit permanent user</p>
     {!! Form::open(['action' => ['SystemUsersController@update',$user->id], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
         <div class="form-group">
             <div class="px-md-5">

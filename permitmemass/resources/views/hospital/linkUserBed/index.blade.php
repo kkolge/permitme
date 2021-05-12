@@ -5,7 +5,7 @@
 <?php $counter = 1; ?>
     
     @if (count($linkBP) > 0)
-    <h1> <font size="+2">Patent Linked to Beds</font> </h1>
+    <p class="h1">Patent Linked to Beds</p>
     <br/>
         <table class="table table-striped table-bordered">
             <tr>
@@ -36,7 +36,7 @@
         </table>
         <!-- add pagination -->
     @else
-        <h1><font size="+2">No patients linked to beds!</font></h1>        
+        <p class="h1">No patients linked to beds!</p>        
     @endif
     <p>
         <div class="flex">

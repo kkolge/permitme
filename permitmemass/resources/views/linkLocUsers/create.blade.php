@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Link User to Location</font></h1>
+    <p class="h1">Link User to Location</p>
     {!! Form::open(['action' => 'LinkLocUserController@store', 'method' => 'POST']) !!}
         <div class="form-group">
             

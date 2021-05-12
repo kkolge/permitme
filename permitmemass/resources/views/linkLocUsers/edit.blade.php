@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Edit Location User Link</font></h1><br/>
+    <p class="h1">Edit Location User Link</p>
     {!! Form::open(['action' => ['LinkLocUserController@update', $lnk], 'method' => 'POST']) !!}
         <div class="form-group">
             <div class="px-md-5">
                 {{Form::label('Location','Location')}}
-                {{Form::select('Location',$loc,null, ['class'=>'form-control'])}}
+                {{Form::select('Location',$loc, $links->locationid, ['class'=>'form-control'])}} 
             </div><br/>
             <div class="px-md-5">
                 {{Form::label('User','User')}}
-                {{Form::select('User',$user,null,['class'=>'form-control'])}}
+                {{Form::select('User',$user,$links->userid,['class'=>'form-control'])}}
             </div><br/>
             <div class="px-md-5">
                 {{Form::label('designation','Designation')}}

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes(['register'=>false]);
 
 Route::get('/', function () {
-    return view('pages.index');
+    return view('auth.login');
 });
 
 Route::get('/about', function () {
@@ -27,8 +27,8 @@ Route::get('/support', function () {
     return view('pages.help');
 });
 
-Route::post('/sDevData','IotController@store');
-Route::post('/vRFID','IotController@validateRFID');
+//Route::post('/sDevData','IotController@store');
+//Route::post('/vRFID','IotController@validateRFID');
 
 Auth::routes();
 
@@ -61,8 +61,14 @@ Route::get('/restaurant/{date}/dayReportDetail','RestaurantController@dayReportD
 Route::get('/restaurant/{date}/export', 'RestaurantController@export');
 
 //Route::resource('report','ReportsController');
-Route::get('/reports/allDataReport','ReportsController@allDataReport');
+//Route::get('/reports/allDataReport','ReportsController@allDataLocationReport');
 Route::get('/reports/allDataLocationReport','ReportsController@allDataLocationReport');
+
+Route::get('/reports/AllAbnormalReport','ReportsController@GenerateAllAbnormalReport');
+Route::get('/reports/{date}/AllAbnormalDetailsByDate','ReportsController@AllAbnormalDetailsByDate');
+
+Route::get('/reports/HbcountReport','ReportsController@GenerateHbcountHighReport');
+Route::get('/reports/{date}/HbcountDetailsByDate','ReportsController@HbcountDetailsByDate');
 
 Route::get('/reports/SPO2Report','ReportsController@GenerateSPO2LowReport');
 Route::get('/reports/{date}/SPO2DetailsByDate','ReportsController@SPO2DetailsByDate');

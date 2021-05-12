@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Admit patient</font></h1>
+    <p class="h1">Admit patient</p>
     <br/>
     {!! Form::open(['action' => 'LinkBedPatientController@store', 'method' => 'POST']) !!}
         <div class="form-group">

@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+     
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -21,40 +22,40 @@
     
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <link href="{{ asset('css/custom-app.css') }}" rel="stylesheet">
+
+    
     
 
     <!-- Generate Menu -->
+    @yield('head-script')
 
     <!-- End generate Menu -->
 </head>
 <body>
-    <div id="app" >
-        @include('inc.navbar')
-        <div>
-            @if(!Auth::guest())
-            <div class="container aligh-right">
-            <!-- adding the user information -->
-            <!-- name --> Welcome {{Auth::user()->name}}, &nbsp; 
-            <!-- Designation -->{{Session::get('GDesignation','')}}, &nbsp;
-            <!-- Location Name --> {{Session::get('GlocationName', '')}}
-            <!-- End adding the user information -->
-            </div>
-            @endif
+ <!-- <body class="text-white" style="background-color:black"> -->
+    <div id="app">
+        <div class="row">
+            @include('inc.navbar')
         </div>
-        <div id="main" class="row">
-            <div id="sidebar" class="col-md-3">
+            
+        <div id="main" class="row" style="margin-left: 0;">
+            <div id="sidebar" class="col-2" style="padding-left: 0px; padding-top: 0px; height: calc(100vh);">
+                <br/>
                 @include('inc.sidebar')
             </div>
             
-            <div class="col-md-9">
+            <div class="col-10">
+                <br/><br/>
                 @include('inc.messages')
                 <main class="py-4">
-                    
                     @yield('content')
                 </main>
             </div>
         </div>
-        @include('inc.footerbar')
+        <div class="row">
+            @include('inc.footerbar')
+        </div>
+        
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
 </body>

@@ -5,7 +5,7 @@
 <?php $counter = 1; ?>
    
     @if (count($visitReportByDay) > 0)
-    <h1> <font size="+2">Day Report for your restaurant </font> </h1>
+    <p class="h1">Day Report for your restaurant </p>
         <table class="table table-striped table-bordered">
             <tr>
                 <th>Serial No </th>
@@ -21,7 +21,7 @@
         @endforeach
         </table>
     @else
-        <h1><font size="+2">No Data available!</font></h1>        
+        <p class="h1">No Data available!</p>        
     @endif
     <p>
         <div class="flex">

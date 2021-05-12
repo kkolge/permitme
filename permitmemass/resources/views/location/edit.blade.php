@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Edit Location</font></h1>
+    <p class="h1">Edit Location</p>
     <br/>
     {!! Form::open(['action' => ['SocietyController@update', $location], 'method' => 'POST']) !!}
         <div class="form-group">
@@ -54,7 +54,28 @@
                     {{Form::label('state', 'State')}}
                     {{Form::text('state', $location->state, ['class' => 'form-control', 'placeholder' => 'State'])}}
                 </div>
-                <div class="w-1/2 px-md-5">
+                <div class="px-md-5">
+                    {{Form::label('location','Location')}}
+                    {{Form::select('location', $allLocations, $location->parent, ['class'=>'form-control'])}}
+                </div>
+            </div>    
+            <br/>
+            <div class="flex">
+                <div class="w-1/3 px-md-5">
+                    {{Form::label('latitude', 'Latitude')}}
+                    {{Form::text('latitude', $location->latitude, ['class' => 'form-control', 'placeholder' => 'Latitude (xxxxxxx.xxxx)'])}}
+                </div>
+                <div class="w-1/3 px-md-5">
+                    {{Form::label('longitude', 'Longitude')}}
+                    {{Form::text('longitude', $location->longitude, ['class' => 'form-control', 'placeholder' => 'Longitude (xxxxxxx.xxxx)'])}}</div>
+                <div class="w-1/3 px-md-5">
+                    {{Form::label('altitude', 'Altitude')}}
+                    {{Form::text('altitude', $location->altitude, ['class' => 'form-control', 'placeholder' => 'Altitude (xxxxxxx.xxxx)'])}}
+                </div>
+            </div>
+            <br/>
+            <div class="flex">
+            <div class="w-1/2 px-md-5">
                     {{Form::label('isactive', 'Status')}}
                     <br/>
                     @if ($location->isactive == '1')
@@ -65,9 +86,6 @@
                         {{Form::radio('isactive', 0, true, ['placeholder' => 'Status', 'checked' => 'checked'])}} No
                     @endif 
                 </div>
-            </div>    
-            <br/>
-            <div class="flex">
                 <div class="w-1/2 px-md-5">
                     {{Form::label('sms', 'Send SMS')}}
                     <br/>

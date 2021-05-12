@@ -5,21 +5,25 @@
 <?php $counter = 1; ?>
     
     @if (count($dev) > 0)
-    <h1> <font size="+2">List of registered devices</font> </h1>
+    <p class="h1">List of registered devices</p>
     <br/>
         <table class="table table-striped table-bordered">
             <tr>
-                <font size="+1">
+               
                 <th>Serial No </th>
                 <th>Device ID</th>
+                <th>Device Type </th>
                 <th>Status </th>
+                @if(Auth::user()->hasRole(['Super Admin']))
                 <th>Actions</th>
-                </font>
+                @endif
+               
             </tr>
         @foreach($dev as $device)
             <tr>
                 <td>{{$counter++}} </td>
                 <td>{{$device->serial_no}}</td>
+                <td>{{$device->devtype}}</td>
                 <td>
                  @if ($device->isactive == true)
                     Active
@@ -27,21 +31,25 @@
                     Disabled    
                  @endif   
                 </td>
+                @if(Auth::user()->hasRole(['Super Admin']))
                 <td>
                     <a href="device/{{$device->id}}/edit" class="btn btn-info">Edit</a>
                 </td>
+                @endif
             </tr>
         @endforeach
         </table>
         {{$dev->links()}}
     @else
-        <h1><font size="+2">No Devices registered yet!</font></h1>        
+        <p class="h1">No Devices registered yet!</p>        
     @endif
     <p>
         <div class="flex">
+            @if(Auth::user()->hasRole(['Super Admin']))
             <div class="mx-auto">
-        <a href="device/create" class="btn btn-primary">Add Device </a>
+                <a href="device/create" class="btn btn-primary">Add Device </a>
             </div>
+            @endif
             <div class="mx-auto">
         <a href="{{ URL::previous() }}" class="btn btn-info">Back</a>
             </div>

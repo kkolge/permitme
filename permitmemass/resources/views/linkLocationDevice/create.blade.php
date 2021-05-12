@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Link Device to Location</font></h1><br/>
+    <p class="h1">Link Device to Location</p>
     {!! Form::open(['action' => 'LinkLocDevController@store', 'method' => 'POST']) !!}
         <div class="form-group">
             <div class="px-md-5">
@@ -10,6 +10,11 @@
             <div class="px-md-5">
                 {{Form::select('Device',$dev,null,['class'=>'form-control', 'placeholder'=>'Select'])}}
             </div><br/>
+            <div class="px-md-5">
+                {{Form::label('position', 'Position')}}
+                {{Form::text('position', '', ['class' => 'form-control', 'placeholder' => 'Installation position'])}}
+            </div>
+            <br/>
             <div class="px-md-5">
                 {{Form::label('isactive', 'Status')}}
             <br/>

@@ -23,6 +23,10 @@ class LinkLocUserController extends Controller
      */
     public function index()
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         //getting logged in users location 
         //$userId = Auth::user()->id;
         //dd($userId);
@@ -52,6 +56,11 @@ class LinkLocUserController extends Controller
      */
     public function create()
     {
+
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $loc = Society::orderBy('name')->pluck('name','id')->toArray();
         $user = User::orderBy('name')->pluck('name','id')->toArray();
         return view('linkLocUsers.create',compact("loc","user"));
@@ -65,6 +74,10 @@ class LinkLocUserController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $this -> validate($request, [
             'Location' => 'required|numeric|gt:0',
             'User' => 'required|numeric|gt:0',
@@ -109,21 +122,31 @@ class LinkLocUserController extends Controller
      */
     public function edit($id)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+        //dd($id);
         $links = DB::table('linklocusers')
             ->Join('location','linklocusers.locationid','=','location.id')
             ->Join('users','linklocusers.userid','=','users.id')
+            ->where('linklocusers.id','=',$id)
             ->select ('location.name as lname',
                 'users.name as uname',
                 'linklocusers.phoneno1', 
                 'linklocusers.designation',
                 'linklocusers.isactive',
-                'linklocusers.id')
+                'linklocusers.id',
+                'linklocusers.locationid',
+                'linklocusers.userid',
+                )
             ->orderBy('location.name')
             ->get()->first();
+        //dd($links);
 
         $loc = Society::all()->pluck('name','id')->toArray();
         $user = User::all()->pluck('name','id')->toArray();
         $lnk = LinkLocUser::find($id);
+        //dd($lnk);
 //dd($links);
         return view('linkLocUsers.edit',compact('links','lnk','loc','user'));
     }
@@ -137,15 +160,20 @@ class LinkLocUserController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+        
         $this -> validate($request, [
             'Location' => 'required|numeric|gt:0',
             'User' => 'required|numeric|gt:0',
-            'designation' => 'required|gt:0',
+            'designation' => 'required',
             'phoneno' => 'required|digits:10'
         ]);
         
         
-
+        //dd($id);
         $lnk = LinkLocUser::find($id);
         $lnk->locationid = $request->input('Location');
         $lnk->userid = $request->input('User');

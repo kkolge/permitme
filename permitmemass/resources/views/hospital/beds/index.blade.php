@@ -5,7 +5,7 @@
 <?php $counter = 1; ?>
     
     @if (count($beds) > 0)
-    <h1> <font size="+2">Beds created for your Location</font> </h1>
+    <p class="h1">Beds created for your Location</p>
     <br/>
         <table class="table table-striped table-bordered">
             <tr>
@@ -35,7 +35,7 @@
         </table>
         {{$beds->links()}}
     @else
-        <h1><font size="+2">No Beds defined for your location yet!</font></h1>        
+        <p class="h1">No Beds defined for your location yet!</p>        
     @endif
     <p>
         <div class="flex">

@@ -4,14 +4,14 @@
 <?php $counter = 1 ?>
     
     @if (count($lowSpo215Days) > 0)
-    <h1><font size="+2"> Low SPO2 Report for last 15 days </font> </h1> <br/>
-    
+    <p class="h1"> Low SPO2 Report for last 15 days </p> 
         <div class="px-md-5">
             {!! $spo2Chart->container() !!}
             {!! $spo2Chart->script() !!}
         
         </div>
         <br/>
+        <p class="h2"> Details </p>
         <div class="px-md-5">
             <table class="table table-striped table-bordered">
                 <tr>
@@ -23,14 +23,20 @@
                 <tr>
                     <td>{{$counter++}} </td>
                     <td>{{$data->date}}</td>
-                    <td><a href="/reports/{{$data->date}}/SPO2DetailsByDate", class="btn btn-link">{{$data->count}}</a></td>
+                    <td><a href="/reports/{{$data->date}}/SPO2DetailsByDate", class="btn-link">{{$data->count}}</a></td>
                 </tr>
             @endforeach
             </table>
+            <p class="small">
+                Normal Range: &nbsp; &nbsp; &nbsp; &nbsp;
+                Pulse Rate < {{env('CUTOFF_PULSE')}} per min &nbsp; &nbsp; &nbsp; &nbsp;
+                SPO2 > {{env('CUTOFF_SPO2')}}% &nbsp; &nbsp; &nbsp; &nbsp;
+                Temperature < {{env('CUTOFF_TEMP')}} &#8457; (Wrist temperature is 3.3&#8451; / 5.9&#8457; lower than core body temperature)
+            </p> <br/><br/>
         </div>
     
     @else
-        <h1><font size="+2">No Data available!</font></h1>        
+        <p class="h1">No Data available!</p>        
     @endif
     <p>
         <div class="flex">

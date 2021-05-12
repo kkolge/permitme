@@ -5,43 +5,80 @@
 <?php $counter = 1; ?>
     
     @if (count($repCollect) > 0)
-    <h1> <font size="+2">15 Days Historical data for {{ $taluka }} (city wise)</font> </h1>
+    <p class="h1">City wise 15 days historical data for {{ $taluka }}</p>
+        <!-- lets show the charts at the top -->
+        <div class="card-deck">
+            <div class="card bg-light text-center">
+                <div class="card-header ">
+                    All Abnormal
+                </div>
+                <div class="card-body ">
+                    {!! $AllAbnormalChart->container() !!}
+                </div>
+            </div>
+            <div class="card bg-light text-center">
+                <div class="card-header ">
+                    High Heart Rate
+                </div>
+                <div class="card-body ">
+                    {!! $HbcountChart->container() !!}
+                </div>
+            </div>
+            <div class="card bg-light text-center">
+                <div class="card-header ">
+                    Low SPO2
+                </div>
+                <div class="card-body ">
+                    {!! $Spo2Chart->container() !!}
+                </div>
+            </div>
+            <div class="card bg-light text-center">
+                <div class="card-header ">
+                    High Temperature
+                </div>
+                <div class="card-body ">
+                    {!! $TempChart->container() !!}
+                </div>
+            </div>
+        </div>
+        {!! $TempChart->script() !!}
+        {!! $Spo2Chart->script() !!}
+        {!! $HbcountChart->script() !!}
+        {!! $AllAbnormalChart->script() !!}
+    <!-- End of charts -->
     <br/>
         <table class="table table-striped table-bordered">
-            <tr>
-                <th style="width:20%">Serial No </th>
-                <th style="width:20%">City</th>
-                <th style="width:20%">High Temperature Count</th>
-                <th style="width:20%">Low Spo2 Count</th>
-                <th style="width:20%"> Total Scans</th>
+            <tr class='text-center'>
+                <th>Serial No </th>
+                <th>City</th>
+                <th>All Abnormal</th>
+                <th>High Pulse Rate (per min)</th>
+                <th>Low Spo2 (%)</th>
+                <th>High Temperature (&#8457;))</th>
+                <th> Total Scans</th>
             </tr>
         @foreach($repCollect as $c)
-            <tr>
+            <tr class='text-center'>
                 <td>{{$counter++}} </td>
-                <td>{{ $c['city'] }}</td>
-                <td ><a href="/adminReports/sCityReport?source={{$state.'.'.$district.'.'.$taluka.'.'.$c['city']}}&type=HighTemp"> <div class="btn btn-link">{{$c['tempCount']}}</div> </a> </td>
-                <td ><a href="/adminReports/sCityReport?source={{$state.'.'.$district.'.'.$taluka.'.'.$c['city']}}&type=LowSpo2"> <div class="btn btn-link">{{$c['spo2Count']}}</div> </a> </td>
+                <td><a href="/adminReports/sCityReport?source={{$state.'.'.$district.'.'.$taluka.'.'.$c['city']}}&type=HighTemp"> <div class="btn-link">{{ $c['city'] }}</div> </a> </td>
+                <td>{{ $c['allAbnormal']}}</td>
+                <td>{{ $c['hbCount'] }}</td>
+                <td >{{$c['spo2Count']}}</td>
+                <td >{{$c['tempCount']}}</td>
                 <td>{{$c['totalScan']}} </td>
             </tr>
         @endforeach
         </table>
-        <p>
-            <div class="flex">
-                <div class="w-1/2">
-                    {!! $TempChart->container() !!}
-                </div>
-                <div class="w-1/2">
-                    {!! $Spo2Chart->container() !!}
-                </div>
-            </div>
-            {!! $TempChart->script() !!}
-            {!! $Spo2Chart->script() !!}
-            
-        </p>
-    
+        
+        <p class="small">
+            Normal Range: &nbsp; &nbsp; &nbsp; &nbsp;
+            Pulse Rate < {{env('CUTOFF_PULSE')}} per min &nbsp; &nbsp; &nbsp; &nbsp;
+            SPO2 > {{env('CUTOFF_SPO2')}}% &nbsp; &nbsp; &nbsp; &nbsp;
+            Temperature < {{env('CUTOFF_TEMP')}} &#8457; (Wrist temperature is 3.3&#8451; / 5.9&#8457; lower than core body temperature)
+        </p> <br/><br/>
     
     @else
-        <h1><font size="+2">No Data available!</font></h1>        
+        <p class="h1">No Data available!</p>        
     @endif
     <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
     <p>

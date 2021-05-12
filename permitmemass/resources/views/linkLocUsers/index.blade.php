@@ -5,7 +5,7 @@
 <?php $counter = 1; ?>
     
     @if (count($link) > 0)
-    <h1> <font size="+2"> List of Users Linked to Locations</font> </h1><br/>
+    <p class="h1"> List of Users Linked to Locations</p>
         <table class="table table-striped table-bordered">
             <font size="+1">
                 <tr>
@@ -40,7 +40,7 @@
         </table>
         {{$link->links()}}
     @else
-        <h1> <font size="+2">No Users Linked to Location!</font></h1>        
+        <p class="h1">No Users Linked to Location!</p>        
     @endif
     <p>
         <div class="flex">

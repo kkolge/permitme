@@ -7,6 +7,7 @@ use App\Device;
 use App\LinkLocDev;
 use App\Society;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class LinkLocDevController extends Controller
 {
@@ -21,10 +22,14 @@ class LinkLocDevController extends Controller
      */
     public function index()
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $link = DB::table('LinkLocDev')
             ->Join('location','LinkLocDev.locationid','=','location.id')
             ->Join('device','LinkLocDev.deviceid','=','device.id')
-            ->select ('location.name','device.serial_no','LinkLocDev.isactive','LinkLocDev.id')
+            ->select ('location.name','device.serial_no','LinkLocDev.isactive','LinkLocDev.id','LinkLocDev.name as devName')
             ->orderBy('location.name')
             ->orderBy('device.serial_no')
             ->paginate(10);
@@ -40,7 +45,9 @@ class LinkLocDevController extends Controller
      */
     public function create()
     {
-        
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
         //get list of locations 
         $loc = Society::orderBy('name')->pluck('name','id')->toArray();
         $dev = Device::orderBy('serial_no')->pluck('serial_no','id')->toArray();
@@ -55,9 +62,14 @@ class LinkLocDevController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $this -> validate($request, [
             'Location' => 'required|numeric|gt:0',
             'Device' => 'required|numeric|gt:0',
+            'position' => 'required',
         ]);
         //check if the device is attached to some other location
         $devLoc = LinkLocDev::where('deviceid','=',$request->input('Device'))->get()->toArray();
@@ -68,6 +80,7 @@ class LinkLocDevController extends Controller
         $lnk = new LinkLocDev();
         $lnk->locationid = $request->input('Location');
         $lnk->deviceid = $request->input('Device');
+        $lnk->name = $request->input('position');
         $lnk->isactive = $request->input('isactive');
 
         $lnk->save();
@@ -94,10 +107,14 @@ class LinkLocDevController extends Controller
      */
     public function edit($id)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $links = DB::table('LinkLocDev')
             ->Join('location','LinkLocDev.locationid','=','location.id')
             ->Join('device','LinkLocDev.deviceid','=','device.id')
-            ->select ('location.name','device.serial_no','LinkLocDev.isactive','LinkLocDev.id')
+            ->select ('location.name','device.serial_no','LinkLocDev.isactive','LinkLocDev.id','LinkLocDev.name as devName')
             ->orderBy('location.name')
             ->get();
 
@@ -119,9 +136,14 @@ class LinkLocDevController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $this -> validate($request, [
             'Location' => 'required|numeric|gt:0',
             'Device' => 'required|numeric|gt:0',
+            'position' => 'required',
         ]);
         
         $lnk = LinkLocDev::find($id);
@@ -130,6 +152,7 @@ class LinkLocDevController extends Controller
         $lnk = LinkLocDev::find($id);
         $lnk->locationid = $request->input('Location');
         $lnk->deviceid = $request->input('Device');
+        $lnk->name = $request->input('position');
         $lnk->isactive = $request->input('isactive');
         if($lnk->isDirty()){
             $lnk->update();
@@ -148,6 +171,10 @@ class LinkLocDevController extends Controller
      */
     public function destroy($id)
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+
         $lnk = LinkLocDev::find($id);
         $lnk->delete();
 

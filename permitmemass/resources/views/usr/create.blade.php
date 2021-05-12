@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1><font size="+2">Add System User</font></h1><br/>
+    <p class="h1">Add System User</p>
     {!! Form::open(['action' => 'SystemUsersController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
         <div class="form-group">
             <div class="px-md-5">

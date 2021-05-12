@@ -5,17 +5,21 @@
 <?php $counter = 1; ?>
     
     @if (count($locations) > 0)
-    <font size="+2"><h1> List of registered Locations </h1></font><br/>
+    <p class="h1">List of registered Locations </p>
         <table class="table table-striped table-bordered">
             <font size="+1">
                 <tr>
                     <th>Serial No. </th>
                     <th>Name</th>
                     <th>Pin code</th>
+                    <th>Landmark</th>
                     <th>City</th>
+                    <th>Base Location</th>
                     <th>Send SMS</th>
                     <th>Status</th>
+                    @if(Auth::user()->hasRole(['Super Admin']))
                     <th>Action</th>
+                    @endif
                 </tr>
             </font>
         @foreach($locations as $loc)
@@ -23,7 +27,15 @@
                 <td>{{$counter++}} </td>
                 <td>{{$loc->name}}</td>
                 <td>{{$loc->pincode}} </td>
+                <td>{{$loc->landmark}}</td>
                 <td>{{$loc->city}} </td>
+                <td>
+                    @if($loc->parent == 0)
+                        Yes
+                    @else                        
+                        {!! ($loc->where('id','=',$loc->parent)->pluck('name'))[0]; !!}
+                    @endif
+                </td>
                 <td>
                     @if ($loc->smsnotification == true)
                        Yes
@@ -38,23 +50,27 @@
                     Disabled    
                  @endif   
                 </td>
+                @if(Auth::user()->hasRole(['Super Admin']))
                 <td>
                     <a href="location/{{$loc->id}}" class="btn btn-info">Show</a> 
                     
                     <a href="location/{{$loc->id}}/edit" class="btn btn-info">Edit</a>
                 </td>
+                @endif
             </tr>
         @endforeach
         </table>
         {{$locations->links()}}
     @else
-       <h1> No Locations registered yet!</h1>        
+       <p class="h1"> No Locations registered yet!</p>        
     @endif
     <p>
         <div class="flex">
-            <div class="mx-auto">
-        <a href="location/create" class="btn btn-primary">Add Location </a>
-            </div>
+            @if(Auth::user()->hasRole(['Super Admin']))
+                <div class="mx-auto">
+                    <a href="location/create" class="btn btn-primary">Add Location </a>
+                </div>
+            @endif
             <div class="mx-auto">
         <a href="{{ URL::previous() }}" class="btn btn-info">Back</a>
             </div>
