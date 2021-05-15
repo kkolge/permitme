@@ -19,4 +19,5 @@ use Illuminate\Support\Facades\Route;
 //});
 Route::post('/validateDevice','IotController@validateDevice');
 Route::post('/updateDevStatus','IotController@updateTokenSuccess');
+Route::post('/vRFID','IotController@validateRFID');
 Route::post('/saveDeviceData','IotController@saveDeviceData');

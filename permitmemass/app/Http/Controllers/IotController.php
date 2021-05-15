@@ -112,19 +112,19 @@ class IotController extends Controller
      * E04 - token is no saved on the device. request a nenewal
      */
     function validateToken(string $token, string $devmd5, string $deviceid ){
-        if($devmd5 != md5($deviceid)){
+        if(strtoupper($devmd5) != strtoupper(md5($deviceid))){
             return('E01');
         }
 
         $devAuth = DevAuths::where('token','=',$token)->get();
         if($devAuth->count() == 1){
             //check if token matches the device
-            if($devAuth->deviceid == $deviceid){
+            if($devAuth[0]->deviceid == $deviceid){
                 //check if the devupdated is set to 1 else ask to resend the request to calidate
-                if($devAuth->devupdated == true){
+                if($devAuth[0]->devupdated == true){
                     //update the updated_at field
-                    $devAuth->updated_at == Carbon::now();
-                    $devAuth->save();
+                    $devAuth[0]->updated_at == Carbon::now();
+                    $devAuth[0]->save();
                     return ('SUCCESS');
                 }
                 else{
@@ -157,8 +157,8 @@ class IotController extends Controller
         //return $jsonReq;
         \Validator::make($jsonReq,[
             'deviceid' => 'required|min:5|max:12',
-            'random1' => 'required|min:16|max:16',
-            'random2' => 'required|min:16|max:16',
+            'random1' => 'required|min:16|max:32',
+            'random2' => 'required|min:16|max:32',
             'cardid' => 'required|max:20'
         ]); 
         
@@ -179,7 +179,7 @@ class IotController extends Controller
         }
 
         $user = RegUser::where('tagid',$reqCardId)->get();
-        if($user->count == 0){ //user not found. return error
+        if($user->count() == 0){ //user not found. return error
             $respJson  = json_encode(array(
                 'status' => 'error',
                 'random1' => $devmd5,
@@ -188,16 +188,16 @@ class IotController extends Controller
             return ($respJson);
         }
 
-        $iotData = IotData::where('identifier','=',$user->phoneno)->orderBy('created_at','desc')->take(1);
+        $iotData = IotData::where('identifier','=',$user[0]->phoneno)->orderBy('created_at','desc')->take(1)->get();
         
         //now we have both device and staff identified so sending response as json 
         $respJson  = json_encode(array(
             'status' => 'success',
             'random1' => $devmd5,
             'random2' => $token,
-            'username' => $user->name,
-            'identifier' => $user->phoneno,
-            'flagstatus' => $iotData->flagstatus ?? 0
+            'username' => $user[0]->name,
+            'identifier' => $user[0]->phoneno,
+            'flagstatus' => $iotData[0]->flagstatus ?? 0
         ));
 
         return $respJson;
@@ -230,15 +230,18 @@ class IotController extends Controller
         $reqCardId = $jsonReq['macid'];
         $devmd5 = $jsonReq['random1'];
         $lastToken = $jsonReq['random2'];
+        //dd($lastToken);
 
         //Step 1 validate that the device hash is correct 
-        if(md5($reqDeviceId) == $devmd5){
+        //dd (strtoupper(md5($reqDeviceId)), strtoupper($devmd5));
+        if(strtoupper(md5($reqDeviceId)) == strtoupper($devmd5)){
             //the hashing is correct 
+
             //check if the device exists
             $dev = Device::where('serial_no','=',$reqDeviceId)->get();
             if($dev->count() == 1){
                 //before proceeding further, lets check if the device, location and the link are active
-                if(!$dev->isactive) {
+                if(!$dev[0]->isactive) {
                     $respJson  = json_encode(array(
                         'status' => 'error',
                         'random1' => md5($reqDeviceId),
@@ -246,45 +249,56 @@ class IotController extends Controller
                     ));
                     return($respJson);
                 }
-                $linkAndLocationActive = LinkLocDev::where('LinkLocDev.deviceid','=',$dev->id)
+                //dd('device active');
+
+                //Checking if link and the location is active 
+                $linkAndLocationActive = LinkLocDev::where('LinkLocDev.deviceid','=',$dev[0]->id)
                     ->join('location', 'location.id','LinkLocDev.locationid')
                     ->where('location.isactive','=',true)
                     ->where('LinkLocDev.isactive','=',true)
                     ->get()
                     ->count();
+                    //dd($linkAndLocationActive);
                 if($linkAndLocationActive == 0){
-                    if(!$dev->isactive) {
                         $respJson  = json_encode(array(
                             'status' => 'error',
                             'random1' => md5($reqDeviceId),
                             'status' => 'E23'
                         ));
                         return($respJson);
-                    }
                 }
 
+                //dd('device, link and location active');
+
                 //get the last record from the devauth table for this device id 
-                $lastAuth = DevAuths::where('deviceid','=',$dev->serial_no)->orderby('updated_at','desc')->take(1);
+                $lastAuth = DevAuths::where('deviceid','=',$dev[0]->serial_no)->orderby('updated_at','desc')->take(1)->get();
+                //dd($lastAuth->count());
+                //dd($lastAuth);
+
+                //dd($lastAuth->tokenlastToken);
                 if($lastAuth->count() == 1) { //device had past authintacations
                     //checking if the tokens march 
-                    if($lastToken == $lastAuth->token || $lastAuth->devupdated){
+                    //dd($lastAuth[0]->token, $lastAuth[0]->devupdated, $lastToken);
+                    if($lastToken == $lastAuth[0]->token || $lastAuth[0]->devupdated){
                         //last token on the server matches the one sent by the device
                         //update is active for the last row to false
-                        if($lastAuth->isactive == true){
-                            $lastAuth->isactive = false;
-                            $lastAuth->devupdated = true;
-                            $lastAuth->save();
+                        if($lastAuth[0]->isactive == true){
+                            $lastAuth[0]->isactive = false;
+                            $lastAuth[0]->devupdated = true;
+                            $lastAuth[0]->save();
                         }
+                        //dd('devupdated set');
 
                         //generate new row and send the new token to the device
                         //save the details in devauth table 
                         $devauth = new DevAuths();
-                        $devauth->deviceid = $dev->$reqDeviceId;
+                        $devauth->deviceid = $reqDeviceId;
                         $devauth->token = Str::random(16);
-                        $devauth->isactime = true;
+                        $devauth->isactive = true;
                         $devauth->devupdated = false;
                         $devauth->save();
-                    
+                        //dd('new row added to devauth');
+
                         //Sending response
                         $respJson  = json_encode(array(
                             'status' => 'success',
@@ -294,30 +308,38 @@ class IotController extends Controller
                             'spo2' => env('CUTOFF_SPO2'),
                             'temp' => env('CUTOFF_TEMP')
                         ));
-        
+                        dd($respJson);
                         return($respJson);
                     }
-                    elseif($lastAuth->devupdated) {
+                    elseif($lastAuth[0]->devupdated) {
                         $respJson = json_encode(array(
                             'status' => 'error',
                             'random1' => md5($reqDeviceId),
                             'reason' => 'E24'
                         ));
                         return($respJson);
+                    }else{
+                        $respJson = json_encode(array(
+                            'status' => 'error',
+                            'random1' => md5($reqDeviceId),
+                            'reason' => 'E26'
+                        ));
+                        return($respJson);
                     }
                 }
-                elseif ($lastToken != "0000000000000000"){ // assuming that the device does not have any last token information
+                elseif ($lastToken == "0000000000000000"){ // assuming that the device does not have any last token information
+                    //dd('in null token 2');
                     $devauth = new DevAuths();
-                    $devauth->deviceid = $dev->$reqDeviceId;
+                    $devauth->deviceid = $reqDeviceId;
                     $devauth->token = Str::random(16);
-                    $devauth->isactime = true;
+                    $devauth->isactive = true;
                     $devauth->devupdated = false;
                     $devauth->save();
                 
                     //Sending response
                     $respJson  = json_encode(array(
                         'status' => 'success',
-                        'random' => md5($reqDeviceId),
+                        'random1' => md5($reqDeviceId),
                         'random2' => $devauth->token,
                         'hbcount' => env('CUTOFF_PULSE'),
                         'spo2' => env('CUTOFF_SPO2'),
@@ -326,6 +348,7 @@ class IotController extends Controller
     
                     return($respJson);
                 }
+                
                 //check if the last token id is all zeros - is this device connecting for the first time 
             }   
             else{
@@ -382,15 +405,16 @@ class IotController extends Controller
             // row against this token exists 
             
             //check for device id 
-            if(md5($tokenRow->deviceid) == $devmd5){
+            //dd($tokenRow[0]->deviceid, md5($tokenRow[0]->deviceid), $devmd5);
+            if(strtoupper(md5($tokenRow[0]->deviceid)) == strtoupper($devmd5)){
                 //double confirmation update the status  
                 if($status == 'success'){
-                    $tokenRow->devupdated = true;
+                    $tokenRow[0]->devupdated = true;
                 }
                 elseif($status == 'update'){
-                    $tokenRow->updated_at = Carbon::now();
+                    $tokenRow[0]->updated_at = Carbon::now();
                 }
-                $tokenRow->save();
+                $tokenRow[0]->save();
 
                 $respJson = json_encode(array(
                     'random2' => $lastToken, 
@@ -402,7 +426,8 @@ class IotController extends Controller
                 $respJson = json_encode(array(
                     'random1' => $devmd5,
                     'random2' => $lastToken, 
-                    'status' => 'error'
+                    'status' => 'error',
+                    'reason' => 'E32'
                 ));
                 return($respJson);
             }
@@ -411,14 +436,15 @@ class IotController extends Controller
             $respJson = json_encode(array(
                 'random1' => $devmd5,
                 'random2' => $lastToken, 
-                'status' => 'error'
+                'status' => 'error',
+                'reason' => 'E31'
             ));
             return($respJson);
         }
     }
 
     public function saveDeviceData(){
-        Log::debug('in store method');
+        //Log::debug('in store method');
         $jsonReq = json_decode(file_get_contents("php://input"),true);
         //validating the request
         \Validator::make($jsonReq,[
@@ -439,7 +465,7 @@ class IotController extends Controller
         $temp = $jsonReq['temp'];
         $spo2 = $jsonReq['spo2'];
         $hbcount = $jsonReq['hbcount'];
-        $flagstatus = $jsonReq['flasstatus'];
+        //$flagstatus = $jsonReq['flagstatus'];
 
         //lets validate the device, token and devupdated
         $valResult = $this->validateToken($token, $devmd5, $deviceId);
@@ -458,7 +484,7 @@ class IotController extends Controller
         $iot -> temp = $temp;
         $iot -> spo2 = $spo2;
         $iot -> hbcount = $hbcount;
-        if($hbcount <= env('CUTOFF_PULSE') ||$spo2 <= env('CUTOFF_SPO2') || $temp > env('CUTOFF_TEMP')){
+        if($hbcount > env('CUTOFF_PULSE') ||$spo2 < env('CUTOFF_SPO2') || $temp > env('CUTOFF_TEMP')){
             $iot->flagstatus = true;
         }
         else{
