@@ -3,12 +3,12 @@
 @section('content')
 <br/><br/><br/>
 
-    <div class="row text-center">
+    <div class="text-center">
         <p class="h1">Plan your war strategy against COVID-19 with <span class="text-primary font-weight-bold"> Permit Me </span> </p>
         <p class="h2 text-primary font-italic">"prevention is better than cure"</p>
     </div>
-    <div class="flex">
-            <div class="col-6">
+    <div class="text-justified">
+            <div >
                 <p>Permit Me, Mass Screening Solution to capture most important early indicators of COVID-19.</p>
                 <br/>
                 <p class="text-justify">As per the government policy, anyone visiting an Office, School, Hotel, Restaurant, Business location, any Public Transport or Gathering Entrances must be screened for hygiene (Wearing Mask, Hand Sanitized), Temperature and Blood oxygen level. </p>
@@ -28,7 +28,8 @@
                     <li class="list-group-item">Reduce Pressure on Govt Healthcare System, Provide Vaccination details for Registered person</li>
                 </ul>
             </div>
-            <div class="col-6">
+            <br/><br/>
+            <div id="loginForm">
                 <div class="aligh-center">
                     
                     <div class="card">
@@ -86,7 +87,7 @@
 
                                         @if (Route::has('password.request'))
                                             <a class="btn btn-link" href="{{ route('password.request') }}">
-                                                {{ __('Forgot Your Password?') }}
+                                                {{ __('Forgot Password?') }}
                                             </a>
                                         @endif
                                     </div>
@@ -112,6 +113,7 @@
                     </div>
                 </div>
             </div>
+            <br/><br/><br/>
         
     </div>
 

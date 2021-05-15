@@ -2,11 +2,13 @@
 
 @section('content')
 <?php use Illuminate\Pagination\LengthAwarePaginator; ?>
+
+<span style="aligh:center;">
 <!-- creating form for capturing the user id -->
 {!! Form::open(['action' => ['ReportsController@UserReportSearch'], 'method' => 'POST']) !!}
     <div class="form-group">
         <div class="form-row">
-            <div class=" col-2 text-right form-control-lg ">{!! Form::label('identifier','Search by Mobile Number') !!}</div>
+            <div class=" col-3 text-right form-control-lg ">{!! Form::label('identifier','Search') !!}</div>
             <div class="col-4">{!! Form::text('identifier','',['class'=>'form-control', 'placeholder'=>'Search by Mobile Number (10 digits)']) !!}</div>
             <div class="col-2 text-left">{{Form::submit('Search', ['class'=>'btn btn-primary'])}}</div>
         </div>
@@ -15,6 +17,8 @@
     </div>
 {!! Form::close() !!}
 <!-- end form -->
+</span>
+
 
 <?php $counter = 1; ?>
     
@@ -49,30 +53,23 @@
        
     </div>
     <br/>
-    <!-- for filters -->
+   
+    <!-- end filters -->
     <div>
+        <p class="h2">Detailed Data</p>
+    </div>
+    <div>
+    <span>
         <!-- creating form for capturing the user id -->
         {!! Form::open(['url'=>Request::url(), 'method' => 'GET']) !!}
             <div class="form-group">
-                <div class="form-row align-middle">
+                <div class="form-row">
                     @if(Auth::user()->hasRole(['Super Admin','Location Admin']))
-                        <div class="col-1 text-right" >{!! Form::label('location','Location') !!}</div>
+                        <div class="col-1 text-right form-control-lg" >{!! Form::label('location','Location') !!}</div>
                     @elseif(Auth::user()->hasRole(['Site Admin']))
-                        <div class="col-1 text-right">{!! Form::label('location','Device') !!}</div>
+                        <div class="col-1 text-right form-control-lg" >{!! Form::label('location','Device') !!}</div>
                     @endif
-                    <div class="col-2" style="vertical-align:middle;">{!! Form::select('location',$ddLocation,null,['class'=>'form-control', 'placeholder'=>'Select']) !!}</div>
-                
-               <!--
-                    <div class="col-2 text-right"> {!! Form::label('pulseRate','High Pulse Rate') !!}</div>
-                    <div class="col-1"> {!! Form::checkbox('pulseRate', env('CUTOFF_PULSE')) !!} </div>
-
-                    <div class="col-1 text-right"> {!! Form::label('lowSpo2','Low SPO2') !!}</div>
-                    <div class="col-1"> {!! Form::checkbox('lowSpo2', env('CUTOFF_SPO2')) !!} </div>
-
-                    <div class="col-1 text-right"> {!! Form::label('highTemp','High Temperature') !!}</div>
-                    <div class="col-1"> {!! Form::checkbox('highTemp', env('CUTOFF_TEMP')) !!} </div>
-                -->
-                    
+                    <div class="col-2" style="vertical-align:middle;">{!! Form::select('location',$ddLocation,null,['class'=>'form-control', 'placeholder'=>'Select']) !!}</div>                   
                     <div>{!! Form::submit('Submit', ['class'=>'btn btn-primary']) !!}</div>
                 </div>
                 
@@ -80,9 +77,8 @@
             </div>
         {!! Form::close() !!}
 <!-- end form -->
-    </div>
-    <!-- end filters -->
-    <p class="h2">Detailed Data</p>
+</span>
+</div>
     <!-- End of new section -->
         <table class="table table-bordered">
             <tr>
