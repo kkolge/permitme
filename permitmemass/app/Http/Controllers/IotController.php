@@ -299,6 +299,8 @@ class IotController extends Controller
                         $devauth->save();
                         //dd('new row added to devauth');
 
+                        
+
                         //Sending response
                         $respJson  = json_encode(array(
                             'status' => 'success',
@@ -306,9 +308,10 @@ class IotController extends Controller
                             'random2' => $devauth->token,
                             'hbcount' => env('CUTOFF_PULSE'),
                             'spo2' => env('CUTOFF_SPO2'),
-                            'temp' => env('CUTOFF_TEMP')
+                            'temp' => env('CUTOFF_TEMP'),
+                            'devtype' => $dev[0]->devtype,
                         ));
-                        dd($respJson);
+                        //dd($respJson);
                         return($respJson);
                     }
                     elseif($lastAuth[0]->devupdated) {
