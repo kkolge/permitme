@@ -45,7 +45,7 @@
             <div class="w-1/3 px-md-5">
                 {{Form::label('firstvaccin', 'First Vaccin')}}
                 @if ($user->vaccinated == 0)
-                    {{Form::date('firstvaccin', \Carbon\Carbon::now())}}
+                    {{Form::date('firstvaccin', \Carbon\Carbon::now()->subYears(50))}}
                 @else
                     {{Form::date('firstvaccin', new \Carbon\Carbon($user->firstvaccin))}}
                 @endif
@@ -53,7 +53,7 @@
             <div class="w-1/3 px-md-5">
                 {{Form::label('secondvaccin', 'Second Vaccin')}}
                 @if($user->vaccinated == 0)
-                    {{Form::date('secondvaccin', \Carbon\Carbon::now())}}
+                    {{Form::date('secondvaccin', \Carbon\Carbon::now()->subYears(50))}}
                 @else
                     {{Form::date('secondvaccin', new \Carbon\Carbon($user->secondvaccin))}}
                 @endif

@@ -5,8 +5,13 @@
 <?php $counter = 1; ?>
     
     @if (count($link) > 0)
-    <p class="h1"> List of Users Linked to Locations</p>
-        <table class="table table-striped table-bordered">
+        <p class="h1"> List of Users Linked to Locations</p>
+        <div class="d-flex">
+            <div>{{$link->links()}}</div>
+            <div class="ml-auto"><a href="{{ URL::previous() }}" class="btn btn-info">Back</a></div>
+        </div>
+        <br/>
+        <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
             <font size="+1">
                 <tr>
                     <th>Serial No </th>
@@ -19,7 +24,7 @@
                 </tr>
             </font>
         @foreach($link as $lnk)
-            <tr>
+            <tr class="text-light">
                 <td>{{$counter++}} </td>
                 <td>{{$lnk->lname}}</td>
                 <td>{{$lnk->uname}}</td>
@@ -42,6 +47,7 @@
     @else
         <p class="h1">No Users Linked to Location!</p>        
     @endif
+    <br/>
     <p>
         <div class="flex">
             <div class="mx-auto">

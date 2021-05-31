@@ -6,8 +6,14 @@
     
     @if (count($regUser) > 0)
     <p class="h1"> List of registered users for your Location </p>
-        <table class="table table-striped table-bordered">
-            <font size="+1">
+    <br/>
+    <div class="d-flex">
+        <div>  {{$regUser->links()}} </div>
+        <div class="ml-auto"><a href="{{ URL::previous() }}" class="btn btn-info">Back</a></div>
+    </div>
+    <br/>
+        <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
+           
                 <tr>
                     <th>Serial No </th>
                     <th>Name</th>
@@ -22,9 +28,9 @@
                         <th>Actions</th>
                     @endif
                 </tr>
-            </font>
+            
         @foreach($regUser as $user)
-            <tr>
+            <tr class="text-light">
                 <td>{{$counter++}} </td>
                 <td>{{$user->name}}</td>
                 <td>{{$user->phoneno}}</td>
@@ -48,8 +54,8 @@
                 </td>
                 @if(Auth::user()->hasRole(['Super Admin']))
                     <td>
-                        <a href="reguser/{{$user->id}}", class="btn btn-info">Details</a>
-                        <a href="reguser/{{$user->id}}/edit", class="btn btn-info">Edit</a>
+                        <a href="reguser/{{$user->phoneno}}", class="btn btn-info">Details</a>
+                        <a href="reguser/{{$user->phoneno}}/edit", class="btn btn-info">Edit</a>
                     </td>
                 @endif
             </tr>

@@ -3,21 +3,7 @@
 @section('content')
 <?php use Illuminate\Pagination\LengthAwarePaginator; ?>
 
-<span style="aligh:center;">
-<!-- creating form for capturing the user id -->
-{!! Form::open(['action' => ['ReportsController@UserReportSearch'], 'method' => 'POST']) !!}
-    <div class="form-group">
-        <div class="form-row">
-            <div class=" col-3 text-right form-control-lg ">{!! Form::label('identifier','Search') !!}</div>
-            <div class="col-4">{!! Form::text('identifier','',['class'=>'form-control', 'placeholder'=>'Search by Mobile Number (10 digits)']) !!}</div>
-            <div class="col-2 text-left">{{Form::submit('Search', ['class'=>'btn btn-primary'])}}</div>
-        </div>
-        
-        <hr/>
-    </div>
-{!! Form::close() !!}
-<!-- end form -->
-</span>
+
 
 
 <?php $counter = 1; ?>
@@ -53,52 +39,67 @@
        
     </div>
     <br/>
-   
+    <br/>
     <!-- end filters -->
-    <div>
-        <p class="h2">Detailed Data</p>
-    </div>
-    <div>
-    <span>
-        <!-- creating form for capturing the user id -->
-        {!! Form::open(['url'=>Request::url(), 'method' => 'GET']) !!}
-            <div class="form-group">
-                <div class="form-row">
-                    @if(Auth::user()->hasRole(['Super Admin','Location Admin']))
-                        <div class="col-1 text-right form-control-lg" >{!! Form::label('location','Location') !!}</div>
-                    @elseif(Auth::user()->hasRole(['Site Admin']))
-                        <div class="col-1 text-right form-control-lg" >{!! Form::label('location','Device') !!}</div>
-                    @endif
-                    <div class="col-2" style="vertical-align:middle;">{!! Form::select('location',$ddLocation,null,['class'=>'form-control', 'placeholder'=>'Select']) !!}</div>                   
-                    <div>{!! Form::submit('Submit', ['class'=>'btn btn-primary']) !!}</div>
+    <div class="row ">
+        <div class="row align-middle">
+            <!-- creating form for capturing the user id -->
+            {!! Form::open(['action' => ['ReportsController@UserReportSearch'], 'method' => 'POST']) !!}
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="text-right form-control-lg ">{!! Form::label('identifier','Search') !!}</div>
+                        <div class="">{!! Form::text('identifier','',['class'=>'form-control', 'placeholder'=>'Search by Mobile Number (10 digits)']) !!}</div>
+                        <div class="text-left">{{Form::submit('Search', ['class'=>'btn btn-primary'])}}</div>
+                    </div>
+                    
+                    <hr/>
                 </div>
-                
-                <hr/>
+            {!! Form::close() !!}
+            <!-- end form -->
+        </div>
+
+        <div class="row ml-auto align-middle">
+            {!! Form::open(['url'=>Request::url(), 'method' => 'GET']) !!}
+            <div class="form-row">
+                @if(Auth::user()->hasRole(['Super Admin','Location Admin']))
+                        <div class="text-right form-control-lg" >{!! Form::label('location','Filter by Location') !!}</div>
+                    @elseif(Auth::user()->hasRole(['Site Admin']))
+                        <div class="text-right form-control-lg" >{!! Form::label('location','Filter by Device') !!}</div>
+                    @endif
+                    <div >{!! Form::select('location',$ddLocation,null,['class'=>'form-control', 'placeholder'=>'Select']) !!}</div>                   
+                    <div class="tet-left">{!! Form::submit('Submit', ['class'=>'btn btn-primary']) !!}</div>
             </div>
-        {!! Form::close() !!}
-<!-- end form -->
-</span>
-</div>
+            {!! Form::close() !!}
+        </div>
+    </div>
+
+    <br/>
+    <div class="row d-flex">
+        <div>{{$allData->links()}}</div>
+        <div class="ml-auto"> <a href="{{ URL::previous() }}" class="btn btn-info">Back</a></div>
+    </div>
+    <br/>
+    
     <!-- End of new section -->
-        <table class="table table-bordered">
+        <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
             <tr>
-                <th width="10%">Serial No </th>
+                <th>Serial No </th>
                 @if(Auth::user()->hasRole(['Super Admin','Location Admin']))
                     <th>Location</th>
                 @elseif(Auth::user()->hasRole(['Site Admin']))
                     <th>Device</th>
                 @endif
                 <th>Identifier</th>
-                <th>Pulse Beat (per min)</th>
+                <th>Pulse Rate (per min)</th>
                 <th>SPO2 (%)</th>
                 <th>Temperature (&#8457;)</th>
                 <th>Captured at</th>
             </tr>
         @foreach($allData as $data)
             @if($data->flagstatus == true)
-                <tr class="table-danger">
+                <tr class="text-danger">
             @else
-                <tr>
+                <tr class="text-light">
             @endif
                 <td>{{$counter++}} </td>
                 @if(Auth::user()->hasRole(['Super Admin','Location Admin']))
@@ -114,14 +115,9 @@
             </tr>
         @endforeach
         </table>
-        <p class="small">
-            Normal Range: &nbsp; &nbsp; &nbsp; &nbsp;
-            Pulse Rate < {{env('CUTOFF_PULSE')}} per min &nbsp; &nbsp; &nbsp; &nbsp;
-            SPO2 > {{env('CUTOFF_SPO2')}}%&nbsp; &nbsp; &nbsp; &nbsp;
-            Temperature < {{env('CUTOFF_TEMP')}}&#8457; (Wrist temperature is 3.3&#8451; / 5.9&#8457; lower than core body temperature)
-            <br/> <span class="text-danger">Rows in Red indicate abnormal values<span>
-        </p> <br/><br/>
+        
         {{$allData->links()}}
+        @include('inc.parameters')
     @else
         <p class="h1">No Data available!</p>        
     @endif
@@ -132,5 +128,4 @@
             </div>
         </div>
     </p>
-    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 @endsection

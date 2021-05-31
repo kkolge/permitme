@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <p class="h1">Edit Location Device Link</p>
+    <p class="h1">Edit Location Device Link</p><br/>
     {!! Form::open(['action' => ['LinkLocDevController@update', $lnk], 'method' => 'POST']) !!}
         <div class="form-group">
             <div class="px-md-5">

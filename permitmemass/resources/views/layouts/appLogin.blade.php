@@ -41,16 +41,13 @@
 </head>
     <body>
     <!-- <body class="text-white" style="background-color:black"> -->
-        <div class="container-fluid" id="app">
+        <div class="container-fluid" id="app" style="min-height:100vh;">
             <div class="row">
                 @include('inc.navbar')
             </div>
                 
             <div id="main" class="row" style="margin-left: 0;">
-
-                
-                
-                <div class="col-lg-12 col-sm-12 col-md-12 text-light">
+                <div class="col-lg-12 text-light">
                     <br/><br/>
                     @include('inc.messages')
 

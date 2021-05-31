@@ -258,6 +258,18 @@ class ReportsController extends Controller
         //dd($spo2Chart);
         $abnormalChart->dataset('All Abnormal Parameters', 'bar',$values)
             ->backgroundColor('red');
+        $abnormalChart->title('All Abnormal Parameters');
+            $abnormalChart->options([
+                'responsive' => true,
+                'title' => ['fontColor' => 'white'],
+                'legend' => ['display' => true, 
+                    'position' => 'bottom',
+                    'align' => 'left',
+                    'labels' => ['fontColor' => 'white', ],
+                ],
+                
+                //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+            ]);
             //->options=[legend->position('right')];
         //$spo2Chart->title('SPO2 data for last 15 days');
 
@@ -325,8 +337,20 @@ class ReportsController extends Controller
         //get array for labels
         $spo2Chart->labels($lbl);
         //dd($spo2Chart);
+        $spo2Chart->title('Low SPO2 Data');
         $spo2Chart->dataset('Low SPO2 data', 'bar',$values)
             ->backgroundColor('red');
+        $spo2Chart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
             //->options=[legend->position('right')];
         //$spo2Chart->title('SPO2 data for last 15 days');
 
@@ -390,8 +414,21 @@ class ReportsController extends Controller
         //get array for labels
         $tempChart->labels($lbl);
         //dd($spo2Chart);
+        
         $tempChart->dataset('High Temperature Data', 'bar',$values)
             ->backgroundColor('red');
+        $tempChart->title('High Temperature Data');
+        $tempChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
         //$spo2Chart->title('SPO2 data for last 15 days');
 
 
@@ -460,9 +497,20 @@ class ReportsController extends Controller
         $hbcountChart = new ReportChartLine();
         //get array for labels
         $hbcountChart->labels($lbl);
-        //dd($spo2Chart);
-        $hbcountChart->dataset('High Pulse Rate Data', 'bar',$values)
+        $hbcountChart->title('High Pulse Rate Data');
+        $hbcountChart->dataset('High Pulse Rate Data', 'line',$values)
             ->backgroundColor('red');
+        $hbcountChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
         //$spo2Chart->title('SPO2 data for last 15 days');
 
 
@@ -606,7 +654,7 @@ class ReportsController extends Controller
             ->join('vlocdev','iotdata.deviceid','vlocdev.serial_no')
             ->select('iotdata.identifier', 'iotdata.temp', 'iotdata.spo2', 'iotdata.hbcount', 'iotdata.created_at', 'vlocdev.name')
             ->orderBy('created_at','desc')
-            ->get();
+            ->paginate(50);
         //dd($iotData);
 
         if(count($iotData) > 0){
@@ -625,14 +673,39 @@ class ReportsController extends Controller
             $spo2Chart = new ReportChartLine();
             //get array for labels
             $spo2Chart->labels($lbl);
-        //dd($spo2Chart);
-            $spo2Chart->dataset('SPO2 data', 'bar',$valuesSpo2)
+            $spo2Chart->title('SPO2 data');
+            //$spo2Chart->borderColor(false);
+            $spo2Chart->dataset('SPO2 data', 'line',$valuesSpo2)
                 ->backgroundColor('red');
+            
+            $spo2Chart->options([
+                'responsive' => true,
+                'title' => ['fontColor' => 'white'],
+                'legend' => ['display' => true, 
+                    'position' => 'bottom',
+                    'align' => 'left',
+                    'labels' => ['fontColor' => 'white', ],
+                ],
+                
+                //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+            ]);
             
             $tempChart = new ReportChartLine();
             $tempChart->labels($lbl);
-            $tempChart->dataset('Temperature data','bar',$valuesTemp)
+            $tempChart->title('Temperature data');
+            $tempChart->dataset('Temperature data','line',$valuesTemp)
                 ->backgroundColor('blue');
+            $tempChart->options([
+                'responsive' => true,
+                'title' => ['fontColor' => 'white'],
+                'legend' => ['display' => true, 
+                    'position' => 'bottom',
+                    'align' => 'left',
+                    'labels' => ['fontColor' => 'white', ],
+                ],
+                
+                //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+            ]);
             return view('reports.userReport',compact('identifier','iotData','spo2Chart','tempChart'));
         }
         else{

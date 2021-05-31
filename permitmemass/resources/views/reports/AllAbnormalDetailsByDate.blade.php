@@ -5,8 +5,12 @@
 <?php $counter = 1; ?>
     @if (count($abnormalOnDate) > 0)
     <p class="h1"> All Abnormal Parameters Report for {{ $date }} </p>
-    
-        <table class="table table-striped table-bordered">
+        <div class="row d-flex">
+            <div> {{$abnormalOnDate->links()}}</div>
+            <div class="ml-auto"><a href="{{ URL::previous() }}" class="btn btn-info">Back</a></div>
+        </div>
+        <br/>
+        <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
             <tr>
                 <th>Serial No </th>
                 <th>Identifier</th>
@@ -19,7 +23,7 @@
                 <th>Captured at</th>
             </tr>
         @foreach($abnormalOnDate as $data)
-            <tr>
+            <tr class="text-light">
                 <td>{{$counter++}} </td>
                 <td><a href="/reports/{{$data->identifier}}/userReport" class="btn-link">{{$data->identifier}}</a></td>
                 @if(Auth::user()->hasRole(['Super Admin', 'Location Admin']))
@@ -33,13 +37,9 @@
         @endforeach
             
         </table>
-        <p class="small">
-            Normal Range: &nbsp; &nbsp; &nbsp; &nbsp;
-            Pulse Rate < {{env('CUTOFF_PULSE')}} per min &nbsp; &nbsp; &nbsp; &nbsp;
-            SPO2 > {{env('CUTOFF_SPO2')}}% &nbsp; &nbsp; &nbsp; &nbsp;
-            Temperature < {{env('CUTOFF_TEMP')}} &#8457; (Wrist temperature is 3.3&#8451; / 5.9&#8457; lower than core body temperature)
-        </p> <br/><br/>
+        <br/>
         {{$abnormalOnDate->links()}}
+       
     @else
         <p class="h1">No Data available!</p>        
     @endif
@@ -48,7 +48,7 @@
             <div class="mx-auto">
                 <a href="{{ URL::previous() }}" class="btn btn-info">Back</a>
             </div>
-        </div>    
+        </div>   
+        @include('inc.parameters') 
     </p>
-    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 @endsection

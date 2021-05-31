@@ -1,9 +1,11 @@
-<div class="nav navbar-nav navbar-dark bg-primary flex-sm-column nav-pills text-white font-weight-bold " role="tablist" aria-orientation="vertical" style="min-height: calc(100vh - 50px); padding-left: 20px;">
+<div class="nav navbar-nav navbar-dark nav-pills text-white font-weight-bold d-none d-lg-block" role="tablist" aria-orientation="vertical" style="min-height:100vh; padding-left: 20px;">
     @if(!Auth::guest())
+        <!-- showing user information -->
+        <div > Welcome {{Auth::user()->name}} </div>
+        <div > Location: {{session('GlocationName')}} </div>
+        <hr class="bg-light"/>
         <!-- Dashboard linl -->
         <a class="nav-link" href="/home" aria-controls="v-pills-home" aria-selected="true">Dashboard</a>
-
-       
         @if(Auth::user()->hasRole(['Super Admin']))
             <!-- Roles and Permissions -->
             <div class="nav-item dropdown">
@@ -81,7 +83,7 @@
         @endif
 
         <!-- Start of custom solutions -->
-        @if(Auth::user()->hasRole(['Super Admin']))
+        @if(Auth::user()->hasRole(['OTHER ROLE']))
             <!-- Hospital Solution -->
             <div class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">Hospital</a>

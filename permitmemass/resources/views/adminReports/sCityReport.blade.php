@@ -8,34 +8,34 @@
     <p class="h1">Pincode wise 15 days historical data for {{ $city }}</p>
     <!-- lets show the charts at the top -->
     <div class="card-deck">
-        <div class="card bg-light text-center">
-            <div class="card-header ">
+        <div class="card bg-transparent text-center">
+        <!--    <div class="card-header ">
                 All Abnormal
-            </div>
+            </div> -->
             <div class="card-body ">
                 {!! $AllAbnormalChart->container() !!}
             </div>
         </div>
-        <div class="card bg-light text-center">
-            <div class="card-header ">
+        <div class="card bg-transparent text-center">
+        <!--    <div class="card-header ">
                 High Heart Rate
-            </div>
+            </div> -->
             <div class="card-body ">
                 {!! $HbcountChart->container() !!}
             </div>
         </div>
-        <div class="card bg-light text-center">
-            <div class="card-header ">
+        <div class="card bg-transparent text-center">
+        <!--    <div class="card-header ">
                 Low SPO2
-            </div>
+            </div> -->
             <div class="card-body ">
                 {!! $Spo2Chart->container() !!}
             </div>
         </div>
-        <div class="card bg-light text-center">
-            <div class="card-header ">
+        <div class="card bg-transparent text-center">
+        <!--    <div class="card-header ">
                 High Temperature
-            </div>
+            </div> -->
             <div class="card-body ">
                 {!! $TempChart->container() !!}
             </div>
@@ -47,8 +47,8 @@
     {!! $AllAbnormalChart->script() !!}
     <!-- End of charts -->
     <br/>
-        <table class="table table-striped table-bordered">
-            <tr class="text-center">
+        <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
+            <tr>
                 <th>Serial No </th>
                 <th>Pincode</th>
                 <th>All Abnormal</th>
@@ -58,7 +58,7 @@
                 <th> Total Scans</th>
             </tr>
         @foreach($repCollect as $c)
-            <tr class="text-center">
+            <tr class="text-light">
                 <td>{{$counter++}} </td>
                 <td><a href="/adminReports/sPincodeReport?source={{$state.'.'.$district.'.'.$taluka.'.'.$city.'.'.$c['pincode']}}&type=HighTemp"> <div class="btn-link">{{ $c['pincode'] }}</div> </a> </td>
                 <td>{{$c['allAbnormal']}}</td>
@@ -69,23 +69,18 @@
             </tr>
         @endforeach
         </table>
-        
-        <p class="small">
-                Normal Range: &nbsp; &nbsp; &nbsp; &nbsp;
-                Pulse Rate < {{env('CUTOFF_PULSE')}} per min &nbsp; &nbsp; &nbsp; &nbsp;
-                SPO2 > {{env('CUTOFF_SPO2')}}% &nbsp; &nbsp; &nbsp; &nbsp;
-                Temperature < {{env('CUTOFF_TEMP')}} &#8457; (Wrist temperature is 3.3&#8451; / 5.9&#8457; lower than core body temperature)
-        </p> <br/><br/>
+        <br/>
     @else
         <p class="h1">No Data available!</p>        
     @endif
-    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+
     <p>
         <div class="flex">
             <div class="mx-auto">
                 <a href="{{ URL::previous() }}" class="btn btn-primary">Back</a>
             </div>
         </div>
+        @include('inc.parameters')
     </p>
-    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+
 @endsection

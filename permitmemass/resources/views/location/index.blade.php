@@ -6,8 +6,13 @@
     
     @if (count($locations) > 0)
     <p class="h1">List of registered Locations </p>
-        <table class="table table-striped table-bordered">
-            <font size="+1">
+        <div class="d-flex">
+            <div >{{$locations->links()}}</div>
+            <div class="ml-auto"><a href="{{ URL::previous() }}" class="btn btn-info">Back</a></div>
+        </div>
+        <br/>
+        <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
+          
                 <tr>
                     <th>Serial No. </th>
                     <th>Name</th>
@@ -21,9 +26,9 @@
                     <th>Action</th>
                     @endif
                 </tr>
-            </font>
+          
         @foreach($locations as $loc)
-            <tr>
+            <tr class="text-light">
                 <td>{{$counter++}} </td>
                 <td>{{$loc->name}}</td>
                 <td>{{$loc->pincode}} </td>
@@ -64,6 +69,7 @@
     @else
        <p class="h1"> No Locations registered yet!</p>        
     @endif
+    <br/>
     <p>
         <div class="flex">
             @if(Auth::user()->hasRole(['Super Admin']))

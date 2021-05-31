@@ -90,3 +90,8 @@ Route::get('/adminReports/sDistrictReport','AdminReportsController@sDistrictRepo
 Route::get('/adminReports/sTalukaReport','AdminReportsController@sTalukaReport');
 Route::get('/adminReports/sCityReport','AdminReportsController@sCityReport');
 // -- End Admin Reports Section
+
+//-- Utils Section
+Route::get('/utils/getlastdevicetoken', 'UtilsController@getLastDeviceToken');
+Route::get('/utils/devicetokendetails/{data}', 'UtilsController@deviceTokenDetails');
+//-- END of Utils section

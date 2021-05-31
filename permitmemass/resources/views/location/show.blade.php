@@ -2,8 +2,85 @@
 
 @section('content')
 <p class="h1">Details of Location </p>
-<table class="table table-striped table-bordered">
-    <tr>
+<br/>
+<div class="row d-flex " style="font-size:x-large;">
+    <div class="w-1/4 px-md-5 text-right"> <strong>Name: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->name}}</div>
+    <div class="w-1/4 px-md-5 text-right"> <strong>Number of Users: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->noofresidents}}</div>
+</div>
+<div class="row d-flex" style="font-size:x-large">
+    <div class="w-1/4 px-md-5 text-right"> <strong>Address Line 1: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->address1}}</div>
+    <div class="w-1/4 px-md-5 text-right"> <strong>Address Line 2: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->address2}}</div>
+</div>
+<div class="row d-flex" style="font-size:x-large">
+    <div class="w-1/4 px-md-5 text-right"> <strong>Address Line 1: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->address1}}</div>
+    <div class="w-1/4 px-md-5 text-right"> <strong>Address Line 2: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->address2}}</div>
+</div>
+<div class="row d-flex" style="font-size:x-large">
+    <div class="w-1/4 px-md-5 text-right"> <strong>Pincode: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->pincode}}</div>
+    <div class="w-1/4 px-md-5 text-right"> <strong>Landmark: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->landmark}}</div>
+</div>
+<div class="row d-flex" style="font-size:x-large">
+    <div class="w-1/4 px-md-5 text-right"> <strong>City: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->city}}</div>
+    <div class="w-1/4 px-md-5 text-right"> <strong>Taluka: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->taluka}}</div>
+</div>
+<div class="row d-flex" style="font-size:x-large">
+    <div class="w-1/4 px-md-5 text-right"> <strong>District: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->district}}</div>
+    <div class="w-1/4 px-md-5 text-right"> <strong>State: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->state}}</div>
+</div>
+<div class="row d-flex" style="font-size:x-large">
+    <div class="w-1/4 px-md-5 text-right"> <strong>Base Location: </strong> </div>
+    <div class="w-1/4 text-left"> 
+        @if($location->parent == 0)
+            Yes
+        @else                 
+            {!! $allLocations[$location->parent]; !!}
+        @endif
+    </div>
+    <div class="w-1/4 px-md-5 text-right"> <strong>Map: </strong> </div>
+    <div class="w-1/4 text-left btn-link"> 
+        <a href=
+                "http://maps.google.com/maps?q={{ $location->latitude }},{{ $location->longitude }}&ll={{ $location->latitude }},{{ $location->longitude }}&z={{ $location->altitude }} " target="_blank" >
+        {{ $location->latitude }} : {{ $location->longitude }} : {{ $location->altitude }} 
+        </a>
+    </div>
+</div>
+<div class="row d-flex" style="font-size:x-large">
+    <div class="w-1/4 px-md-5 text-right"> <strong>Send SMS: </strong> </div>
+    <div class="w-1/4 text-left">
+        @if($location->smsnotification == 1)
+            Yes
+        @else
+            No
+        @endif
+    </div>
+    <div class="w-1/4 px-md-5 text-right"> <strong>Is Active: </strong> </div>
+    <div class="w-1/4 text-left">
+        @if($location->isactive == 1)
+            Yes
+        @else
+            No
+        @endif
+    </div>
+</div>
+<div class="row d-flex" style="font-size:x-large">
+    <div class="w-1/4 px-md-5 text-right"> <strong>Created At: </strong> </div>
+    <div class="w-1/4 text-left"> {{$location->created_at}}</div>
+</div>
+
+ <!--<table class="table  table-bordered table-responsive bg-transparent text-center text-light">
+   <tr>
         <td class="col-5">
             <div class="flex">
                 <div class="w-1/2 px-md-2"><strong> Name:</strong></div>
@@ -30,7 +107,7 @@
                 <div class="w-1/2"> {{ $location->address2}}</div>
             </div>
         </td>
-    </tr>
+    </tr> 
     <tr>
         <td class="col-5">
             <div class="flex">
@@ -44,7 +121,7 @@
                 <div class="w-1/2"> {{ $location->landmark}}</div>
             </div>
         </td>
-    </tr>
+    </tr> 
     <tr>
         <td class="col-5">
             <div class="flex">
@@ -58,7 +135,7 @@
                 <div class="w-1/2"> {{ $location->taluka}}</div>
             </div>
         </td>
-    </tr>
+    </tr> 
     <tr>
         <td class="col-5">
             <div class="flex">
@@ -72,7 +149,7 @@
                 <div class="w-1/2"> {{ $location->state}}</div>
             </div>
         </td>
-    </tr>
+    </tr> 
     <tr>
         <td class="col-5">
             <div class="flex">
@@ -94,7 +171,7 @@
                 {{ $location->latitude }} : {{ $location->longitude }} : {{ $location->altitude }} </a></div>
             </div>
         </td>
-    </tr>
+    </tr> 
     <tr>
         <td class="col-5">
             <div class="flex">
@@ -120,7 +197,7 @@
                 </div>
             </div>
         </td>
-    </tr>
+    </tr> 
     <tr>
         <td class="col-5">
             <div class="flex">
@@ -128,8 +205,13 @@
                 <div class="w-1/2"> {{ $location->created_at}}</div>
             </div>
         </td>
+        <td class="col-5">
+            <div class="flex">
+                &nbsp;
+            </div>
+        </td>
     </tr>
-</table>
+</table> -->
 
 
 <br/><hr/><br/>

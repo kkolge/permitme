@@ -18,6 +18,8 @@ use GuzzleHttp;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\LinkLocDev;
+use Illuminate\Support\Facades\DB;
+
 
 //use GuzzelHttp\Guzzel;
 
@@ -481,13 +483,32 @@ class IotController extends Controller
             return ($respJson);
         }
         
+        //Ketan Add for V3
+        /*
+            Simple truth table approach 
+            if pulse rate is high - value = 1
+            if spo2 is low - value = 2
+            if temp is high - value = 4
+            updateValue gets the value based on the above parameters so we can set the proper column to be updated 
+	    */
+        $totalFlagCount = 0;
+        if ($hbcount > env('CUTOFF_PULSE')){
+            $totalFlagCount = $totalFlagCount + 1;
+        }
+        if($spo2 < env('CUTOFF_SPO2')){
+            $totalFlagCount = $totalFlagCount + 2;
+        }
+        if($temp > env('CUTOFF_TEMP')){
+            $totalFlagCount = $totalFlagCount + 4;
+        }
+
         $iot = new iotData();
         $iot -> identifier = $identifier;
         $iot -> deviceid = $deviceId;
         $iot -> temp = $temp;
         $iot -> spo2 = $spo2;
         $iot -> hbcount = $hbcount;
-        if($hbcount > env('CUTOFF_PULSE') ||$spo2 < env('CUTOFF_SPO2') || $temp > env('CUTOFF_TEMP')){
+        if($totalFlagCount > 0){
             $iot->flagstatus = true;
         }
         else{
@@ -496,7 +517,8 @@ class IotController extends Controller
         $iot->save();
         
         
-
+        $err = DB::select('call after_iotdata_insert(?,?,?)',[$deviceId, $totalFlagCount, Carbon::now()]);
+        //dd($err);
         $respJson  = json_encode(array(
             'status' => 'success',
             'random1' => $devmd5,

@@ -2,16 +2,19 @@
 
 @section('content')
     <p class="h1">Create Role</p>
+
     {!! Form::open(['action' => 'RolesController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
-        <div class="form-group">
-            <div class="px-md-5">
+        <div class="form-group ">
+            <div >
                 {{Form::label('name', 'Name')}}
                 {{Form::text('name', '', ['class' => 'form-control', 'placeholder' => 'Name'])}}
-            </div><br/>
-            <div class="px-md-5">
+            </div>
+            <br/>
+            <div>
                 {{Form::label('guard', 'Guard Name (optional)')}}
                 {{Form::text('guard', 'web', ['class' => 'form-control', 'placeholder' => 'Guard Name'])}}
-            </div><br/>
+            </div>
+            <br/>
         </div>
         <!-- adding list of permissions-->
         <!--@if(count($perms) > 0)

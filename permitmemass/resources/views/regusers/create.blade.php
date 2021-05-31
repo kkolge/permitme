@@ -44,11 +44,11 @@
                 </div>
                 <div class="w-1/3 px-md-5">
                     {{Form::label('firstvaccin', 'First Vaccin')}}
-                    {{Form::date('firstvaccin', \Carbon\Carbon::now())}}
+                    {{Form::date('firstvaccin', \Carbon\Carbon::now()->subYears(50))}}
                 </div>
                 <div class="w-1/3 px-md-5">
                     {{Form::label('secondvaccin', 'Second Vaccin')}}
-                    {{Form::date('secondvaccin', \Carbon\Carbon::now())}}
+                    {{Form::date('secondvaccin', \Carbon\Carbon::now()->subYears(50))}}
                 </div>
             </div>
             <br/>

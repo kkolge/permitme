@@ -6,20 +6,20 @@
     
     @if (count($roles) > 0)
     <p class="h1"> List of Roles </p>
-        <table class="table table-striped table-bordered">
-            <tr>
+        <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
+            <tr >
                 <th class="cols-1">Serial No </th>
                 <th class="cols-2">Name</th>
-                <th class="cols-1">Guard name</th>
+                <th class="cols-2">Guard name</th>
                 <th class="cols-2">Created at</th>
                 <th class="cols-3">Actions</th>
             </tr>
            
         @foreach($roles as $role)
-            <tr>
+            <tr class="text-light">
                 <td class="cols-1"> {{$counter++}} </td>
                 <td class="cols-2">{{$role->name}}</td>
-                <td class="cols-1">{{$role->guard_name}}</td>
+                <td class="cols-2">{{$role->guard_name}}</td>
                 <td class="cols-2">{{$role->created_at}}</td>
                 <td class="cols-3">
                     <span>

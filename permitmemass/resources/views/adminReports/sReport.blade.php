@@ -2,9 +2,11 @@
 
 @section('content')
     <!-- creating form for capturing the inputs -->
+    <p class="h1"> Admin Reports </p>
+    <br/>
     {!! Form::open(['url' =>'/adminReports/sUserReport', 'method' => 'GET']) !!}
         <div class="form-group">
-            <table class="table table-sm max-width">
+            <table class="table table-sm table-bordered table-responsive bg-transparent text-center text-light">
                 <tr>
                     <td class="px-md-5" style="width:30%"> <font size="+1">{!! Form::label('identifier','Identifier') !!}</font></td>
                     <td style="width:40%">{!! Form::text('identifier','',['class'=>'form-control', 'placeholder'=>'Identifier']) !!}</td>
@@ -19,7 +21,7 @@
 
     {!! Form::open(['url' => '/adminReports/sStateReport', 'method'=>'GET'])!!}
         <div class="form-group">
-            <table class="table table-sm max-width ">
+            <table class="table table-sm table-bordered table-responsive bg-transparent text-center text-light">
                 <tr>
                     <td class="px-md-5" style="width:30%">
                         <font size="+1">
@@ -37,7 +39,7 @@
 
     {!! Form::open(['url' => '/adminReports/sPincodeReport', 'method'=>'GET'])!!}
         <div class="form-group">
-            <table class="table table-sm max-width ">
+            <table class="table table-sm table-bordered table-responsive bg-transparent text-center text-light ">
                 <tr>
                     <td class="px-md-5" style="width:30%">
                         <font size="+1">
@@ -55,7 +57,7 @@
 
     {!! Form::open(['url' => '/adminReports/sPincodeReport', 'method'=>'GET'])!!}
         <div class="form-group">
-            <table class="table table-sm max-width">
+            <table class="table table-sm table-bordered table-responsive bg-transparent text-center text-light">
                 <tr>
                     <td class="px-md-5" style="width:30%">
                         <font size="+1">
@@ -73,7 +75,7 @@
 
     {!! Form::open(['url' => '/adminReports/sCityReport', 'method'=>'GET'])!!}
         <div class="form-group">
-            <table class="table table-sm max-width">
+            <table class="table table-sm table-bordered table-responsive bg-transparent text-center text-light">
                 <tr>
                     <td class="px-md-5" style="width:30%">
                         <font size="+1">
@@ -91,7 +93,7 @@
 
     {!! Form::open(['url' => '/adminReports/sPincodeReport', 'method'=>'GET'])!!}
         <div class="form-group">
-            <table class="table table-sm max-width">
+            <table class="table table-sm table-bordered table-responsive bg-transparent text-center text-light">
                 <tr>
                     <td class="px-md-5" style="width:30%">
                         <font size="+1">
@@ -110,7 +112,7 @@
 
     {!! Form::open(['url' => '/adminReports/sLocationReport', 'method'=>'GET'])!!}
         <div class="form-group">
-            <table class="table table-sm max-width">
+            <table class="table table-sm table-bordered table-responsive bg-transparent text-center text-light">
                 <tr>
                     <td class="px-md-5" style="width:30%">
                         <font size="+1">

@@ -56,7 +56,9 @@
             <div class="col-md-2">
             </div>
         </div>
-        @include('inc.footerbar')
+        <div class="row">
+                @include('inc.footerbar')
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
 </body>

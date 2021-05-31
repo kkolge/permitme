@@ -1,14 +1,5 @@
 @extends('layouts.app')
-<script>
-$(document).ready(function(){
-  $("#tableSearch").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
-</script>
+
 @section('content')
 <?php use Illuminate\Pagination\LengthAwarePaginator; ?>
 <?php $counter = 1; ?>
@@ -16,19 +7,24 @@ $(document).ready(function(){
     @if (count($link) > 0)
     <p class="h1">List of Devices Linked to Locations</p>
     <br/>
-        <table class="table table-striped table-bordered table-sm">
+    <div class="d-flex">
+        <div>{{$link->links()}}</div>
+        <div class="ml-auto"> <a href="{{ URL::previous() }}" class="btn btn-info">Back</a></div>
+    </div>
+    <br/>
+        <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
             <tr>
-                <font size="+1">
+                
                 <th >Serial No </th>
                 <th >Location</th>
                 <th >Device</th>
                 <th> Position </th>
                 <th >Status </th>
                 <th >Actions</th>
-                </font>
+                
             </tr>
         @foreach($link as $lnk)
-            <tr>
+            <tr class="text-light">
                 <td>{{$counter++}} </td>
                 <td>{{$lnk->name}}</td>
                 <td>{{$lnk->serial_no}}</td>
@@ -55,6 +51,7 @@ $(document).ready(function(){
         <p class="h1">No Devices Linked to Location!</p>  
               
     @endif
+    <br/>
     <p>
         <div class="flex">
             <div class="mx-auto">

@@ -5,8 +5,14 @@
 <?php $counter = 1; ?>
     
     @if (count($highTempOnDate) > 0)
-    <p class="h1">High Temperature Report for {{ $date }}</p>
-        <table class="table table-striped table-bordered">
+        <p class="h1">High Temperature Report for {{ $date }}</p>
+        <br/>
+        <div class="d-flex">
+            <div>{{$highTempOnDate->links()}}</div>
+            <div class="ml-auto"><a href="{{ URL::previous() }}" class="btn btn-primary">Back</a></div>
+        </div>
+        <br/>
+        <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
             <tr>
                 <th>Serial No </th>
                 <th>Identifier</th>
@@ -19,7 +25,7 @@
                 <th>Captured at</th>
             </tr>
         @foreach($highTempOnDate as $data)
-            <tr>
+            <tr class="text-light">
                 <td>{{$counter++}} </td>
                 <td><a href="/reports/{{$data->identifier}}/userReport" class="btn-link">{{$data->identifier}}</a></td>
                 @if(Auth::user()->hasRole(['Super Admin', 'Location Admin']))
@@ -32,12 +38,7 @@
             </tr>
         @endforeach
         </table>
-        <p class="small">
-                Normal Range: &nbsp; &nbsp; &nbsp; &nbsp;
-                Pulse Rate < {{env('CUTOFF_PULSE')}} per min &nbsp; &nbsp; &nbsp; &nbsp;
-                SPO2 > {{env('CUTOFF_SPO2')}}% &nbsp; &nbsp; &nbsp; &nbsp;
-                Temperature < {{env('CUTOFF_TEMP')}} &#8457; (Wrist temperature is 3.3&#8451; / 5.9&#8457; lower than core body temperature)
-            </p> <br/><br/>
+        <br/>
         {{$highTempOnDate->links()}}
     @else
         <p class="h1">No Data available!</p>        
@@ -48,6 +49,6 @@
                 <a href="{{ URL::previous() }}" class="btn btn-primary">Back</a>
             </div>
         </div>
-    </p>
-    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+        @include('inc.parameters')
+    </p>    
 @endsection

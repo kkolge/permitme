@@ -355,22 +355,115 @@ class AdminReportsController extends Controller
         $TempChart->labels($lbl);
         $TempChart->dataset($pincode.": High Temperature by Location", 'doughnut',$valuesTemp)
             ->backgroundColor($col);
+        $TempChart->title($state.': High Temperature by Location');
+        $TempChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
         
 
         $Spo2Chart = new ReportChartLine();
         $Spo2Chart->labels($lbl);
         $Spo2Chart->dataset($pincode.": Low Spo2 by Location", 'doughnut',$valuesSpo2)
             ->backgroundColor($col);
+        $Spo2Chart->title($state.': Low Spo2 by Location');
+        $Spo2Chart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
         $HbcountChart = new ReportChartLine();
         $HbcountChart->labels($lbl);
         $HbcountChart->dataset($pincode.": High Pulse Rate by Location", 'doughnut',$valuesHbcount)
             ->backgroundColor($col);
+        $HbcountChart->title($state.': High Pulse Rate by Location');
+        $HbcountChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
         $AllAbnormalChart = new ReportChartLine();
         $AllAbnormalChart->labels($lbl);
-        $AllAbnormalChart->dataset($pincode.": High Pulse Rate by Location", 'doughnut',$valuesAllAbnormal)
+        $AllAbnormalChart->dataset($pincode.": All Abnormal by Location", 'doughnut',$valuesAllAbnormal)
             ->backgroundColor($col);
+        $AllAbnormalChart->title($state.': All Abnormal by Location');
+        $AllAbnormalChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
+
         return view('adminReports.sPincodeReport', compact('repCollect','state','district','taluka','city','pincode','TempChart','Spo2Chart', 'HbcountChart','AllAbnormalChart'));
         
       }
@@ -497,22 +590,114 @@ class AdminReportsController extends Controller
         $TempChart->labels($lbl);
         $TempChart->dataset($city. ": High Temperature by Pincode", 'doughnut',$valuesTemp)
             ->backgroundColor($col);
+        $TempChart->title($state.': High Temperature by Pincode');
+        $TempChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
         
 
         $Spo2Chart = new ReportChartLine();
         $Spo2Chart->labels($lbl);
         $Spo2Chart->dataset($city. ": Low SPO2 by Pincode", 'doughnut',$valuesSpo2)
             ->backgroundColor($col);
+        $Spo2Chart->title($state.': Low SPO2 by Pincode');
+        $Spo2Chart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
         $HbcountChart = new ReportChartLine();
         $HbcountChart->labels($lbl);
         $HbcountChart->dataset($city. ": High Pulse Rate by Pincode", 'doughnut',$valuesHbcount)
-                ->backgroundColor($col);
+            ->backgroundColor($col);
+        $HbcountChart->title($state.': High Pulse Rate by Pincode');
+        $HbcountChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
         $AllAbnormalChart = new ReportChartLine();
         $AllAbnormalChart->labels($lbl);
-        $AllAbnormalChart->dataset($city. ": High Pulse Rate by Pincode", 'doughnut',$valuesAllAbnormal)
-                ->backgroundColor($col);
+        $AllAbnormalChart->dataset($city. ": All Abnormal by Pincode", 'doughnut',$valuesAllAbnormal)
+            ->backgroundColor($col);
+        $AllAbnormalChart->title($state.': All Abnormal by Pincode');
+        $AllAbnormalChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
         return view('adminReports.sCityReport', compact('repCollect','state','type','district','taluka','city','TempChart','Spo2Chart', 'HbcountChart','AllAbnormalChart'));
 
@@ -646,22 +831,114 @@ class AdminReportsController extends Controller
         $TempChart->labels($lbl);
         $TempChart->dataset($taluka. ": High Temperature by City", 'doughnut',$valuesTemp)
             ->backgroundColor($col);
+        $TempChart->title($state.': High Temperature by City');
+        $TempChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
         
 
         $Spo2Chart = new ReportChartLine();
         $Spo2Chart->labels($lbl);
         $Spo2Chart->dataset($taluka. ": Low Spo2 by City", 'doughnut',$valuesSpo2)
             ->backgroundColor($col);
+        $Spo2Chart->title($state.': Low Spo2 by City');
+        $Spo2Chart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
         $HbcountChart = new ReportChartLine();
         $HbcountChart->labels($lbl);
         $HbcountChart->dataset($taluka. ": Low Spo2 by City", 'doughnut',$valuesHbcount)
             ->backgroundColor($col);
+        $HbcountChart->title($state.': Low Spo2 by City');
+        $HbcountChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
         $AllAbnormalChart = new ReportChartLine();
         $AllAbnormalChart->labels($lbl);
-        $AllAbnormalChart->dataset($taluka. ": Low Spo2 by City", 'doughnut',$valuesAllAbnormal)
+        $AllAbnormalChart->dataset($taluka. ": All Abnormal by City", 'doughnut',$valuesAllAbnormal)
             ->backgroundColor($col);
+        $AllAbnormalChart->title($state.': All Abnormal by City');
+        $AllAbnormalChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
         return view('adminReports.sTalukaReport', compact('repCollect','state','type','district','taluka','TempChart','Spo2Chart', 'HbcountChart','AllAbnormalChart'));
 
@@ -789,22 +1066,114 @@ class AdminReportsController extends Controller
         $TempChart->labels($lbl);
         $TempChart->dataset($district. ": High Temperature by Taluka", 'doughnut',$valuesTemp)
             ->backgroundColor($col);
+        $TempChart->title($state.': High Temperature by Taluka');
+        $TempChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
         
 
         $Spo2Chart = new ReportChartLine();
         $Spo2Chart->labels($lbl);
         $Spo2Chart->dataset($district. ": Low SPO2 by Taluka", 'doughnut',$valuesSpo2)
             ->backgroundColor($col);
+        $Spo2Chart->title($state.': Low SPO2 by Taluka');
+        $Spo2Chart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
         $HbcountChart = new ReportChartLine();
         $HbcountChart->labels($lbl);
         $HbcountChart->dataset($district. ": High Pulse Rate by Taluka", 'doughnut',$valuesHbcount)
             ->backgroundColor($col);
+        $HbcountChart->title($state.': High Pulse Rate by Taluka');
+        $HbcountChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
         $AllAbnormalChart = new ReportChartLine();
         $AllAbnormalChart->labels($lbl);
         $AllAbnormalChart->dataset($district. ": High Pulse Rate by Taluka", 'doughnut',$valuesAllAbnormal)
             ->backgroundColor($col);
+        $AllAbnormalChart->title($state.': High Pulse Rate by Taluka');
+        $AllAbnormalChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
         
         return view('adminReports.sDistrictReport', compact('repCollect','state','type','district','taluka','TempChart','Spo2Chart','HbcountChart','AllAbnormalChart'));
 
@@ -864,20 +1233,56 @@ class AdminReportsController extends Controller
             //Generating SPO2 Chart
             $spo2Chart = new ReportChartLine();
             $spo2Chart->labels($lbl);
-            $spo2Chart->dataset('SPO2 data', 'bar',$valuesSpo2)
+            $spo2Chart->dataset('Low SPO2', 'bar',$valuesSpo2)
                 ->backgroundColor('red');
+            $spo2Chart->title('Low SPO2');
+            $spo2Chart->options([
+                'responsive' => true,
+                'title' => ['fontColor' => 'white'],
+                'legend' => ['display' => true, 
+                    'position' => 'bottom',
+                    'align' => 'left',
+                    'labels' => ['fontColor' => 'white', ],
+                ],
+                
+                //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+            ]);
             
             //Generating Temperature chart
             $tempChart = new ReportChartLine();
             $tempChart->labels($lbl);
-            $tempChart->dataset('Temperature data','bar',$valuesTemp)
+            $tempChart->dataset('High Temperature','bar',$valuesTemp)
                 ->backgroundColor('blue');
+            $tempChart->title('High Temperature');
+            $tempChart->options([
+                'responsive' => true,
+                'title' => ['fontColor' => 'white'],
+                'legend' => ['display' => true, 
+                    'position' => 'bottom',
+                    'align' => 'left',
+                    'labels' => ['fontColor' => 'white', ],
+                ],
+                
+                //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+            ]);
 
             //Generating HB Count chart
             $hbcountChart = new ReportChartLine();
             $hbcountChart->labels($lbl);
-            $hbcountChart->dataset('Pulse Rate data','bar',$valuesHbcount)
+            $hbcountChart->dataset('High Pulse Rate','bar',$valuesHbcount)
                 ->backgroundColor('orange');
+            $hbcountChart->title('High Pulse Rate');
+            $hbcountChart->options([
+                'responsive' => true,
+                'title' => ['fontColor' => 'white'],
+                'legend' => ['display' => true, 
+                    'position' => 'bottom',
+                    'align' => 'left',
+                    'labels' => ['fontColor' => 'white', ],
+                ],
+                
+                //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+            ]);
 
             return view('adminReports.sUserReportv',compact('identifier','iotData','spo2Chart','tempChart', 'hbcountChart'));
         }
@@ -984,22 +1389,114 @@ class AdminReportsController extends Controller
         $TempChart->labels($lbl);
         $TempChart->dataset($state.': High Temperature by District', 'doughnut',$valuesTemp)
             ->backgroundColor($col);
+        $TempChart->title($state.': High Temperature by District');
+        $TempChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
         
 
         $Spo2Chart = new ReportChartLine();
         $Spo2Chart->labels($lbl);
         $Spo2Chart->dataset($state.': Low Spo2 by Distict', 'doughnut',$valuesSpo2)
             ->backgroundColor($col);
+        $Spo2Chart->title($state.': Low Spo2 by Distict');
+        $Spo2Chart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
         $HbcountChart = new ReportChartLine();
         $HbcountChart->labels($lbl);
         $HbcountChart->dataset($state.': High Pulse Rate by Distict', 'doughnut',$valuesHbcount)
             ->backgroundColor($col);
+        $HbcountChart->title($state.': High Pulse Rate by Distict');
+        $HbcountChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
         $AllAbnormalChart = new ReportChartLine();
-            $AllAbnormalChart->labels($lbl);
-            $AllAbnormalChart->dataset($state.': All Abnormal by Distict', 'doughnut',$valuesAllAbnormal)
-                ->backgroundColor($col);
+        $AllAbnormalChart->labels($lbl);
+        $AllAbnormalChart->dataset($state.': All Abnormal by Distict', 'doughnut',$valuesAllAbnormal)
+            ->backgroundColor($col);
+        $AllAbnormalChart->title($state.': All Abnormal by Distict');
+        $AllAbnormalChart->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => false]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
 
             return view('adminReports.sStateReport', compact('repCollect','state','TempChart','Spo2Chart','HbcountChart','AllAbnormalChart'));
     }

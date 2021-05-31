@@ -8,7 +8,6 @@
 
     <p class="h1">Historical data for Location {{ $location }}</p>
     
-    
     <!-- Start making the tabs -->
     <ul class="nav nav-pills nav-fill mb-3" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -38,7 +37,12 @@
     <div class="tab-content" id="myTab-content">
         <div class="tab-pane fade show active" id="tab-allAbnormal-Data" role="tabpanel" aria-labelledby="ex2-tab-1">
             @if (count($iotDataAllAbnormal) > 0)
-                <table class="table table-striped table-bordered">
+            <div class="d-flex">
+                <div>{{ $iotDataAllAbnormal->appends(Request::except('page'))->fragment('tab-allAbnormal')->links() }}</div>
+                <div class="ml-auto"><a href="{{ URL::previous() }}" class="btn btn-primary">Back</a></div>
+            </div>
+            <br/>
+                <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
                     <tr>
                     <th>Serial No </th>
                     <th>Identifier</th>
@@ -48,7 +52,7 @@
                     <th>Captured at</th>
                 </tr>
                 @foreach($iotDataAllAbnormal as $data)
-                    <tr>
+                    <tr class="text-light">
                         <td>{{$counterAllAbnormal++}} </td>
                         <td><a href='/reports/userSearch?identifier={{$data->identifier}}'><div class="btn-link">{{$data->identifier}}</div></a></td>
                         <td>{{$data->hbcount}}</td>
@@ -58,12 +62,7 @@
                     </tr>
                 @endforeach
                 </table>
-                <p class="small">
-                    Normal Range: &nbsp; &nbsp; &nbsp; &nbsp;
-                    Pulse Rate < {{env('CUTOFF_PULSE')}} per min &nbsp; &nbsp; &nbsp; &nbsp;
-                    SPO2 > {{env('CUTOFF_SPO2')}}% &nbsp; &nbsp; &nbsp; &nbsp;
-                    Temperature < {{env('CUTOFF_TEMP')}} &#8457; (Wrist temperature is 3.3&#8451; / 5.9&#8457; lower than core body temperature)
-                </p> <br/><br/>
+               <br/>
                 {{ $iotDataAllAbnormal->appends(Request::except('page'))->fragment('tab-allAbnormal')->links() }}
             @else
                 <p class="h2">No Data available!</p>        
@@ -71,7 +70,12 @@
         </div>
         <div class="tab-pane fade " id="tab-highTemp-Data" role="tabpanel" aria-labelledby="ex2-tab-2" >
             @if (count($iotDataHighTemp) > 0)
-                <table class="table table-striped table-bordered">
+                <div class="d-flex">
+                    <div>{{ $iotDataHighTemp->appends(Request::except('page'))->fragment('tab-allAbnormal')->links() }}</div>
+                    <div class="ml-auto"><a href="{{ URL::previous() }}" class="btn btn-primary">Back</a></div>
+                </div>
+                <br/>
+                <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
                     <tr>
                     <th>Serial No </th>
                     <th>Identifier</th>
@@ -81,7 +85,7 @@
                     <th>Captured at</th>
                 </tr>
                 @foreach($iotDataHighTemp as $data)
-                    <tr>
+                    <tr class="text-light">
                         <td>{{$counterHighTemp++}} </td>
                         <td><a href='/reports/userSearch?identifier={{$data->identifier}}'><div class="btn-link">{{$data->identifier}}</div></a></td>
                         <td>{{$data->hbcount}}</td>
@@ -91,12 +95,7 @@
                     </tr>
                 @endforeach
                 </table>
-                <p class="small">
-                    Normal Range: &nbsp; &nbsp; &nbsp; &nbsp;
-                    Pulse Rate < {{env('CUTOFF_PULSE')}} per min &nbsp; &nbsp; &nbsp; &nbsp;
-                    SPO2 > {{env('CUTOFF_SPO2')}}% &nbsp; &nbsp; &nbsp; &nbsp;
-                    Temperature < {{env('CUTOFF_TEMP')}} &#8457; (Wrist temperature is 3.3&#8451; / 5.9&#8457; lower than core body temperature)
-                </p> <br/><br/>
+                <br/>
                 {{ $iotDataHighTemp->appends(Request::except('page'))->fragment('tab-highTemp')->links() }}
             @else
                 <p class="h2">No Data available!</p>        
@@ -104,7 +103,12 @@
         </div>
         <div class="tab-pane fade " id="tab-lowSpo2-Data" role="tabpanel" aria-labelledby="ex2-tab-2" >
             @if (count($iotDataLowSpo2) > 0)
-                <table class="table table-striped table-bordered">
+                <div class="d-flex">
+                    <div>{{ $iotDataLowSpo2->appends(Request::except('page'))->fragment('tab-allAbnormal')->links() }}</div>
+                    <div class="ml-auto"><a href="{{ URL::previous() }}" class="btn btn-primary">Back</a></div>
+                </div>
+                <br/>
+                <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
                     <tr>
                     <th>Serial No </th>
                     <th>Identifier</th>
@@ -114,7 +118,7 @@
                     <th>Captured at</th>
                 </tr>
                 @foreach($iotDataLowSpo2 as $data)
-                    <tr>
+                    <tr class="text-light">
                         <td>{{$counterLowSpo2++}} </td>
                         <td><a href='/reports/userSearch?identifier={{$data->identifier}}'><div class="btn-link">{{$data->identifier}}</div></a></td>
                         <td>{{$data->hbcount}}</td>
@@ -124,12 +128,7 @@
                     </tr>
                 @endforeach
                 </table>
-                <p class="small">
-                Normal Range: &nbsp; &nbsp; &nbsp; &nbsp;
-                    Pulse Rate < {{env('CUTOFF_PULSE')}} per min &nbsp; &nbsp; &nbsp; &nbsp;
-                    SPO2 > {{env('CUTOFF_SPO2')}}% &nbsp; &nbsp; &nbsp; &nbsp;
-                    Temperature < {{env('CUTOFF_TEMP')}} &#8457; (Wrist temperature is 3.3&#8451; / 5.9&#8457; lower than core body temperature)
-                </p> <br/><br/>
+               <br/>
                 {{ $iotDataLowSpo2->appends(Request::except('page'))->fragment('tab-lowSpo2')->links() }}
             @else
                 <p class="h2">No Data available!</p>        
@@ -137,7 +136,12 @@
         </div>
         <div class="tab-pane fade " id="tab-highHeartRate-Data" role="tabpanel" aria-labelledby="ex2-tab-2" >
             @if (count($iotDataHighHbcount) > 0)
-                <table class="table table-striped table-bordered">
+            <div class="d-flex">
+                    <div>{{ $iotDataHighHbcount->appends(Request::except('page'))->fragment('tab-allAbnormal')->links() }}</div>
+                    <div class="ml-auto"><a href="{{ URL::previous() }}" class="btn btn-primary">Back</a></div>
+                </div>
+                <br/>
+                <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
                     <tr>
                     <th>Serial No </th>
                     <th>Identifier</th>
@@ -147,7 +151,7 @@
                     <th>Captured at</th>
                 </tr>
                 @foreach($iotDataHighHbcount as $data)
-                    <tr>
+                    <tr class="text-light">
                         <td>{{$counterHighHbCount++}} </td>
                         <td><a href='/reports/userSearch?identifier={{$data->identifier}}'><div class="btn-link">{{$data->identifier}}</div></a></td>
                         <td>{{$data->hbcount}}</td>
@@ -157,12 +161,7 @@
                     </tr>
                 @endforeach
                 </table>
-                <p class="small">
-                    Normal Range: &nbsp; &nbsp; &nbsp; &nbsp;
-                    Pulse Rate < {{env('CUTOFF_PULSE')}} per min &nbsp; &nbsp; &nbsp; &nbsp;
-                    SPO2 > {{env('CUTOFF_SPO2')}}% &nbsp; &nbsp; &nbsp; &nbsp;
-                    Temperature < {{env('CUTOFF_TEMP')}} &#8457; (Wrist temperature is 3.3&#8451; / 5.9&#8457; lower than core body temperature)
-                </p> <br/><br/>
+                <br/>
                 {{ $iotDataHighHbcount->appends(Request::except('page'))->fragment('tab-highHeartRate')->links() }}
             @else
                 <p class="h2">No Data available!</p>        
@@ -179,7 +178,8 @@
                 <a href="{{ URL::previous() }}" class="btn btn-primary">Back</a>
             </div>
         </div>
+        @include('inc.parameters')
     </p>
-    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+
     
 @endsection

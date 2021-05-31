@@ -3,11 +3,18 @@
 @section('content')
 <?php use Illuminate\Pagination\LengthAwarePaginator; ?>
 <?php $counter = 1; ?>
+
     
     @if (count($users) > 0)
     <p class="h1"> List of System Users </p>
-        <table class="table table-striped table-bordered">
-            <font size="+1">
+    <div class="d-flex">
+        <div > {{$users->links()}}</div>
+        <div class="ml-auto"><a href="{{ URL::previous() }}" class="btn btn-info">Back</a></div>
+        
+    </div>
+    <br/>
+        <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
+            
                 <tr>
                     <th>Serial No </th>
                     <th>Name</th>
@@ -15,9 +22,9 @@
                     <th>Created at</th>
                     <th>Actions</th>
                 </tr>
-            </font>
+           
         @foreach($users as $user)
-            <tr>
+            <tr class="text-light">
                 <td>{{$counter++}} </td>
                 <td>{{$user->name}}</td>
                 <td>{{$user->email}}</td>
@@ -32,9 +39,9 @@
     @else
         <p class="h1">No Users added!</p>      
     @endif
-    
+    <br/>
     <p>
-        <div class="flex">
+        <div class="d-flex">
             <div class="mx-auto">
                 <a href="usr/create" class="btn btn-primary">Add User </a>
             </div>

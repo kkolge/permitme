@@ -135,18 +135,19 @@ class RegUsersController extends Controller
      */
     public function show($id)
     {
+        //dd('I am here');
         if(!Auth::user()->hasRole(['Super Admin'])){
             abort(403);
         }
         //dd("I am in show", $id);
-        $stf = RegUser::find($id);
+        $stf = RegUser::where('phoneno','=',$id)->first();
         //dd($stf);
         
         
         $idata = iotdata::where('identifier',$id)
-            //->where('created_at','>=',Carbon::today()->subDays(15))
-            ->where('created_at','<=',Carbon::today()->addDays(1))
-            ->orderBy('created_at')->get();
+            ->where('created_at','>=',Carbon::today()->subDays(15))
+            //->where('created_at','<=',Carbon::today()->addDays(1))
+            ->orderBy('created_at')->paginate(25);
         //dd($idata);
         $lbl = collect([]);
         $tempVal = collect([]);
@@ -160,15 +161,65 @@ class RegUsersController extends Controller
         $chart1 = new ReportChartLine();
         $chart1->labels($lbl);
 
-        $chart1->dataset('Temperature','bar',$tempVal)
-            ->backgroundColor('orange');
+        $chart1->dataset('Temperature','line',$tempVal)
+            ->backgroundColor('orange')
+            ->fill(true);
+            
+            //->borderColor('orange');
         $chart1->title("Temperature data for last 15 days");
+        $chart1->options([
+            'responsive' => true,
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'title' => ['fontColor' => 'white'],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => true,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => true],
+                    'grid' => ['fontColor' => 'white'],                    
+                ],
+                'xAxes' => [
+                    'display' => true,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => true],
+                    'grid' => ['olor' => 'white']
+                ],
+            ],
+            'elements' => ['line' => ['borderColor' => 'rgba(255, 165, 0, 0.1)']],
+            //'plugins' => '{datalabels: {color: \'white\'}',
+        ]);
         
         $chart2 = new ReportChartLine();
         $chart2->labels($lbl);
         $chart2->title("SPO2 Data for last 15 days");
-        $chart2->dataset('SPO2','bar',$spo2Val)
+        $chart2->dataset('SPO2','line',$spo2Val)
             ->backgroundColor('blue');
+        $chart2->options([
+            'responsive' => true,
+            'title' => ['fontColor' => 'white'],
+            'legend' => ['display' => true, 
+                'position' => 'bottom',
+                'align' => 'left',
+                'labels' => ['fontColor' => 'white', ],
+            ],
+            'scales' =>[
+                'yAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => true]
+                ],
+                'xAxes' => [
+                    'display' => false,
+                    'ticks' => ['beginAtZero' => true],
+                    'gridLines' => ['display' => true]
+                ],
+            ],
+            //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
+        ]);
         //$chart->title("SPO2 data for all users");
 
         return view('regusers.show',compact('stf','chart1', 'chart2'));//->with('stf',$stf);
@@ -187,7 +238,7 @@ class RegUsersController extends Controller
         }
         //return ('I am here');
 
-        $user = RegUser::find($id);
+        $user = RegUser::where('phoneno','=',$id)->first();
         //dd($user);
         
         return view('regusers.edit')->with('user', $user);

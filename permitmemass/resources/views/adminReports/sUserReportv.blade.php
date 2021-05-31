@@ -7,7 +7,39 @@
     @if (count($iotData ?? []) > 0)
     <p class="h1"> 15 Days Historical data for {{ $identifier }}</p>
     <br/>
-        <table class="table table-striped table-bordered">
+   
+    <div class="card-deck">
+            <div class="card bg-transparent text-center">
+            <!--    <div class="card-header ">
+                    All Abnormal
+                </div> -->
+                <div class="card-body ">
+                    {!! $hbcountChart->container() !!}
+                </div>
+            </div>
+            <div class="card bg-transparent text-center">
+            <!--    <div class="card-header ">
+                    High Heart Rate
+                </div> -->
+                <div class="card-body ">
+                    {!! $spo2Chart->container() !!}
+                </div>
+            </div>
+            <div class="card bg-transparent text-center">
+            <!--    <div class="card-header ">
+                    Low SPO2
+                </div> -->
+                <div class="card-body ">
+                    {!! $tempChart->container() !!}
+                </div>
+            </div>
+            {!! $tempChart->script() !!}
+            {!! $spo2Chart->script() !!}
+            {!! $hbcountChart->script() !!}
+        </div>
+        
+        <br/>
+        <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
             <tr>
                 <th>Serial No </th>
                 @if(Auth::user()->hasRole(['Super Admin', 'Location Admin']))
@@ -22,7 +54,9 @@
             </tr>
         @foreach($iotData as $data)
             @if($data->flagstatus == true)
-                <tr class="table-danger">
+                <tr class="text-danger">
+            @else
+                <tr class="text-light">
             @endif
                 <td>{{$counter++}} </td>
                 <td>{{$data->name}}</td>
@@ -36,28 +70,8 @@
         {{$iotData->appends(request()->except('page'))->links()}}
         
     
-    <p>
-        <div class="flex">
-            <div class="w-1/3">
-                {!! $hbcountChart->container() !!}
-            </div>
-            <div class="w-1/3">
-                {!! $spo2Chart->container() !!}
-            </div>
-            <div class="w-1/3">
-                {!! $tempChart->container() !!}
-            </div>
-        </div>
-        {!! $tempChart->script() !!}
-        {!! $spo2Chart->script() !!}
-        {!! $hbcountChart->script() !!}
-    </p>
-    <p class="small">
-            Normal Range: &nbsp; &nbsp; &nbsp; &nbsp;
-            Pulse Rate < {{env('CUTOFF_PULSE')}} per min &nbsp; &nbsp; &nbsp; &nbsp;
-            SPO2 > {{env('CUTOFF_SPO2')}}% &nbsp; &nbsp; &nbsp; &nbsp;
-            Temperature < {{env('CUTOFF_TEMP')}} &#8457; (Wrist temperature is 3.3&#8451; / 5.9&#8457; lower than core body temperature)
-        </p> <br/><br/>
+    
+    <br/>
     @else
         <p class="h1">No Data available!</p>        
     @endif
@@ -67,6 +81,7 @@
                 <a href="{{ URL::previous() }}" class="btn btn-primary">Back</a>
             </div>
         </div>
+        @include('inc.parameters')
     </p>
     <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 @endsection

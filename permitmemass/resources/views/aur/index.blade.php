@@ -7,17 +7,22 @@
     @if (count($lur) > 0)
     <p class="h1">Users Linked to Roles</p>
     <br/>
-        <table class="table table-striped table-bordered">
+    <div class="d-flex">
+            <div >{{$lur->links()}}</div>
+            <div class="ml-auto"> <a href="{{ URL::previous() }}" class="btn btn-info">Back</a> </div>
+        </div>
+        <br/>
+        <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
             <tr>
-                <font size="+1">
+                
                 <th>Serial No </th>
                 <th>Role </th>
                 <th>User Name</th>
                 <th>Actions</th>
-                </font>
+              
             </tr>
         @foreach($lur as $l)
-            <tr>
+            <tr class="text-light">
                 <td>{{$counter++}} </td>
                 <td> {{$l->rn}} </td>
                 <td>{{$l->un}}</td>
@@ -31,6 +36,7 @@
     @else
         <p class="h1">No Users linked to Role!</p>        
     @endif
+    <br/>
     <p>
         <div class="flex">
             <div class="mx-auto">
@@ -41,6 +47,6 @@
             </div>
         </div>
     </p>
-    <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+
 
 @endsection
