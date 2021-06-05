@@ -7,7 +7,7 @@
 
 
 //#define _DEBUG      // UNCOMMENT FOR DEBUGGING/////////////////////////////
-
+//Ketam -- Add comments next to each variable that you are using. 
 
 LiquidCrystal_I2C lcd(16, 2); // set the LCD 16 chars and 2 line display
 
@@ -32,6 +32,8 @@ const uint8_t spo2_table[184] PROGMEM =
   28, 27, 26, 25, 23, 22, 21, 20, 19, 17, 16, 15, 14, 12, 11, 10, 9, 7, 6, 5,
   3, 2, 1
 } ;
+//Ketan -- How did you arrive at this? We need to update this with proper readings so that we can add a protective film on top of the sensor. 
+// Lets start this testing process with a standard film in the office ASAP
 
 const uint8_t MAXWAVE = 36;
 
@@ -47,9 +49,23 @@ class Waveform {
       waveval = waveval < 0 ? 0 : waveval;
       waveform[wavep] = (uint8_t) (waveval > 255) ? 255 : waveval;
       wavep = (wavep + 1) % MAXWAVE;
+      /*
+      Add following to class level variables 
+      uint8_t maxw = 0;
+      uint8_t minw = 255;
+
+      Add this here 
+      remove this array amd move it to a variable as below - 
+      waveform[wavep] = (uint8_t) (waveval > 255) ? 255 : waveval;
+      variable = (uint8_t) (waveval > 255) ? 255 : waveval;
+      maxw = variable > maxw ? waveform[i] : maxw;
+      minw = variable < minw ? waveform[i] : minw;
+      This will enable you to remove the scale function and also same memory as you will not have to stare each reading in the memory. 
+      REMEMBER TO RESET maxw and minw ONE THE READING FOR THE PERSON IS COMPLETED
+      */
     }
 
-    void scale() {
+    void scale() { // Ketan -- this function can be merged with the above record function. We are just trying to find the min and max here. The display wave array is not required as we are not showing the graph. Lets not add to memory overload. 
       uint8_t maxw = 0;
       uint8_t minw = 255;
       for (int i = 0; i < MAXWAVE; i++) {
@@ -66,8 +82,8 @@ class Waveform {
 
 
   private:
-    uint8_t waveform[MAXWAVE];
-    uint8_t disp_wave[MAXWAVE];
+    uint8_t waveform[MAXWAVE]; //Ketan -- not required. a variable can be used instead of array
+    uint8_t disp_wave[MAXWAVE]; //Ketan -- not required
     uint8_t wavep = 0;
 
 } wave;
@@ -98,8 +114,8 @@ float average_temp = 0;
 long lastBeat = 0;    //Time of the last beat
 long displaytime = 0; //Time of the last display update
 
-bool TScanst=false;
-
+bool TScanst=false; // Ketan - Add a comment what this variables are 
+ 
 const int analogInPin = A0;
 static const uint8_t RLED = D0;
 static const uint8_t GLED = D8;
@@ -184,7 +200,7 @@ void HB_SPO2_OUT()
       beatIR =  pulseIR.isBeat(IR_signal);
       //      }
       // invert waveform to get classical BP waveshape
-      wave.record(draw_Red ? -Red_signal : -IR_signal );
+      wave.record(draw_Red ? -Red_signal : -IR_signal ); // Ketan -- not clear about this step. draw_Red is defined as Boolean whereas you are trying to pass above values as (-). What is the response from pulseIR/Red.ma_filter
       // check IR or Red for heartbeat
       if (draw_Red ? beatRed : beatIR) {
         long btpm = 60000 / (now - lastBeat);
@@ -204,8 +220,8 @@ void HB_SPO2_OUT()
       // update display every 50 ms if fingerdown
       if (now - displaytime > 50) {
         displaytime = now;
-        wave.scale();
-        if (i > 190)
+        wave.scale(); // Ketan -- after the change in the Wave class, you can use the variable directly here. no need to calculate the min/max every time you want to display.  
+        if (i > 190) // Ketan - what is the purpose of this ?
         {
           total_hbcount = total_hbcount - readings_hbcount[readIndex_hbcount];
           readings_hbcount[readIndex_hbcount] = beatAvg;
@@ -236,7 +252,7 @@ void HB_SPO2_OUT()
         lcd.print(SPO2); lcd.print("          ");
         i++;
         if (SPO2 > SPO2_max && i > 100)
-          SPO2_max = SPO2;
+          SPO2_max = SPO2; // Ketan -- make sure this is not above 100%
         delay(1);
       }
     }
@@ -246,7 +262,7 @@ void HB_SPO2_OUT()
       break;
     }
 
-    if (time_out_Spo2 >= 150) { // 1 minute time out
+    if (time_out_Spo2 >= 150) { // 1 minute time out // Ketan - lets cut this down to 30 seconds. The wait is too long.
       err_rled_buz_3();
       lcd.clear();
       time_out_Spo2 = 0;
@@ -281,7 +297,7 @@ void MLX9614()
   float total_temp = 0;                  // the running total
   // the average
 
-  for (int thisReading = 0; thisReading < numReadings; thisReading++) {
+  for (int thisReading = 0; thisReading < numReadings; thisReading++) { // Ketan - this is a new call to the method and it is a private variable. Why do you need to initialize it here? I understand it is on the heap and will have random value. But you are setting the values anyway below. 
     readings_temp[thisReading] = 0;
   }
 #ifdef _DEBUG
@@ -303,14 +319,14 @@ void MLX9614()
     lcd.print("Scaning Temp....");
     lcd.setCursor(0, 1);
     lcd.print("Temp: ");
-    lcd.print(mlx.readObjectTempF());
+    lcd.print(mlx.readObjectTempF()); // Ketan - reading 1
     lcd.print("'F");
-    total_temp = total_temp - readings_temp[readIndex_temp];
-    readings_temp[readIndex_temp] = mlx.readObjectTempF();
+    total_temp = total_temp - readings_temp[readIndex_temp]; // Ketan -- (1)
+    readings_temp[readIndex_temp] = mlx.readObjectTempF(); //Ketan - Reading 2 - you missed one reading here. 
     // add the reading to the total:
-    total_temp = total_temp + readings_temp[readIndex_temp];
+    total_temp = total_temp + readings_temp[readIndex_temp]; // Ketan -- (2) - what is the purpose ? adding and subtracting same number
     // advance to the next position in the array:
-    readIndex_temp = readIndex_temp + 1;
+    readIndex_temp = readIndex_temp + 1; // Ketan - use readIndex++ in line 325 to avoid this step
 
     if (readIndex_temp >= numReadings ) {
       // ...wrap around to the beginning:
@@ -334,7 +350,7 @@ void MLX9614()
 
   }
   // calculate the average:
-  average_temp = total_temp / numReadings;
+  average_temp = total_temp / numReadings; // Ketan - see comment in line 327
 #ifdef _DEBUG
   // send it to the computer as ASCII digits
   Serial.print("average_temp=");
@@ -400,6 +416,8 @@ void setup() {
   lcd.setCursor(0, 1);
   lcd.print(deviceid);
 
+  //Add a check here to check if the sensors are connected and working. If not working, we can stop the loop with an error message
+
 #ifdef _DEBUG
   Serial.println();
   Serial.print("Device ID : ");
@@ -407,7 +425,8 @@ void setup() {
 #endif
 
   delay(100);
-
+//Ketan - this can be done as a function. Putting it here makes code complex to read
+//Ketan - make a single functon where you pass RLED, GLED, BUZZ and number of times to blink. This will make code much more readable 
   digitalWrite(RLED, HIGH);
   digitalWrite(GLED, HIGH);
   //digitalWrite(RLY, HIGH);
@@ -476,14 +495,14 @@ up:
 
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print(" Stay closer to ");
+  lcd.print(" Stay closer to "); // Ketan - Should this be - Scan Temerature to start???
   lcd.setCursor(0, 1);
   lcd.print("   Temp Sensor  ");
   uint8_t time_out = 0;
   while (1)
   {
     sensorValue = analogRead(analogInPin);
-    delay(1000);
+    delay(1000); // Ketan - check this faster - there is a pretty long delay when the person comes close to the sensor. As there are no indications, the user does not get the correct message. 
 #ifdef _DEBUG
     Serial.print("sensor = ");
     Serial.println(sensorValue);
@@ -496,10 +515,10 @@ up:
 
   MLX9614();
   
-  if(TScanst==false)
-  goto up;
+  if(TScanst==false) // Ketan - what is this condition ?
+  goto up; // Ketan -- use can use return here so it goes out of the loop immediately. Avoid using labels  
   
-  delay(1000);
+  delay(1000); // do we need such a long delay ?
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Temp Scan finish");
@@ -548,15 +567,15 @@ up:
     Serial.println("Temprature is Normal ");
 #endif
     TEMPStaus = true;
-    delay(500);
+    delay(500); // Ketan - reduce this if we can 
   }
 
   //  scan SPO2
   lcd.setCursor(0, 0);
-  lcd.print("Place finger to ");
+  lcd.print("Place finger to "); // Ketan - lets change this message. measure spellingis incorrect
   lcd.setCursor(0, 1);
-  lcd.print("measur HB & SPO2");
-  delay(2000);
+  lcd.print("measur HB & SPO2"); // Ketan - 
+  delay(2000); // Ketan - do we need this long delay ?
   String hb = ""; String spo2 = "";
 
   HB_SPO2_OUT();
@@ -598,7 +617,7 @@ up:
   hb = String((uint8_t)average_hbcount);
   spo2 = String((uint8_t)average_spo2 );
 
-  if (spo2.toInt() < 95) {
+  if (spo2.toInt() < 95) { // Ketan - this should be 93
 #ifdef _DEBUG
     Serial.print("SOP2 is < Set Max Value = ");Serial.println("95%");
     Serial.print(average_spo2); Serial.println("%");
@@ -624,6 +643,8 @@ up:
     delay(500);
   }
 
+//Ketan -- add a check for pulse rate too - pulse rate > 120
+
 #ifdef _DEBUG
   Serial.print( "BPM : " );
   Serial.print( hb);
@@ -641,7 +662,7 @@ up:
 
       lcd.clear();
       lcd.setCursor(0, 0);
-      lcd.print("  For Re-Scan   ");
+      lcd.print("  For Re-Scan   "); // Ketan - Rescanning - 
       delay(1000);
 
       lcd.clear();
@@ -653,10 +674,10 @@ up:
       delay(1000);
 
       if (sensorValue > 100) {
-        goto up;
+        goto up; // Ketan - use a return 
       }
 
-      rescan_time_out++;
+      rescan_time_out++; 
       if (rescan_time_out >= 5) { // 10 sec rescan time out
         err_rled_buz_3();
         flag = 1;
@@ -668,7 +689,10 @@ up:
     flag = 0;
   }
 
+//Ketan --add check for Pulse rate
 
+//Ketan -- you are already setting the flag above. Can you use the flag above for this. This will reduct no of checkes
+//Ketan -- Move this out of loop into a separate function. Pass required variables and calculate there 
   if (SPO2Staus && TEMPStaus) {
     lcd.clear();
     lcd.setCursor(0, 0);
@@ -721,6 +745,7 @@ up:
     err_rled_buz_3();
     delay(3000);
   }
+  //Ketan -- add check for Pulse rate
 lcd.setCursor(0, 0);
 lcd.clear();
 }
