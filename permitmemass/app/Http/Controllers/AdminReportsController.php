@@ -1332,9 +1332,11 @@ class AdminReportsController extends Controller
             $iotDataAll = IotData::whereIn('deviceid',$devNameList)
                 ->where('created_at','>=',Carbon::today()->subDays(15))
                 ->get();
+                //dd($iotDataAll);
 
             //Filter all abnormal scans
             $iotDataAbnormal = $iotDataAll->where('flagstatus','=',true);
+            //dd($iotDataAbnormal);
 
             //Total scanned records 
             $iotData = $iotDataAll->count();
@@ -1378,7 +1380,7 @@ class AdminReportsController extends Controller
             $valuesAllAbnormal->push($data['allAbnormal']);
         }
     //dd($lbl);
-    //dd($values);
+    //dd($valuesTemp);
         //getting count of cities to generate colors 
         $col = array(count($repCollect));
         for ( $i = 0; $i<count($repCollect); $i++){

@@ -27,11 +27,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script> 
     
     <style>
-        #app {
+        #app1 {
+            height:100%;
+            background-color:purple; /* For browsers that do not support gradients */
+            background-image: linear-gradient(to right, rgba(50,51,52,0.4), rgba(91,10,145,0.5));
+        };
+
+        #appbody {
             height:100%;
             background-color:purple; /* For browsers that do not support gradients */
             background-image: linear-gradient(to right, rgba(50,51,52,0.4), rgba(91,10,145,0.5));
         }
+
     </style>
 
     <!-- Generate Menu -->
@@ -39,7 +46,9 @@
 
     <!-- End generate Menu -->
 </head>
-    <body>
+    <body style="height:100%;
+            background-color:purple; /* For browsers that do not support gradients */
+            background-image: linear-gradient(to right, rgba(50,51,52,0.4), rgba(91,10,145,0.5));">
     <!-- <body class="text-white" style="background-color:black"> -->
         <div class="container-fluid" id="app">
             <div class="row">

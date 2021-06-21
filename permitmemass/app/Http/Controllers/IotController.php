@@ -517,7 +517,7 @@ class IotController extends Controller
         $iot->save();
         
         
-        $err = DB::select('call after_iotdata_insert(?,?,?)',[$deviceId, $totalFlagCount, Carbon::now()]);
+        $err = DB::statement('call after_iotdata_insert(?,?,?)',[$deviceId, $totalFlagCount, Carbon::now()]);
         //dd($err);
         $respJson  = json_encode(array(
             'status' => 'success',

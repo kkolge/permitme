@@ -52,6 +52,10 @@ Route::resource('aur','AssignUserRoleController');
 
 Route::resource('usr','SystemUsersController');
 
+Route::resource('billplans','BillPlansController');
+
+Route::resource('linklocationbillplan','LocationPlanController');
+
 Route::resource('hospital/beds','BedsController');
 Route::resource('hospital/linkUserBed','LinkBedPatientController');
 Route::resource('hospital/dashboard','HospitalDeshboardController');

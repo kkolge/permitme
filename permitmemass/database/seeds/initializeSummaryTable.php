@@ -36,7 +36,7 @@ class initializeSummaryTable extends Seeder
                 $totalFlagCount = $totalFlagCount + 4;
             }
 
-            $err = DB::select('call after_iotdata_insert(?,?,?)',[$data->deviceid, $totalFlagCount, $data->created_at]);
+            $err = DB::statement('call after_iotdata_insert(?,?,?)',[$data->deviceid, $totalFlagCount, $data->created_at]);
             $count++;
         }
         print("Done processing: ".$count."\n");

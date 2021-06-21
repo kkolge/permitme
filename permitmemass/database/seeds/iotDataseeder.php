@@ -22,7 +22,7 @@ class iotDataseeder extends Seeder
                 $data = new IotData();
                 $data->identifier = rand(9900000001,9900001000);
                 $data->deviceid = $d;
-                $data->temp = rand(87, 95);
+                $data->temp = rand(87, 99);
                 $data->spo2 = rand(85,100);
                 $data->hbcount = rand(65,160);
                 $data->created_at = Carbon::now()
@@ -42,8 +42,12 @@ class iotDataseeder extends Seeder
                 if($data->temp > env('CUTOFF_TEMP')){
                     $totalFlagCount = $totalFlagCount + 4;
                 }
+                if($totalFlagCount > 0){
+                    $data->flagstatus = true;
+                }
+                $data->save();
     
-                $err = DB::select('call after_iotdata_insert(?,?,?)',[$data->deviceid, $totalFlagCount, $data->created_at]);
+                $err = DB::statement('call after_iotdata_insert(?,?,?)',[$data->deviceid, $totalFlagCount, $data->created_at]);
                 echo ('completed device '.$d);
             }
         }

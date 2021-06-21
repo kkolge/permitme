@@ -57,6 +57,17 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/linkUser">View Location Users</a>
                     <a class="dropdown-item" href="/linkUser/create">Link User-Location</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/linklocationbillplan">View Location Plan </a>
+                    <a class="dropdown-item" href="/linklocationbillplan/create">Link Plan-Location</a>
+                </div>
+            </div>
+            <div class="nav-item dropdown">
+                <div>
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">Bill Plans</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/billplans">Bill Plans</a>
+                    </div>
                 </div>
             </div>
 
