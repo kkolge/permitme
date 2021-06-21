@@ -146,9 +146,14 @@ class HomeController extends Controller
                 //->get()
                 //->toArray();
         }
+        else{
+            $devNameList = collect('NODEV');
+        }
+                
         //dd($devNameList);
+
         session([
-            'GDevId' => $devNameList,
+            'GDevId' => $devNameList ?? '',
         ]);
            
         //getting data for dashboard
@@ -166,7 +171,7 @@ class HomeController extends Controller
         //dd($dataCounts);
 
         
-        $iotScanAll =IotData::whereIn('deviceid',$devNameList)
+        $iotScanAll =IotData::whereIn('deviceid',$devNameList ?? 'NODEV')
             ->select('identifier','deviceid','temp','spo2','hbcount','created_at','flagstatus')
             ->get(); 
         //This is the master data set for all data 

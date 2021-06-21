@@ -126,6 +126,7 @@
             <div class="mx-auto">
                 <a href="{{ URL::previous() }}" class="btn btn-info">Back</a>
             </div>
-        </div>
+        </div> 
+        @include('inc.parameters')
     </p>
 @endsection
