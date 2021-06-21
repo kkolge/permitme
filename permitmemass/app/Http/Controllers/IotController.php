@@ -265,7 +265,7 @@ class IotController extends Controller
                         $respJson  = json_encode(array(
                             'status' => 'error',
                             'random1' => md5($reqDeviceId),
-                            'status' => 'E23'
+                            'reason' => 'E23'
                         ));
                         return($respJson);
                 }
