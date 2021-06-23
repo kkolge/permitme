@@ -311,7 +311,7 @@ class IotController extends Controller
                             'hbcount' => env('CUTOFF_PULSE'),
                             'spo2' => env('CUTOFF_SPO2'),
                             'temp' => env('CUTOFF_TEMP'),
-                            'devtype' => $dev[0]->devtype,
+                            'devtype' => $dev[0]->devtype
                         ));
                         //dd($respJson);
                         return($respJson);
@@ -522,7 +522,7 @@ class IotController extends Controller
         $respJson  = json_encode(array(
             'status' => 'success',
             'random1' => $devmd5,
-            'random2' => $token,
+            'random2' => $token
         ));
 
         return $respJson;
