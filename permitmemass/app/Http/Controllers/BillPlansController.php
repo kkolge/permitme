@@ -13,6 +13,11 @@ class BillPlansController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         $plans = BillPlans::where('isactive','=',true)->orderBy('name', 'desc')->orderBy('created_at','desc')->paginate(50);

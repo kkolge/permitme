@@ -26,30 +26,37 @@
     <!-- Generate Menu -->
 
     <!-- End generate Menu -->
+    <style>
+        #app1 {
+            height:100%;
+            background-color:purple; /* For browsers that do not support gradients */
+            background-image: linear-gradient(to right, rgba(50,51,52,0.4), rgba(91,10,145,0.5));
+        };
+
+        #appbody {
+            height:100%;
+            background-color:purple; /* For browsers that do not support gradients */
+            background-image: linear-gradient(to right, rgba(50,51,52,0.4), rgba(91,10,145,0.5));
+        }
+
+    </style>
 </head>
-<body>
-    <div id="app" >
-        @include('inc.navbar')
-        <div id="main" class="row">
-            <div id="sidebar" class="col-md-2">
-                
+    <body style="height:100%;
+            background-color:purple; /* For browsers that do not support gradients */
+            background-image: linear-gradient(to right, rgba(50,51,52,0.4), rgba(91,10,145,0.5));">
+        <div class="container-fluid" id="app" >
+            <div class="row">
+                @include('inc.navbar')
             </div>
             
-            <div class="col-md-8">
+        <div id="main" class="row d-flex justify-content-cente" style="margin-left:0;">
+            
+            <div class="col-lg-12 col-sm-12 col-md-8 text-light  ">
+                
+                <br/><br/>
                 @include('inc.messages')
-                <main class="py-4">
-                    <div>
-                        @if(!Auth::guest())
-                        <font size="+2">
-                        <!-- adding the user information -->
-                        <!-- name --> Welcome {{Auth::user()->name}}, &nbsp; 
-                        <!-- Designation -->{{Session::get('GDesignation','')}}, &nbsp;
-                        <!-- Location Name --> {{Session::get('GlocationName', '')}}
-                        <!-- End adding the user information -->
-                        </font>
-                        <p>&nbsp;</p> 
-                        @endif
-                    </div>
+
+                <main class="py-md-5 ">
                     @yield('content')
                 </main>
             </div>

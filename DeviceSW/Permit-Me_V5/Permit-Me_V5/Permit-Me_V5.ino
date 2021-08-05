@@ -43,7 +43,7 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
 
 byte x, y;  // track lcd position
 char c;
-char MobNo[11] = " ";
+char MobNo[11] = " "; // Ketan -- we may have to use aadhar number at some places so make this 12 chars
 
 LiquidCrystal_I2C lcd(16, 2); // set the LCD 16 chars and 2 line display
 
@@ -56,6 +56,7 @@ Pulse pulseRed;
 MAFilter bpm;
 
 //spo2_table is approximated as  -45.060*ratioAverage* ratioAverage + 30.354 *ratioAverage + 94.845 ;
+//Ketan -- as per the comment is stand alone
 const uint8_t spo2_table[184] PROGMEM =
 { 95, 95, 95, 96, 96, 96, 97, 97, 97, 97, 97, 98, 98, 98, 98, 98, 99, 99, 99, 99,
   99, 99, 99, 99, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,

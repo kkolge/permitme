@@ -10,7 +10,6 @@
     <div class="d-flex">
         <div > {{$users->links()}}</div>
         <div class="ml-auto"><a href="{{ URL::previous() }}" class="btn btn-info">Back</a></div>
-        
     </div>
     <br/>
         <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
@@ -36,6 +35,8 @@
         @endforeach
         </table>
         {{$users->links()}}
+
+        
     @else
         <p class="h1">No Users added!</p>      
     @endif
@@ -45,6 +46,7 @@
             <div class="mx-auto">
                 <a href="usr/create" class="btn btn-primary">Add User </a>
             </div>
+            <div class="mx-auto"><a href="{{ URL::to('/usr?type=download') }}" class="btn btn-info">Download</a></div>
             <div class="mx-auto">
                 <a href="{{ URL::previous() }}" class="btn btn-info">Back</a>
             </div>

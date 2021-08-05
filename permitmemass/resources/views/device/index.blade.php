@@ -55,6 +55,9 @@
             <div class="mx-auto">
                 <a href="device/create" class="btn btn-primary">Add Device </a>
             </div>
+            <div class="mx-auto">
+                <a href="device?type=download" class="btn btn-info">Download </a>
+            </div>
             @endif
             <div class="mx-auto">
         <a href="{{ URL::previous() }}" class="btn btn-info">Back</a>

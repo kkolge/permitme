@@ -60,6 +60,7 @@
                     <a href="location/{{$loc->id}}" class="btn btn-info">Show</a> 
                     
                     <a href="location/{{$loc->id}}/edit" class="btn btn-info">Edit</a>
+                    
                 </td>
                 @endif
             </tr>
@@ -76,9 +77,12 @@
                 <div class="mx-auto">
                     <a href="location/create" class="btn btn-primary">Add Location </a>
                 </div>
+            <div class="mx-auto">
+                <a href="/location?type=download" class="btn btn-info">Download</a>
+            </div>
             @endif
             <div class="mx-auto">
-        <a href="{{ URL::previous() }}" class="btn btn-info">Back</a>
+                <a href="{{ URL::previous() }}" class="btn btn-info">Back</a>
             </div>
         </div>
     </p>

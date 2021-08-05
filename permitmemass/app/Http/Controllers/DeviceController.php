@@ -6,9 +6,13 @@ use App\Device;
 use Exception;
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Support\Facades\DB;
+use App\Http\Traits\ExportHelpers;
 
 class DeviceController extends Controller
 {
+    use ExportHelpers;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -19,7 +23,41 @@ class DeviceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {   
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                if(Auth::user()->hasRole(['Super Admin'])){
+                    $device = DB::select('select d.serial_no, d.devtype, lld.name as installedat, concat(v.name, ":", v.pincode, ":", v.city, ":", v.taluka, ":", v.district, ":", v.state) as location from device d
+                    inner join vlocdev v
+                        on d.serial_no = v.serial_no
+                    inner JOIN LinkLocDev lld
+                        on lld.deviceid = d.id
+                    where d.isactive = true
+                        AND  v.locactive = true
+                        and v.linkactive = true
+                        and v.devactive = true
+                    order by location asc, d.serial_no asc');
+
+                
+                }
+                /*else if(Auth::user()->hasRole('Location Admin')){
+                    $locationsDownload = DB::select("select l.name, l.noofresidents, concat(l.address1, ' ', l.address2) as address, l.pincode, l.city, l.taluka, l.district, l.state, ifnull(m.name,'Parent Location') as parent 
+                    from location l 
+                    left outer join location m 
+                        on m.id = l.parent
+                    where id = ? or parent = ? 
+                    order BY 
+                        parent asc, l.state ASC, l.district asc, l.taluka asc, l.city asc, l.pincode asc, l.name asc", session('GlocationId'), session('GlocationId'));
+                }*/
+                //dd($locationsDownload);
+                $colHeaders = array('Device ID','Device Type', 'Installed At', 'Location Name');
+                $listOfFields = array('serial_no','devtype','installedat', 'location');
+                $fileName = "Device.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $device, 4, $listOfFields);
+            }
+        }
+
         if(Auth::user()->hasRole(['Super Admin'])){
             $dev = Device::orderBy('serial_no')->paginate(10);
         }

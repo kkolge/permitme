@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Route;
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
-Route::post('/validateDevice','IotController@validateDevice');
-Route::post('/updateDevStatus','IotController@updateTokenSuccess');
-Route::post('/vRFID','IotController@validateRFID');
-Route::post('/saveDeviceData','IotController@saveDeviceData');//->middleware('throttle:100,1');
+//Route::post('/validateDevice','IotController@validateDevice');
+Route::post('/validateDevice','IotController@validateDevice')->middleware(\Spatie\HttpLogger\Middlewares\HttpLogger::class);
+Route::post('/updateDevStatus','IotController@updateTokenSuccess')->middleware(\Spatie\HttpLogger\Middlewares\HttpLogger::class);
+Route::post('/vRFID','IotController@validateRFID')->middleware(\Spatie\HttpLogger\Middlewares\HttpLogger::class);
+Route::post('/saveDeviceData','IotController@saveDeviceData')->middleware(\Spatie\HttpLogger\Middlewares\HttpLogger::class);//->middleware('throttle:100,1');

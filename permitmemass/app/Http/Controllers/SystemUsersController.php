@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Expr\Cast;
+use Illuminate\Support\Facades\DB;
+use App\Http\Traits\ExportHelpers;
 
 class SystemUsersController extends Controller
 {
+    use ExportHelpers;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -21,6 +26,19 @@ class SystemUsersController extends Controller
     {
         if(!Auth::user()->hasRole(['Super Admin'])){
             abort(403);
+        }
+        //dd($_GET['type']);
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                $users = User::select('name','email',DB::raw('DATE_FORMAT(created_at,"%d-%b-%Y") as created_at'))
+                ->get();
+                //dd($users);
+                $colHeaders = array('Name','Email ID', 'Added On');
+                $listOfFields = array('name','email','created_at');
+                $fileName = "SystemUsers.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $users, 3, $listOfFields);
+            }
         }
 
         $users = User::orderBy('name')->paginate(10);
@@ -134,5 +152,12 @@ class SystemUsersController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Function to download all system users
+     */
+    public function downloadAll(){
+        
     }
 }

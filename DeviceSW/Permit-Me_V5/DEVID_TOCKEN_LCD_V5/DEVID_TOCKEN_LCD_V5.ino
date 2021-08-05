@@ -4,6 +4,7 @@
 #include "LiquidCrystal_I2C.h"
 
 // Set the LCD address to 0x27 or 0x3F as per LCD//////////////////////////
+//Ketan --  CHANGE TOCKEN TO TOKEN
 
 byte LCD_ADD = 0x27;
 
@@ -28,7 +29,9 @@ int ledPin = D0;
 
 #ifdef _WRITE_TOCKEN_EEPROM
 
-void writeStringToEEPROM(int addrOffset, const String &strToWrite)
+//Ketan -- you get the token as 16 byte Hex . convert the string into 16 bytes Hex and save so you can save lots of space in the memory. Instead of writing 32 bytes - you need to deal with only 16 bytes. 
+// you can use String to Hex and reverse functions
+void writeStringToEEPROM(int addrOffset, const String &strToWrite) 
 {
   byte len = strToWrite.length();
   EEPROM.write(addrOffset, len);

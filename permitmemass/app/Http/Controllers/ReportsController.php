@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\AllDataReport;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Device;
 use Illuminate\Support\Facades\Auth;
 use App\LinkLocUser;
@@ -16,9 +16,12 @@ use App\RegUser;
 use App\Http\Controllers\RegUsersController;
 use App\vLocDev;
 use Illuminate\Routing\RedirectController;
+use App\Http\Traits\ExportHelpers;
 
 class ReportsController extends Controller
 {
+    use ExportHelpers;
+    
     public function __construct()
     {
         $this->middleware('auth');
@@ -64,23 +67,7 @@ class ReportsController extends Controller
     public function allDataLocationReport(){
         // throw all sensor data 
        
-        /*$allData = DB::select('select i.deviceid, d.id, l.locationid,  i.identifier, ln.name, i.temp, i.spo2, i.hbcount, i.created_at from iotdata as i
-        join device as d on i.deviceid = d.serial_no
-        join LinkLocDev as l on d.id = l.deviceid
-        join location as ln on l.locationid = ln.id
-        order by i.created_at desc');//->paginate(15);
-
-        'GDesignation' => 'Site Admin',
-                'GlocationName' => $loc1->name,
-                'GlocationId'=> $loc1->id,
-                'GnoOfResidents' => $loc1->noofresidents,
-                'Gcity' => $loc1->city,
-                'GisActive' => true,
-                session([
-            'GDevId' => $devNameList,
-
-        ]);
-        */
+        
 
         /* 
             Adding code for filters
@@ -92,6 +79,48 @@ class ReportsController extends Controller
 
         //dd(session('GDevId'));
         if(Auth::user()->hasRole(['Super Admin','Location Admin'])){
+            //Ketan add for report document 
+            if(isset($_GET['type']) && !empty($_GET['type'])){
+                if($_GET['type']== 'download'){
+                    if($fLocation == '*'){
+                        $allDataDownload = DB::table('iotdata')->whereIn('iotdata.deviceid',session('GDevId'))
+                                    ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
+                                    ->join('vlocdev','vlocdev.serial_no','iotdata.deviceid')
+                                    ->select('iotdata.identifier as identifier',
+                                    'iotdata.temp as temp', 'iotdata.spo2 as spo2',
+                                    'iotdata.hbcount as hbcount', 'iotdata.created_at as created_at',
+                                    'vlocdev.name as lname', DB::raw('(select case iotdata.flagstatus when 0 then "No" when 1 then "Yes" end) as flagstatus'))
+                                    ->orderBy('iotdata.created_at','desc')
+                                    ->orderBy('iotdata.hbcount', 'desc')
+                                    ->orderBy('iotdata.spo2','asc')
+                                    ->orderBy('iotdata.temp','desc')
+                                    ->get();
+                                    //dd(Carbon::today()->subDays(15));
+                    }
+                    else{
+                        $allDataDownload = DB::table('iotdata')->whereIn('iotdata.deviceid',session('GDevId'))
+                                    ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
+                                    ->join('vlocdev','vlocdev.serial_no','iotdata.deviceid')
+                                    ->where('vlocdev.name','=',$fLocation)
+                                    ->select('iotdata.identifier as identifier',
+                                    'iotdata.temp as temp', 'iotdata.spo2 as spo2',
+                                    'iotdata.hbcount as hbcount', 'iotdata.created_at as created_at',
+                                    'vlocdev.name as lname', DB::raw('(select case iotdata.flagstatus when 0 then "No" when 1 then "Yes" end) as flagstatus'))
+                                    ->orderBy('iotdata.created_at','desc')
+                                    ->orderBy('iotdata.hbcount', 'desc')
+                                    ->orderBy('iotdata.spo2','asc')
+                                    ->orderBy('iotdata.temp','desc')
+                                    ->get();
+                    }
+                    //dd($allDataDownload);
+                    $colHeaders = array('Identifier','Temperature', 'SPO2', 'Pulse Rate', 'Recorded Time', 'Recorded At', 'Abnormal');
+                    $listOfFields = array('identifier','temp','spo2', 'hbcount', 'created_at', 'lname', 'flagstatus');
+                    $fileName = "AllDataReport.csv";
+                    //dd('sending data to export controller');
+                    $this->generateCSV($fileName, $colHeaders, $allDataDownload, 7, $listOfFields);
+                }
+            }
+
             if($fLocation == '*'){
                 $allData = DB::table('iotdata')->whereIn('iotdata.deviceid',session('GDevId'))
                             ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
@@ -125,6 +154,53 @@ class ReportsController extends Controller
             $ddLocation = (vLocDev::whereIn('serial_no',session('GDevId'))->pluck('name','name'))->unique();
         }
         elseif (Auth::user()->hasRole(['Site Admin'])){
+            if(isset($_GET['type']) && !empty($_GET['type'])){
+                if($_GET['type']== 'download'){
+                    if($fLocation == '*'){
+                        $allDataDownload = DB::table('iotdata')->whereIn('iotdata.deviceid',session('GDevId'))
+                            ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
+                            ->join('vlocdev','vlocdev.serial_no','iotdata.deviceid')
+                            ->join('device','device.serial_no','iotdata.deviceid')
+                            ->join('LinkLocDev','LinkLocDev.deviceid','device.id')
+                            ->where('LinkLocDev.isactive','=',true)
+                            ->select('iotdata.identifier as identifier',
+                            'iotdata.temp as temp', 'iotdata.spo2 as spo2',
+                            'iotdata.hbcount as hbcount', 'iotdata.created_at as created_at',
+                            'vlocdev.name as lname', DB::raw('(select case iotdata.flagstatus when 0 then "No" when 1 then "Yes" end) as flagstatus'), 'LinkLocDev.name as dname')
+                            ->orderBy('iotdata.created_at','desc')
+                            ->orderBy('iotdata.hbcount', 'desc')
+                            ->orderBy('iotdata.spo2','asc')
+                            ->orderBy('iotdata.temp','desc')
+                            ->get();
+                                    //dd(Carbon::today()->subDays(15));
+                    }
+                    else{
+                        $allDataDownload = DB::table('iotdata')->whereIn('iotdata.deviceid',session('GDevId'))
+                            ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
+                            ->join('vlocdev','vlocdev.serial_no','iotdata.deviceid')
+                            ->join('device','device.serial_no','iotdata.deviceid')
+                            ->join('LinkLocDev','LinkLocDev.deviceid','device.id')
+                            ->where('LinkLocDev.isactive','=',true)
+                            ->where('vlocdev.serial_no','=',$fLocation)
+                            ->select('iotdata.identifier as identifier',
+                            'iotdata.temp as temp', 'iotdata.spo2 as spo2',
+                            'iotdata.hbcount as hbcount', 'iotdata.created_at as created_at',
+                            'vlocdev.name as lname', DB::raw('(select case iotdata.flagstatus when 0 then "No" when 1 then "Yes" end) as flagstatus'), 'LinkLocDev.name as dname')
+                            ->orderBy('iotdata.created_at','desc')
+                            ->orderBy('iotdata.hbcount', 'desc')
+                            ->orderBy('iotdata.spo2','asc')
+                            ->orderBy('iotdata.temp','desc')
+                            ->paginate(50);
+                    }
+                    //dd($allDataDownload);
+                    $colHeaders = array('Identifier','Temperature', 'SPO2', 'Pulse Rate', 'Recorded Time', 'Recorded At', 'Abnormal', 'Device Name');
+                    $listOfFields = array('identifier','temp','spo2', 'hbcount', 'created_at', 'lname', 'flagstatus', 'dname');
+                    $fileName = "AllDataReport.csv";
+                    //dd('sending data to export controller');
+                    $this->generateCSV($fileName, $colHeaders, $allDataDownload, 8, $listOfFields);
+                }
+            }
+
             if($fLocation == '*'){
                 $allData = DB::table('iotdata')->whereIn('iotdata.deviceid',session('GDevId'))
                             ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
@@ -240,6 +316,18 @@ class ReportsController extends Controller
         ->orderBy(DB::raw('Date(created_at)'),'desc')
         ->get();
 
+        //Generating download report 
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                $colHeaders = array('Date','Number of All Abnormal Scans');
+                    $listOfFields = array('date','count');
+                    $fileName = "AllAbnormalDataReport.csv";
+                    //dd('sending data to export controller');
+                    $this->generateCSV($fileName, $colHeaders, $allAbnormal15Days, 2, $listOfFields);
+            }
+        }
+
+
         //dd($lowSpo215Days);
         //creating data for chart
         $lbl = collect([]);
@@ -284,6 +372,30 @@ class ReportsController extends Controller
             return view('/reports/AllAbnormalReportByDate')->with('error', 'No device associated with your location');
         }
 
+        //Generating download report 
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                $abnormalOnDateReport = IotData::whereIn('iotdata.deviceid',session('GDevId'))
+                ->where(DB::raw('Date(iotdata.created_at)'),'=',new Carbon($date))
+                ->where('iotdata.spo2','<',env('CUTOFF_SPO2'))
+                ->where('iotdata.temp', '>', env('CUTOFF_TEMP'))
+                ->where('iotdata.hbcount', '>', env('CUTOFF_PULSE'))
+                ->join('vlocdev','iotdata.deviceid','vlocdev.serial_no')
+                ->select('iotdata.identifier','iotdata.temp','iotdata.spo2','iotdata.hbcount',DB::raw('DATE_FORMAT(iotdata.created_at, "%d-%m-%Y %H%i%s") as created_at'),'vlocdev.name')
+                ->orderBy(DB::raw('Date(iotdata.created_at)','desc'))
+                ->orderBy('vlocdev.name','desc')
+                ->get();
+                //dd($abnormalOnDateReport);
+               
+                $colHeaders = array('Identifier', 'Temperature', 'SPO2', 'Pulse Rate', 'Capture Time', 'Caputre Location');
+                $listOfFields = array('identifier','temp', 'spo2', 'hbcount', 'created_at', 'name');
+                $fileName = "AllAbnormalDataByDate.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $abnormalOnDateReport, 6, $listOfFields);
+            }
+        }
+
         $abnormalOnDate = IotData::whereIn('iotdata.deviceid',session('GDevId'))
         ->where(DB::raw('Date(iotdata.created_at)'),'=',new Carbon($date))
         ->where('iotdata.spo2','<',env('CUTOFF_SPO2'))
@@ -320,6 +432,17 @@ class ReportsController extends Controller
         ->groupBy(DB::raw('Date(created_at)'))
         ->orderBy(DB::raw('Date(created_at)'),'desc')
         ->get();
+
+        //Generating download report 
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                $colHeaders = array('Date','Number of High Pulse Rate Scans');
+                    $listOfFields = array('date','count');
+                    $fileName = "LowSPO2Report.csv";
+                    //dd('sending data to export controller');
+                    $this->generateCSV($fileName, $colHeaders, $lowSpo215Days, 2, $listOfFields);
+            }
+        }
 
         //dd($lowSpo215Days);
         //creating data for chart
@@ -365,6 +488,28 @@ class ReportsController extends Controller
             return view('/reports/SPO2ReportByDate')->with('error', 'No device associated with your location');
         }
 
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                $abnormalOnDateReport = IotData::whereIn('iotdata.deviceid',session('GDevId'))
+                ->where(DB::raw('Date(iotdata.created_at)'),'=',new Carbon($date))
+                ->where('iotdata.spo2', '>', env('CUTOFF_SPO2'))
+                ->join('vlocdev','iotdata.deviceid','vlocdev.serial_no')
+                ->select('iotdata.identifier','iotdata.temp','iotdata.spo2','iotdata.hbcount',DB::raw('DATE_FORMAT(iotdata.created_at, "%d-%m-%Y %H%i%s") as created_at'),'vlocdev.name')
+                ->orderBy(DB::raw('Date(iotdata.created_at)','desc'))
+                ->orderBy('vlocdev.name','desc')
+                ->get();
+                //dd($abnormalOnDateReport);
+               
+                $colHeaders = array('Identifier', 'Temperature', 'SPO2', 'Pulse Rate', 'Capture Time', 'Caputre Location');
+                $listOfFields = array('identifier','temp', 'spo2', 'hbcount', 'created_at', 'name');
+                $fileName = "LowSPO2ByDateReport.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $abnormalOnDateReport, 6, $listOfFields);
+            }
+        }
+
+
         $lowSpo2OnDate = IotData::whereIn('iotdata.deviceid',session('GDevId'))
         ->where(DB::raw('Date(iotdata.created_at)'),'=',new Carbon($date))
         ->where('iotdata.spo2','<',env('CUTOFF_SPO2'))
@@ -397,6 +542,18 @@ class ReportsController extends Controller
         ->groupBy(DB::raw('Date(created_at)'))
         ->orderBy(DB::raw('Date(created_at)','desc'))
         ->get();
+
+        //Generating download report 
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                $colHeaders = array('Date','Number of High Pulse Rate Scans');
+                    $listOfFields = array('date','count');
+                    $fileName = "HighTemperatureReport.csv";
+                    //dd('sending data to export controller');
+                    $this->generateCSV($fileName, $colHeaders, $highTemp15Days, 2, $listOfFields);
+            }
+        }
+
 
         //dd($lowSpo215Days);
         //creating data for chart
@@ -445,6 +602,27 @@ class ReportsController extends Controller
             return view('/reports/TempDetailsByDate')->with('error', 'No device associated with your location');
         }
 
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                $abnormalOnDateReport = IotData::whereIn('iotdata.deviceid',session('GDevId'))
+                ->where(DB::raw('Date(iotdata.created_at)'),'=',new Carbon($date))
+                ->where('iotdata.temp', '>', env('CUTOFF_TEMP'))
+                ->join('vlocdev','iotdata.deviceid','vlocdev.serial_no')
+                ->select('iotdata.identifier','iotdata.temp','iotdata.spo2','iotdata.hbcount',DB::raw('DATE_FORMAT(iotdata.created_at, "%d-%m-%Y %H%i%s") as created_at'),'vlocdev.name')
+                ->orderBy(DB::raw('Date(iotdata.created_at)','desc'))
+                ->orderBy('vlocdev.name','desc')
+                ->get();
+                //dd($abnormalOnDateReport);
+               
+                $colHeaders = array('Identifier', 'Temperature', 'SPO2', 'Pulse Rate', 'Capture Time', 'Caputre Location');
+                $listOfFields = array('identifier','temp', 'spo2', 'hbcount', 'created_at', 'name');
+                $fileName = "HighTemperatureByDateReport.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $abnormalOnDateReport, 6, $listOfFields);
+            }
+        }
+
         $highTempOnDate = IotData::whereIn('iotdata.deviceid',session('GDevId'))
         ->where(DB::raw('Date(iotdata.created_at)'),'=',new Carbon($date))
         ->where('iotdata.temp','>',env('CUTOFF_TEMP'))
@@ -473,6 +651,7 @@ class ReportsController extends Controller
             return view('/reports/HbcountReport')->with('error', 'No records');
         }
 
+
         $highHbcount15Days = IotData::whereIn('deviceid',session('GDevId'))
         ->where('created_at','>=',Carbon::today()->subDays(15))
         ->where('created_at','<=',Carbon::today()->addDays(1))
@@ -481,6 +660,17 @@ class ReportsController extends Controller
         ->groupBy(DB::raw('Date(created_at)'))
         ->orderBy(DB::raw('Date(created_at)'), 'desc')
         ->get();
+
+         //Generating download report 
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                $colHeaders = array('Date','Number of High Pulse Rate Scans');
+                    $listOfFields = array('date','count');
+                    $fileName = "HighPulseRateReport.csv";
+                    //dd('sending data to export controller');
+                    $this->generateCSV($fileName, $colHeaders, $highHbcount15Days, 2, $listOfFields);
+            }
+        }
 
         //dd($lowSpo215Days);
         //creating data for chart
@@ -498,7 +688,7 @@ class ReportsController extends Controller
         //get array for labels
         $hbcountChart->labels($lbl);
         $hbcountChart->title('High Pulse Rate Data');
-        $hbcountChart->dataset('High Pulse Rate Data', 'line',$values)
+        $hbcountChart->dataset('High Pulse Rate Data', 'bar',$values)
             ->backgroundColor('red');
         $hbcountChart->options([
             'responsive' => true,
@@ -527,6 +717,27 @@ class ReportsController extends Controller
             return view('/reports/HbcountDetailsByDate')->with('error', 'No data available!');
         }
 
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                $abnormalOnDateReport = IotData::whereIn('iotdata.deviceid',session('GDevId'))
+                ->where(DB::raw('Date(iotdata.created_at)'),'=',new Carbon($date))
+                ->where('iotdata.hbcount', '>', env('CUTOFF_PULSE'))
+                ->join('vlocdev','iotdata.deviceid','vlocdev.serial_no')
+                ->select('iotdata.identifier','iotdata.temp','iotdata.spo2','iotdata.hbcount',DB::raw('DATE_FORMAT(iotdata.created_at, "%d-%m-%Y %H%i%s") as created_at'),'vlocdev.name')
+                ->orderBy(DB::raw('Date(iotdata.created_at)','desc'))
+                ->orderBy('vlocdev.name','desc')
+                ->get();
+                //dd($abnormalOnDateReport);
+               
+                $colHeaders = array('Identifier', 'Temperature', 'SPO2', 'Pulse Rate', 'Capture Time', 'Caputre Location');
+                $listOfFields = array('identifier','temp', 'spo2', 'hbcount', 'created_at', 'name');
+                $fileName = "HighPulseRateByDateReport.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $abnormalOnDateReport, 6, $listOfFields);
+            }
+        }
+
         $highHbcountOnDate = IotData::whereIn('iotdata.deviceid',session('GDevId'))
         ->where(DB::raw('Date(iotdata.created_at)'),'=',new Carbon($date))
         ->where('iotdata.hbcount','>',env('CUTOFF_PULSE'))
@@ -553,6 +764,18 @@ class ReportsController extends Controller
         
 
         $id = $request->input('identifier');
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                $type = 'download';
+            }
+            else{
+                $type = 'normal';
+            }
+        }
+        else{
+            $type='normal';
+        }
+
         $this -> validate($request, [
             'identifier' => 'required|gt:0|digits:10'
         ]);
@@ -575,8 +798,9 @@ class ReportsController extends Controller
         //session([
         //    'GDevId' => $devNameList,
         //]);
-        
+        //dd($uRName, $userVisitDevices);
         if($uRName != null){
+            //dd('in if');
             //get the devices and the location where the user belongs to 
             $uLocation = Device::where('device.isactive','=',true)
                 ->join('LinkLocDev','device.id','LinkLocDev.deviceid')
@@ -589,7 +813,7 @@ class ReportsController extends Controller
             if(Auth::user()->hasRole('Super Admin')){
                 //dd('in SuperAdmin');
                 //dd($uRName->id);
-                return redirect('reguser/'.$uRName->id);
+                return redirect('reguser/'.$uRName->phoneno.'?type='.$type);
                 //$r = new RegUsersController();
                 //$r->show($uRName->id);
             }
@@ -605,7 +829,10 @@ class ReportsController extends Controller
 
                 //dd($visitData);
                 if($visitData > 0){
-                    return redirect('reguser/'.$uRName->id);
+                    return redirect('reguser/'.$uRName->phoneno.'?type='.$type);
+                }
+                else{
+                    return view ('reports.userReport')->with('error','No data available for this use');
                 }
             }
             else if(Auth::user()->hasRole(['App User'])){
@@ -613,10 +840,11 @@ class ReportsController extends Controller
             }
         }
         else{
+            //dd('in else');
             //check for the user role based access to the data
             if(Auth::user()->hasRole('Super Admin')){
                 //we should show all the data for that user
-                return $this->UserReport($id);
+                return $this->UserReport($id, $type);
             }
             else if(Auth::user()->hasRole(['Location Admin','Site Admin'])){
                 //restrict the user search only if the user has visit one of the location devices
@@ -628,7 +856,7 @@ class ReportsController extends Controller
 
                 //dd($visitData);
                 if($visitData > 0){
-                    return $this->UserReport($id);
+                    return $this->UserReport($id, $type);
                 } 
                 else{
                     return view('reports.userReport')->with('error','No data available for this user');
@@ -642,11 +870,27 @@ class ReportsController extends Controller
       }
 
       
-      public function UserReport($identifier){
+      public function UserReport($identifier, $type){
 
         //The identifier should be 10 digit number
         /**/
           //dd($identifier);
+        if($type == 'download'){
+            $iotData = IotData::where('iotdata.identifier','=',$identifier)
+            //->where('iotdata.created_at','<=',Carbon::today()->addDays(1))
+            ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
+            ->join('vlocdev','iotdata.deviceid','vlocdev.serial_no')
+            ->select('iotdata.identifier', 'iotdata.temp', 'iotdata.spo2', 'iotdata.hbcount', 'iotdata.created_at', 'vlocdev.name')
+            ->orderBy('created_at','desc')
+            ->get();
+
+            $colHeaders = array('Identifier', 'Temperature', 'SPO2', 'Pulse Rate', 'Capture Time', 'Caputre Location');
+            $listOfFields = array('identifier','temp', 'spo2', 'hbcount', 'created_at', 'name');
+            $fileName = "UserData.csv";
+            //dd('sending data to export controller');
+            $this->generateCSV($fileName, $colHeaders, $iotData, 6, $listOfFields);
+        }
+        
         
         $iotData = IotData::where('iotdata.identifier','=',$identifier)
             //->where('iotdata.created_at','<=',Carbon::today()->addDays(1))

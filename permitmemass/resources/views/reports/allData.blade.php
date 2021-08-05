@@ -8,7 +8,7 @@
 
 <?php $counter = 1; ?>
     
-    @if (count($allData) > 0)
+    @if (count($allData??array()) > 0)
     <p class="h1">Last 15 days data for your location (all devices)  </p>
     <!-- New section added with cummary -->
     <div class="card-deck">
@@ -117,12 +117,16 @@
         </table>
         
         {{$allData->links()}}
-        @include('inc.parameters')
+       
     @else
         <p class="h1">No Data available!</p>        
     @endif
     <p>
+    <br/>
         <div class="flex">
+            <div class="mx-auto">
+                <a href="/reports/allDataLocationReport?type=download" class="btn btn-info">Download</a>
+            </div>
             <div class="mx-auto">
                 <a href="{{ URL::previous() }}" class="btn btn-info">Back</a>
             </div>

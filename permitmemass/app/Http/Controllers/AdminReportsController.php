@@ -10,17 +10,23 @@ use App\LinkLocDev;
 use App\Device;
 use App\vLocDev;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 use PdfReport;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\ExportHelpers;
+
 //use App\Helpers;
 //use App\Location;
 
+//Ketan Adding download functionality - 5 jul 2021
+
 class AdminReportsController extends Controller
 {
+    use ExportHelpers;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -200,23 +206,72 @@ class AdminReportsController extends Controller
         ->where('temp','>',env('CUTOFF_TEMP')))->unique('identifier');
         $iotDataAllAbnormal = $this->paginate($iotDataAllAbnormal1,20,$pageNo=0);
         $iotDataAllAbnormal->setPath('/adminReports/sLocationReport');
+        
+        /*if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                
+                $colHeaders = array('Identifier', 'Pulse Rate', 'SPO2', 'Temperature', 'Captured at');
+                $listOfFields = array('identifier', 'hbcount', 'spo2', 'temp', 'created_at');
+                $fileName = "AdminLocationAllAbnormalReport.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $iotDataAllAbnormal1, 5, $listOfFields);
+            }
+        }*/
 
         //Data for Tab 2 - High Temperature
         $iotDataHighTemp1 = ($iotAllData->where('temp','>',env('CUTOFF_TEMP')))->unique('identifier');
         $iotDataHighTemp = $this->paginate($iotDataHighTemp1,20,$pageNo=0);
         $iotDataHighTemp->setPath('/adminReports/sLocationReport');
+        
+        /*if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                
+                $colHeaders = array('Identifier', 'Pulse Rate', 'SPO2', 'Temperature', 'Captured at');
+                $listOfFields = array('identifier', 'hbcount', 'spo2', 'temp', 'created_at');
+                $fileName = "AdminLocationHighTemperatureReport.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $iotDataHighTemp1, 5, $listOfFields);
+            }
+        }*/
+
 
         // Data for Tab 3 - Low SPO2
         $iotDataLowSpo21 = ($iotAllData->where('spo2','<',env('CUTOFF_SPO2')))->unique('identifier');
         $iotDataLowSpo2 =$this->paginate($iotDataLowSpo21,20,$pageNo=0);
         $iotDataLowSpo2->setPath('/adminReports/sLocationReport');
+       
+        /*if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                
+                $colHeaders = array('Identifier', 'Pulse Rate', 'SPO2', 'Temperature', 'Captured at');
+                $listOfFields = array('identifier', 'hbcount', 'spo2', 'temp', 'created_at');
+                $fileName = "AdminLocationLowSPO2Report.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $iotDataLowSpo21, 5, $listOfFields);
+            }
+        }*/
 
         // Data for Tab 4 - High Heart Rate
         $iotDataHighHbcount1 = ($iotAllData->where('hbcount','>',env('CUTOFF_PULSE')))->unique('identifier');
         $iotDataHighHbcount = $this->paginate($iotDataHighHbcount1,20,$pageNo=0);
         $iotDataHighHbcount->setPath('/adminReports/sLocationReport');
+        
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                
+                $colHeaders = array('Identifier', 'Pulse Rate', 'SPO2', 'Temperature', 'Captured at');
+                $listOfFields = array('identifier', 'hbcount', 'spo2', 'temp', 'created_at');
+                $fileName = "AdminLocationLowSPO2Report.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $iotAllData, 5, $listOfFields);
+            }
+        }
 
-        return view ('adminReports.sLocationReport',compact('iotDataAllAbnormal','iotDataHighTemp','iotDataLowSpo2','iotDataHighHbcount','location'));
+        return view ('adminReports.sLocationReport',compact('iotDataAllAbnormal','iotDataHighTemp','iotDataLowSpo2','iotDataHighHbcount','location','source'));
        
      }
 
@@ -329,6 +384,19 @@ class AdminReportsController extends Controller
             $repCollect ->push($f);
         }
         //dd($repCollect);
+
+        //Generating download report
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                
+                $colHeaders = array('Location Name', 'All Abnormal', 'High Pulse Rate', 'Low SPO2', 'High Temperature', 'Total Scans');
+                $listOfFields = array('name', 'allAbnormal', 'hbCount', 'spo2Count', 'tempCount', 'totalScan');
+                $fileName = "AdminPincodeReport.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $repCollect, 6, $listOfFields);
+            }
+        }
 
         $lbl = collect([]);
         $valuesTemp = collect([]);
@@ -464,7 +532,7 @@ class AdminReportsController extends Controller
             //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
         ]);
 
-        return view('adminReports.sPincodeReport', compact('repCollect','state','district','taluka','city','pincode','TempChart','Spo2Chart', 'HbcountChart','AllAbnormalChart'));
+        return view('adminReports.sPincodeReport', compact('repCollect','state','district','taluka','city','pincode','TempChart','Spo2Chart', 'HbcountChart','AllAbnormalChart','source'));
         
       }
 
@@ -564,6 +632,20 @@ class AdminReportsController extends Controller
             $repCollect ->push($f);
         }
         //dd($repCollect);
+
+        //Generating download report
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                
+                $colHeaders = array('Pincode', 'All Abnormal', 'High Pulse Rate', 'Low SPO2', 'High Temperature', 'Total Scans');
+                $listOfFields = array('pincode', 'allAbnormal', 'hbCount', 'spo2Count', 'tempCount', 'totalScan');
+                $fileName = "AdminCityReport.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $repCollect, 6, $listOfFields);
+            }
+        }
+
         
         $lbl = collect([]);
         $valuesTemp = collect([]);
@@ -699,7 +781,7 @@ class AdminReportsController extends Controller
             //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
         ]);
 
-        return view('adminReports.sCityReport', compact('repCollect','state','type','district','taluka','city','TempChart','Spo2Chart', 'HbcountChart','AllAbnormalChart'));
+        return view('adminReports.sCityReport', compact('repCollect','state','type','district','taluka','city','TempChart','Spo2Chart', 'HbcountChart','AllAbnormalChart','source'));
 
     }
 
@@ -805,6 +887,19 @@ class AdminReportsController extends Controller
             $repCollect ->push($f);
         }
         //dd($repCollect);
+
+        //generating download file 
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                
+                $colHeaders = array('City', 'All Abnormal', 'High Pulse Rate', 'Low SPO2', 'High Temperature', 'Total Scans');
+                $listOfFields = array('city', 'allAbnormal', 'hbCount', 'spo2Count', 'tempCount', 'totalScan');
+                $fileName = "AdminTalukaReport.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $repCollect, 6, $listOfFields);
+            }
+        }
 
         $lbl = collect([]);
         $valuesTemp = collect([]);
@@ -940,7 +1035,7 @@ class AdminReportsController extends Controller
             //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
         ]);
 
-        return view('adminReports.sTalukaReport', compact('repCollect','state','type','district','taluka','TempChart','Spo2Chart', 'HbcountChart','AllAbnormalChart'));
+        return view('adminReports.sTalukaReport', compact('repCollect','state','type','district','taluka','TempChart','Spo2Chart', 'HbcountChart','AllAbnormalChart','source'));
 
     }
 
@@ -1040,6 +1135,20 @@ class AdminReportsController extends Controller
             $repCollect ->push($f);
         }
         //dd($repCollect);
+
+        //generating download report
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                
+                $colHeaders = array('Taluka', 'All Abnormal', 'High Pulse Rate', 'Low SPO2', 'High Temperature', 'Total Scans');
+                $listOfFields = array('taluka', 'allAbnormal', 'hbCount', 'spo2Count', 'tempCount', 'totalScan');
+                $fileName = "AdminDistrictReport.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $repCollect, 6, $listOfFields);
+            }
+        }
+
 
         $lbl = collect([]);
         $valuesTemp = collect([]);
@@ -1175,7 +1284,8 @@ class AdminReportsController extends Controller
             //'plugins' => '{datalabels: {color: \'red\'}, title: {display: true}}',
         ]);
         
-        return view('adminReports.sDistrictReport', compact('repCollect','state','type','district','taluka','TempChart','Spo2Chart','HbcountChart','AllAbnormalChart'));
+        //$mySource = $src;
+        return view('adminReports.sDistrictReport', compact('repCollect','state','type','district','taluka','TempChart','Spo2Chart','HbcountChart','AllAbnormalChart','source'));
 
 
      }
@@ -1191,6 +1301,38 @@ class AdminReportsController extends Controller
         $this -> validate($request, [
             'identifier' => 'required|digits:10'
         ]);
+
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                if(Auth::user()->hasRole(['Super Admin', 'Location Admin'])){
+                    $iotDataReport = IotData::where('iotdata.identifier','=',$identifier)
+                        ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
+                        ->whereIn('iotdata.deviceid',session('GDevId'))
+                        ->join('vlocdev','iotdata.deviceid','vlocdev.serial_no')
+                        ->select('iotdata.identifier','iotdata.temp','iotdata.spo2', 'iotdata.hbcount','iotdata.created_at', DB::raw('(select case iotdata.flagstatus when 0 then "No" when 1 then "Yes" end) as flagstatus'), 'vlocdev.name as name')
+                        ->orderBy('created_at','desc')
+                        ->orderBy('vlocdev.name','desc')
+                        ->paginate(50);
+                    }
+                    elseif(Auth::user()->hasRole('Site Admin')){
+                        //abort(403);
+                        $iotDataReport = IotData::where('iotdata.identifier','=',$identifier)
+                        ->whereIn('iotdata.deviceid',session('GDevId'))
+                        ->where('iotdata.created_at','>=',Carbon::today()->subDays(15))
+                        ->select('iotdata.identifier','iotdata.temp','iotdata.spo2', 'iotdata.hbcount','iotdata.created_at', DB::raw('(select case iotdata.flagstatus when 0 then "No" when 1 then "Yes" end) as flagstatus'), 'iotdata.deviceid as name')
+                        ->orderBy('created_at','desc')
+                        ->orderBy('iotdata.deviceid','desc')
+                        ->paginate(50);
+                    }
+               
+                $colHeaders = array('Identifier', 'Temperature', 'SPO2', 'Pulse Rate', 'Capture Time', 'Abnormal', 'Caputre Location');
+                $listOfFields = array('identifier','temp', 'spo2', 'hbcount', 'created_at', 'flagstatus', 'name');
+                $fileName = "AdminReportUser.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $iotDataReport, 7, $listOfFields);
+            }
+        }
         
         if(Auth::user()->hasRole(['Super Admin', 'Location Admin'])){
         $iotData = IotData::where('iotdata.identifier','=',$identifier)
@@ -1296,6 +1438,8 @@ class AdminReportsController extends Controller
         if(!Auth::user()->hasRole(['Super Admin','Location Admin'])){
             abort(403);
         }
+
+        
         $state = $request->input('state');
         //$type = $request->input('type');
         //dd($state);
@@ -1366,6 +1510,20 @@ class AdminReportsController extends Controller
         }
         //$repCollect->paginate(15);
                 //dd($repCollect);
+        
+        //download data 
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                //dd('in download');
+                
+                $colHeaders = array('District', 'All Abnormal', 'High Pulse Rate', 'Low SPO2', 'High Temperature', 'Total Scans');
+                $listOfFields = array('district', 'allAbnormal', 'hbCount', 'spo2Count', 'tempCount', 'totalScan');
+                $fileName = "AdminStateReport.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $repCollect, 6, $listOfFields);
+            }
+        }
+        
         $lbl = collect([]);
         $valuesTemp = collect([]);
         $valuesSpo2 = collect([]);

@@ -29,6 +29,7 @@
         <table class="table table-sm table-bordered table-responsive bg-transparent text-center">
             <tr>
                 <th>Serial No </th>
+                <th>Location </th>
                 <th>Pulse Rate (per min)</th>
                 <th>SPO2 (%)</th>
                 <th>Temperature (&#8457;)</th>
@@ -37,6 +38,7 @@
         @foreach($iotData as $data)
             <tr class="text-light">
                 <td>{{$counter++}} </td>
+                <td>{{$data->name}}</td>
                 <td>{{$data->hbcount}}</td>
                 <td>{{$data->spo2}}</td>
                 <td>{{$data->temp}}</td>
@@ -54,6 +56,9 @@
     
     <p>
         <div class="flex">
+            <div class="mx-auto">
+                <a href="/reports/{{$identifier}}/download/userReport" class="btn btn-info">Download</a>
+            </div>
             <div class="mx-auto">
                 <a href="{{ URL::previous() }}" class="btn btn-primary">Back</a>
             </div>

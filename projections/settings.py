@@ -1,0 +1,5 @@
+host = "127.0.0.1"
+port = "3306"
+username = "permitme"
+password = "SuuOFar2IpR95NgD"
+database = "permitmemass_25Apr21"

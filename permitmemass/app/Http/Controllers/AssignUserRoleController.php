@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Spatie\Permission\Models\Role;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\ExportHelpers;
 
 class AssignUserRoleController extends Controller
 {
+    use ExportHelpers;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -23,6 +26,24 @@ class AssignUserRoleController extends Controller
     {
         if(!Auth::user()->hasRole(['Super Admin'])){
             abort(403);
+        }
+
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                $lur = DB::table('model_has_roles')
+                -> join('users','users.id','=','model_has_roles.model_id')
+                -> join('roles','roles.id','=','model_has_roles.role_id')
+                -> select('users.name as un', 'roles.name as rn')
+                ->orderBy('rn')
+                ->orderBy('un')
+                ->get()->toArray();
+                //dd($users);
+                $colHeaders = array('Name','Role');
+                $listOfFields = array('un','rn');
+                $fileName = "UserRoles.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $lur, 2, $listOfFields);
+            }
         }
 
         $lur = DB::table('model_has_roles')

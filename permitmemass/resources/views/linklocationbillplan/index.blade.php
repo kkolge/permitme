@@ -19,6 +19,8 @@
                 <th>Location</th>
                 <th>Plan</th>
                 @if(Auth::user()->hasRole(['Super Admin']))
+                <th>Start Date</th>
+                <th>End Date</th>
                 <th>Actions</th>
                 @endif
                
@@ -28,6 +30,8 @@
                 <td>{{$counter++}} </td>
                 <td>{{$plan->lname}}</td>
                 <td>{{$plan->pname}}</td>
+                <td>{{$plan->planstartdate}}</td>
+                <td>{{$plan->planenddate}}</td>
                 
                 @if(Auth::user()->hasRole(['Super Admin']))
                 <td>

@@ -20,6 +20,10 @@ class LinkBedPatientController extends Controller
      */
     public function index()
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
+        
         $linkBP = LinkBedPatient::where('linkHospitalBedUser.locationid','=',session('GlocationId'))
         ->where('linkHospitalBedUser.isactive','=',true)
         ->join('bedMaster','bedMaster.id','=','linkHospitalBedUser.bedid')

@@ -74,6 +74,9 @@
                 </div>
             @endif
             <div class="mx-auto">
+                <a href="/reguser?type=download" class="btn btn-info">Download</a>
+            </div>
+            <div class="mx-auto">
                 <a href="{{ URL::previous() }}" class="btn btn-info">Back</a>
             </div>
             <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>

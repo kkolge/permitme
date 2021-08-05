@@ -11,14 +11,22 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent1">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="http://www.ko-aaham.com">&#169; Copyright - Ko-Aaham Technologies LLP</a>
-              </li>
-              <!-- Removed for sidebad -->
-              <li class="nav-item">
-                <!-- <a class="nav-link" href="#">Social Media links</a> -->
-
-              </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="http://www.ko-aaham.com">&#169; Copyright 2021 - Ko-Aaham Technologies LLP</a>
+                </li>
+                <!-- Removed for sidebad -->
+                <li class="nav-item">
+                  <!-- <a class="nav-link" href="#">Social Media links</a> -->
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link"  href="/about">About</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/support">Support</a>
+                </li> 
+                <li class="nav-item">
+                  <div class="nav-link disabled"> Software Version: {{env('APP_VERSION')}} </div>
+                </li>
             </ul>
         </div>
     </div>

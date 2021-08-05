@@ -199,7 +199,8 @@ class IotController extends Controller
             'random2' => $token,
             'username' => $user[0]->name,
             'identifier' => $user[0]->phoneno,
-            'flagstatus' => $iotData[0]->flagstatus ?? 0
+            'flagstatus' => $iotData[0]->flagstatus ?? 0,
+           //TO:DO - remove for V6 'useractive' => $user->isactive ?? 0
         ));
 
         return $respJson;
@@ -254,6 +255,7 @@ class IotController extends Controller
                 //dd('device active');
 
                 //Checking if link and the location is active 
+                //TO-DO - split this to check location and link separately and send different error code
                 $linkAndLocationActive = LinkLocDev::where('LinkLocDev.deviceid','=',$dev[0]->id)
                     ->join('location', 'location.id','LinkLocDev.locationid')
                     ->where('location.isactive','=',true)
@@ -279,14 +281,14 @@ class IotController extends Controller
 
                 //dd($lastAuth->tokenlastToken);
                 if($lastAuth->count() == 1) { //device had past authintacations
-                    //checking if the tokens march 
+                    //checking if the tokens match 
                     //dd($lastAuth[0]->token, $lastAuth[0]->devupdated, $lastToken);
-                    if($lastToken == $lastAuth[0]->token || $lastAuth[0]->devupdated){
+                    if($lastToken == $lastAuth[0]->token || !$lastAuth[0]->devupdated){
                         //last token on the server matches the one sent by the device
                         //update is active for the last row to false
                         if($lastAuth[0]->isactive == true){
                             $lastAuth[0]->isactive = false;
-                            $lastAuth[0]->devupdated = true;
+                            //$lastAuth[0]->devupdated = true;
                             $lastAuth[0]->save();
                         }
                         //dd('devupdated set');
@@ -313,6 +315,7 @@ class IotController extends Controller
                             'temp' => env('CUTOFF_TEMP'),
                             'devtype' => $dev[0]->devtype
                         ));
+                       
                         //dd($respJson);
                         return($respJson);
                     }
@@ -399,9 +402,9 @@ class IotController extends Controller
         //check the status message first 
         if($status == 'error'){
             $respJson = json_encode(array(
+                'status' => 'error',
                 'random1' => $devmd5,
-                'random2' => $lastToken, 
-                'status' => 'error'
+                'random2' => $lastToken 
             ));
             return($respJson);
         }
@@ -422,16 +425,16 @@ class IotController extends Controller
                 $tokenRow[0]->save();
 
                 $respJson = json_encode(array(
-                    'random2' => $lastToken, 
-                    'status' => 'success'
+                    'status' => 'success', 
+                    'random2' => $lastToken 
                 ));
                 return($respJson);
             }
             else{
                 $respJson = json_encode(array(
+                    'status' => 'error',
                     'random1' => $devmd5,
                     'random2' => $lastToken, 
-                    'status' => 'error',
                     'reason' => 'E32'
                 ));
                 return($respJson);
@@ -439,9 +442,9 @@ class IotController extends Controller
         }
         else{
             $respJson = json_encode(array(
+                'status' => 'error',
                 'random1' => $devmd5,
                 'random2' => $lastToken, 
-                'status' => 'error',
                 'reason' => 'E31'
             ));
             return($respJson);

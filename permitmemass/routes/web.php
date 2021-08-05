@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Auth::routes(['register'=>false]);
+//Auth::routes(['register'=>false]);
 
 Route::get('/', function () {
     return view('auth.login');
@@ -80,8 +80,9 @@ Route::get('/reports/{date}/SPO2DetailsByDate','ReportsController@SPO2DetailsByD
 Route::get('/reports/TempReport','ReportsController@GenerateTempHighReport');
 Route::get('/reports/{date}/TempDetailsByDate','ReportsController@TempDetailsByDate');
 
-Route::get('/reports/{identifier}/userReport','ReportsController@UserReport');
+Route::get('/reports/{identifier}/{type}/userReport','ReportsController@UserReport');
 Route::any('/reports/userSearch','ReportsController@UserReportSearch');
+
 
 //-- Admin Reports Section 
 Route::get('/adminReports/sReport','AdminReportsController@sReport');

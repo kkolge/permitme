@@ -79,6 +79,35 @@
     <div class="w-1/4 text-left"> {{$location->created_at}}</div>
 </div>
 
+<!-- Bill Plan Details -->
+<p class="h2">Bill Plan Details</p>
+<br/>
+<div class="row d-flex " style="font-size:x-large;">
+    <div class="w-1/2 px-md-5 text-right"><strong>Name</strong></div>
+    <div class="w-1/2 px-md-5 text-right"><strong>Bill Plan Name</strong></div>
+</div>
+<div class="row d-flex " style="font-size:x-large;">
+    <div class="w-1/2 px-md-5 text-right"><strong>Description</strong></div>
+    <div class="w-1/2 px-md-5 text-right"><strong>Bill Plan Name</strong></div>
+</div>
+<div class="row d-flex " style="font-size:x-large;">
+    <div class="w-1/4 px-md-5 text-right"><strong>Security Deposite</strong></div>
+    <div class="w-1/4 px-md-5 text-right"><strong>Bill Plan Name</strong></div>
+    <div class="w-1/4 px-md-5 text-right"><strong>Rent Per Month</strong></div>
+    <div class="w-1/4 px-md-5 text-right"><strong>Bill Plan Name</strong></div>
+</div>
+<div class="row d-flex " style="font-size:x-large;">
+    <div class="w-1/4 px-md-5 text-right"><strong>Cost per Transaction</strong></div>
+    <div class="w-1/4 px-md-5 text-right"><strong>Bill Plan Name</strong></div>
+</div>
+<div class="row d-flex " style="font-size:x-large;">
+    <div class="w-1/2 px-md-5 text-right"><strong>Bill Plan Name</strong></div>
+    <div class="w-1/2 px-md-5 text-right"><strong>Bill Plan Name</strong></div>
+    <div class="w-1/4 px-md-5 text-right"><strong>Cost per Transaction</strong></div>
+    <div class="w-1/4 px-md-5 text-right"><strong>Bill Plan Name</strong></div>
+</div>
+
+
  <!--<table class="table  table-bordered table-responsive bg-transparent text-center text-light">
    <tr>
         <td class="col-5">

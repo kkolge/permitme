@@ -67,8 +67,8 @@
                 <div class="card-body">
                     <div class="row">Email: support@permitme.in</div><br/>
                     <div class="row">Phone no: +91 77188 65005 </div> <br/>
-                    <div class="row">Twitter: @permitme</div><br/>
-                    <div class="row">Facebook: @permitme</div><br/>
+                    <div class="row"> Blog: Coming soon</div><br/>
+                    <div class="row"> Support Ticket: Coming soon </div><br/>
                 </div>
             </div>
         </div>

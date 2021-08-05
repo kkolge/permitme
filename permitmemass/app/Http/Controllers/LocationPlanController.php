@@ -16,16 +16,29 @@ class LocationPlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
+        if(!Auth::user()->hasRole(['Super Admin'])){
+            abort(403);
+        }
         $locationplanlinks = DB::table('locationbillplanlink')
         ->join('location','location.id','=','locationbillplanlink.locationid')
         ->join ('billplan','billplan.id','=','locationbillplanlink.planid')
         ->where('locationbillplanlink.isactive','=',true)
         ->where('location.isactive','=',true)
         ->where('billplan.isactive','=',true)
-        ->select(DB::raw('concat(location.name,":",location.pincode,":",location.city,":",location.taluka,":",location.district,":",location.state) as lname, billplan.name as pname, locationbillplanlink.id as id'))
-        ->orderBy('lname', 'desc')->paginate(50);
+        ->select(DB::raw('concat(location.name,":",location.pincode,":",location.city,":",location.taluka,":",location.district,":",location.state) as lname, billplan.name as pname, locationbillplanlink.id as id', 'locationbillplanlink.planstartdate','locationbillplanlink.planenddate'))
+        ->orderBy('lname', 'desc')
+        ->orderBy('locationbillplanlink.planstartdate','desc')
+        ->orderBy('locationbillplanlink.planenddate','desc')
+        ->paginate(50);
+
+        dd($locationplanlinks); // DO A ISNULL CHECK 
         return view('linklocationbillplan.index', compact('locationplanlinks'));
     }
 

@@ -175,6 +175,9 @@
     <p>
         <div class="flex">
             <div class="mx-auto">
+                <a href="/adminReports/sLocationReport?source={{$source}}&type=download" class="btn btn-info">Download</a>
+            </div>
+            <div class="mx-auto">
                 <a href="{{ URL::previous() }}" class="btn btn-primary">Back</a>
             </div>
         </div>

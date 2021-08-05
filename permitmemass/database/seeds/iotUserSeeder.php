@@ -4,6 +4,7 @@ use App\Device;
 use Illuminate\Database\Seeder;
 use App\IotData;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class iotUserSeeder extends Seeder
 {
@@ -19,7 +20,7 @@ class iotUserSeeder extends Seeder
         //dd($d);
             for ($i=0; $i<2; $i++){
                 $data = new IotData();
-                $data->identifier = '1122334455';
+                $data->identifier = '7718865005';
                 $data->deviceid = $d;
                 $data->temp = rand(87, 95);
                 $data->spo2 = rand(85,100);
@@ -27,14 +28,29 @@ class iotUserSeeder extends Seeder
                 $data->created_at = Carbon::now()
                                     ->subDays(rand(0,15))
                                     ->format('Y-m-d H:i:s');
-                if($data->hbcount > 120 || $data->spo2 < 93 || $data->temp > 93.5){
+                
+                $totalFlagCount = 0;
+                if ($data->hbcount > env('CUTOFF_PULSE')){
+                    $totalFlagCount = $totalFlagCount + 1;
+                }
+                if($data->spo2 < env('CUTOFF_SPO2')){
+                    $totalFlagCount = $totalFlagCount + 2;
+                }
+                if($data->temp > env('CUTOFF_TEMP')){
+                    $totalFlagCount = $totalFlagCount + 4;
+                }
+                if($totalFlagCount > 0){
+                    $data->flagstatus = true;
+                }
+                
+                if($totalFlagCount > 0){
                     $data->flagstatus = true;
                 }
                 else{
                     $data->flagstatus=false;
                 }
-                
                 $data->save();
+                $err = DB::statement('call after_iotdata_insert(?,?,?)',[$data->deviceid, $totalFlagCount, $data->created_at]);
                 echo ('completed device '.$d);
             }
         }

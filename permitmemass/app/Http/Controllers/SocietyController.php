@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\LinkLocUser;
 use Illuminate\Http\Request;
 use App\Society;
-use \DB;
-use Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\ExportHelpers;
 
 class SocietyController extends Controller
 {
+    use ExportHelpers;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -21,6 +24,36 @@ class SocietyController extends Controller
      */
     public function index()
     {
+        if(isset($_GET['type']) && !empty($_GET['type'])){
+            if($_GET['type']== 'download'){
+                if(Auth::user()->hasRole(['Super Admin'])){
+                    $locationsDownload = DB::select("select l.name, l.noofresidents, concat(l.address1, ' ', l.address2) as address, l.pincode, l.city, l.taluka, l.district, l.state, ifnull(m.name,'Parent Location') as parent 
+                    from location l 
+                    left outer join location m 
+                        on m.id = l.parent
+                    order BY 
+                        parent asc, l.state ASC, l.district asc, l.taluka asc, l.city asc, l.pincode asc, l.name asc");
+
+                
+                }
+                /*else if(Auth::user()->hasRole('Location Admin')){
+                    $locationsDownload = DB::select("select l.name, l.noofresidents, concat(l.address1, ' ', l.address2) as address, l.pincode, l.city, l.taluka, l.district, l.state, ifnull(m.name,'Parent Location') as parent 
+                    from location l 
+                    left outer join location m 
+                        on m.id = l.parent
+                    where id = ? or parent = ? 
+                    order BY 
+                        parent asc, l.state ASC, l.district asc, l.taluka asc, l.city asc, l.pincode asc, l.name asc", session('GlocationId'), session('GlocationId'));
+                }*/
+                //dd($locationsDownload);
+                $colHeaders = array('Name','No Of Users', 'Address 1', 'Pin Code', 'City', 'Taluka', 'District', 'State', 'Parent Location');
+                $listOfFields = array('name','noofresidents','address', 'pincode', 'city', 'taluka', 'district', 'state' ,'parent');
+                $fileName = "Locations.csv";
+                //dd('sending data to export controller');
+                $this->generateCSV($fileName, $colHeaders, $locationsDownload, 9, $listOfFields);
+            }
+        }
+
         if(Auth::user()->hasRole(['Super Admin'])){
             $locations = Society::orderBy('state')
             ->orderBy('landmark')

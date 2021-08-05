@@ -46,6 +46,9 @@
     <p>
         <div class="flex">
             <div class="mx-auto">
+                <a href="/reports/{{ $date }}/AllAbnormalDetailsByDate?type=download" class="btn btn-info">Download</a>
+            </div>
+            <div class="mx-auto">
                 <a href="{{ URL::previous() }}" class="btn btn-info">Back</a>
             </div>
         </div>   

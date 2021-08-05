@@ -5,10 +5,10 @@
 <?php $counter = 1; ?>
     
     @if (count($lur) > 0)
-    <p class="h1">Users Linked to Roles</p>
+    <p class="h1">Bills </p>
     <br/>
     <div class="d-flex">
-            <div >{{$lur->links()}}</div>
+            <div >{{$locationsWithBills->links()}}</div>
             <div class="ml-auto"> <a href="{{ URL::previous() }}" class="btn btn-info">Back</a> </div>
         </div>
         <br/>
@@ -16,18 +16,18 @@
             <tr>
                 
                 <th>Serial No </th>
-                <th>Role </th>
-                <th>User Name</th>
+                <th>Location </th>
+                <th>Bill Plan</th>
                 <th>Actions</th>
               
             </tr>
-        @foreach($lur as $l)
+        @foreach($locationsWithBills as $l)
             <tr class="text-light">
                 <td>{{$counter++}} </td>
-                <td> {{$l->rn}} </td>
-                <td>{{$l->un}}</td>
+                <td> {{$l->lname}} </td>
+                <td>{{$l->bname}}</td>
                 <td>
-                    <a href="aur/{{$l->ui.",".$l->ri}}/edit" class="btn btn-info">Edit</a>
+                    <a href="bills/{{$l->id}}/show" class="btn btn-info">Edit</a>
                 </td>
             </tr>
         @endforeach
