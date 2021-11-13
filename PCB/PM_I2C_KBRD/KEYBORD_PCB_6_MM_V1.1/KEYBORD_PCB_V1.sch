@@ -1,0 +1,407 @@
+EESchema Schematic File Version 4
+LIBS:KEYBORD_PCB_V1-cache
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Switch:SW_Push_45deg SW1
+U 1 1 61052529
+P 1834 1575
+F 0 "SW1" H 1834 1853 50  0000 C CNN
+F 1 "1" H 1834 1762 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 1834 1575 50  0001 C CNN
+F 3 "" H 1834 1575 50  0001 C CNN
+	1    1834 1575
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push_45deg SW6
+U 1 1 6105252F
+P 2334 2075
+F 0 "SW6" H 2334 2353 50  0000 C CNN
+F 1 "5" H 2334 2262 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 2334 2075 50  0001 C CNN
+F 3 "" H 2334 2075 50  0001 C CNN
+	1    2334 2075
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push_45deg SW11
+U 1 1 61052535
+P 2834 2575
+F 0 "SW11" H 2834 2853 50  0000 C CNN
+F 1 "9" H 2834 2762 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 2834 2575 50  0001 C CNN
+F 3 "" H 2834 2575 50  0001 C CNN
+	1    2834 2575
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push_45deg SW5
+U 1 1 6105253B
+P 2334 1575
+F 0 "SW5" H 2334 1853 50  0000 C CNN
+F 1 "2" H 2334 1762 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 2334 1575 50  0001 C CNN
+F 3 "" H 2334 1575 50  0001 C CNN
+	1    2334 1575
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push_45deg SW10
+U 1 1 61052541
+P 2834 2075
+F 0 "SW10" H 2834 2353 50  0000 C CNN
+F 1 "6" H 2834 2262 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 2834 2075 50  0001 C CNN
+F 3 "" H 2834 2075 50  0001 C CNN
+	1    2834 2075
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push_45deg SW8
+U 1 1 61052547
+P 2334 3075
+F 0 "SW8" H 2334 3353 50  0000 C CNN
+F 1 "0" H 2334 3262 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 2334 3075 50  0001 C CNN
+F 3 "" H 2334 3075 50  0001 C CNN
+	1    2334 3075
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push_45deg SW9
+U 1 1 6105254D
+P 2834 1575
+F 0 "SW9" H 2834 1853 50  0000 C CNN
+F 1 "3" H 2834 1762 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 2834 1575 50  0001 C CNN
+F 3 "" H 2834 1575 50  0001 C CNN
+	1    2834 1575
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push_45deg SW3
+U 1 1 61052553
+P 1834 2575
+F 0 "SW3" H 1834 2853 50  0000 C CNN
+F 1 "7" H 1834 2762 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 1834 2575 50  0001 C CNN
+F 3 "" H 1834 2575 50  0001 C CNN
+	1    1834 2575
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push_45deg SW4
+U 1 1 61052559
+P 1834 3075
+F 0 "SW4" H 1834 3353 50  0000 C CNN
+F 1 "CLEAR" H 1834 3262 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 1834 3075 50  0001 C CNN
+F 3 "" H 1834 3075 50  0001 C CNN
+	1    1834 3075
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push_45deg SW2
+U 1 1 6105255F
+P 1834 2075
+F 0 "SW2" H 1834 2353 50  0000 C CNN
+F 1 "4" H 1834 2262 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 1834 2075 50  0001 C CNN
+F 3 "" H 1834 2075 50  0001 C CNN
+	1    1834 2075
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push_45deg SW7
+U 1 1 61052565
+P 2334 2575
+F 0 "SW7" H 2334 2853 50  0000 C CNN
+F 1 "8" H 2334 2762 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 2334 2575 50  0001 C CNN
+F 3 "" H 2334 2575 50  0001 C CNN
+	1    2334 2575
+	1    0    0    -1  
+$EndComp
+$Comp
+L Switch:SW_Push_45deg SW12
+U 1 1 6105256B
+P 2834 3075
+F 0 "SW12" H 2834 3353 50  0000 C CNN
+F 1 "ENTER" H 2834 3262 50  0000 C CNN
+F 2 "Button_Switch_THT:SW_PUSH_6mm_H7.3mm" H 2834 3075 50  0001 C CNN
+F 3 "" H 2834 3075 50  0001 C CNN
+	1    2834 3075
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1934 1675 1934 2175
+Connection ~ 1934 2175
+Wire Wire Line
+	1934 2175 1934 2675
+Connection ~ 1934 2675
+Wire Wire Line
+	1934 2675 1934 3175
+Wire Wire Line
+	2434 1675 2434 2175
+Connection ~ 2434 2175
+Wire Wire Line
+	2434 2175 2434 2675
+Connection ~ 2434 2675
+Wire Wire Line
+	2434 2675 2434 3175
+Wire Wire Line
+	2934 1675 2934 2175
+Connection ~ 2934 2175
+Wire Wire Line
+	2934 2175 2934 2675
+Connection ~ 2934 2675
+Wire Wire Line
+	2934 2675 2934 3175
+Wire Wire Line
+	1734 1475 2234 1475
+Connection ~ 2234 1475
+Wire Wire Line
+	2234 1475 2734 1475
+Wire Wire Line
+	2734 1975 2234 1975
+Connection ~ 2234 1975
+Wire Wire Line
+	2234 1975 1734 1975
+Wire Wire Line
+	1734 2475 2234 2475
+Connection ~ 2234 2475
+Wire Wire Line
+	2234 2475 2734 2475
+Wire Wire Line
+	1734 2975 2234 2975
+Connection ~ 2234 2975
+Wire Wire Line
+	2234 2975 2734 2975
+Wire Wire Line
+	1734 1475 1534 1475
+Connection ~ 1734 1475
+Wire Wire Line
+	1734 1975 1534 1975
+Connection ~ 1734 1975
+Wire Wire Line
+	1734 2475 1534 2475
+Connection ~ 1734 2475
+Wire Wire Line
+	1734 2975 1534 2975
+Connection ~ 1734 2975
+Wire Wire Line
+	1934 3175 1934 3375
+Connection ~ 1934 3175
+Wire Wire Line
+	2434 3175 2434 3375
+Connection ~ 2434 3175
+Wire Wire Line
+	2934 3175 2934 3375
+Connection ~ 2934 3175
+Text GLabel 1534 1475 0    50   Input ~ 0
+R1
+Text GLabel 1534 1975 0    50   Input ~ 0
+R2
+Text GLabel 1534 2475 0    50   Input ~ 0
+R3
+Text GLabel 1534 2975 0    50   Input ~ 0
+R4
+Text GLabel 1934 3375 3    50   Input ~ 0
+C1
+Text GLabel 2434 3375 3    50   Input ~ 0
+C2
+Text GLabel 2934 3375 3    50   Input ~ 0
+C3
+$Comp
+L Connector:Conn_01x08_Male J1
+U 1 1 610525E9
+P 3587 1499
+F 0 "J1" H 3560 1472 50  0000 R CNN
+F 1 "Conn_01x08_Male" V 3525 1405 50  0000 R CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 3587 1499 50  0001 C CNN
+F 3 "~" H 3587 1499 50  0001 C CNN
+	1    3587 1499
+	0    -1   1    0   
+$EndComp
+$Comp
+L power:+3.3V #PWR05
+U 1 1 610525EF
+P 3987 1699
+F 0 "#PWR05" H 3987 1549 50  0001 C CNN
+F 1 "+3.3V" V 4002 1827 50  0000 L CNN
+F 2 "" H 3987 1699 50  0001 C CNN
+F 3 "" H 3987 1699 50  0001 C CNN
+	1    3987 1699
+	-1   0    0    1   
+$EndComp
+Text GLabel 3287 1699 3    50   Input ~ 0
+SCL
+Text GLabel 3387 1699 3    50   Input ~ 0
+SDA
+$Comp
+L power:GND #PWR06
+U 1 1 6105260A
+P 3787 1699
+F 0 "#PWR06" H 3787 1449 50  0001 C CNN
+F 1 "GND" V 3792 1571 50  0000 R CNN
+F 2 "" H 3787 1699 50  0001 C CNN
+F 3 "" H 3787 1699 50  0001 C CNN
+	1    3787 1699
+	1    0    0    -1  
+$EndComp
+Text GLabel 3584 2279 0    50   Input ~ 0
+R1
+Text GLabel 3584 2379 0    50   Input ~ 0
+R2
+Text GLabel 3584 2479 0    50   Input ~ 0
+R3
+Text GLabel 3584 2579 0    50   Input ~ 0
+R4
+Text GLabel 3584 2679 0    50   Input ~ 0
+C1
+Text GLabel 3584 2779 0    50   Input ~ 0
+C2
+Text GLabel 3584 2879 0    50   Input ~ 0
+C3
+NoConn ~ 3687 1699
+NoConn ~ 3887 1699
+NoConn ~ 3587 1699
+Wire Wire Line
+	3584 2279 3919 2280
+Wire Wire Line
+	3584 2379 3919 2380
+Wire Wire Line
+	3584 2479 3919 2480
+Wire Wire Line
+	3584 2579 3919 2580
+Wire Wire Line
+	3584 2679 3919 2680
+Wire Wire Line
+	3584 2779 3919 2780
+Wire Wire Line
+	3584 2879 3919 2880
+$Comp
+L power:GND #PWR0102
+U 1 1 61115049
+P 4419 3380
+F 0 "#PWR0102" H 4419 3130 50  0001 C CNN
+F 1 "GND" V 4424 3252 50  0000 R CNN
+F 2 "" H 4419 3380 50  0001 C CNN
+F 3 "" H 4419 3380 50  0001 C CNN
+	1    4419 3380
+	1    0    0    -1  
+$EndComp
+Text GLabel 5173 2380 2    50   Input ~ 0
+SDA
+Wire Wire Line
+	4919 2380 5048 2380
+Text GLabel 5171 2280 2    50   Input ~ 0
+SCL
+Wire Wire Line
+	4919 2280 4950 2280
+$Comp
+L Device:R R1
+U 1 1 61116E17
+P 4950 2028
+F 0 "R1" V 4866 1990 50  0000 L CNN
+F 1 "4.7k" V 4952 1944 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric" V 4880 2028 50  0001 C CNN
+F 3 "~" H 4950 2028 50  0001 C CNN
+	1    4950 2028
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 611172A4
+P 5048 2028
+F 0 "R2" V 4964 1990 50  0000 L CNN
+F 1 "4.7k" V 5050 1944 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric" V 4978 2028 50  0001 C CNN
+F 3 "~" H 5048 2028 50  0001 C CNN
+	1    5048 2028
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	4419 1878 4419 1980
+Wire Wire Line
+	4419 1878 4719 1878
+Connection ~ 4950 1878
+Wire Wire Line
+	4950 1878 5048 1878
+Wire Wire Line
+	4950 2178 4950 2280
+Connection ~ 4950 2280
+Wire Wire Line
+	4950 2280 5171 2280
+Wire Wire Line
+	5048 2178 5048 2380
+Connection ~ 5048 2380
+Wire Wire Line
+	5048 2380 5173 2380
+$Comp
+L power:+3.3V #PWR0103
+U 1 1 6111889B
+P 4719 1878
+F 0 "#PWR0103" H 4719 1728 50  0001 C CNN
+F 1 "+3.3V" V 4734 2006 50  0000 L CNN
+F 2 "" H 4719 1878 50  0001 C CNN
+F 3 "" H 4719 1878 50  0001 C CNN
+	1    4719 1878
+	1    0    0    -1  
+$EndComp
+Connection ~ 4719 1878
+Wire Wire Line
+	4719 1878 4950 1878
+NoConn ~ 3919 2980
+$Comp
+L Interface_Expansion:PCF8574 U1
+U 1 1 61112237
+P 4419 2680
+F 0 "U1" H 4657 3283 50  0000 C CNN
+F 1 "PCF8574" H 4194 3276 50  0000 C CNN
+F 2 "Package_SO:SOIC-16W_7.5x12.8mm_P1.27mm" H 4419 2680 50  0001 C CNN
+F 3 "http://www.nxp.com/documents/data_sheet/PCF8574_PCF8574A.pdf" H 4419 2680 50  0001 C CNN
+	1    4419 2680
+	-1   0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0104
+U 1 1 61124BAF
+P 5299 2688
+F 0 "#PWR0104" H 5299 2438 50  0001 C CNN
+F 1 "GND" H 5376 2550 50  0000 R CNN
+F 2 "" H 5299 2688 50  0001 C CNN
+F 3 "" H 5299 2688 50  0001 C CNN
+	1    5299 2688
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4919 2580 4986 2580
+Wire Wire Line
+	4986 2780 4919 2780
+Wire Wire Line
+	4919 2680 4986 2680
+Wire Wire Line
+	5299 2680 5299 2688
+Wire Wire Line
+	4986 2580 4986 2680
+Connection ~ 4986 2680
+Wire Wire Line
+	4986 2680 5299 2680
+Wire Wire Line
+	4986 2680 4986 2780
+NoConn ~ 4919 3080
+$EndSCHEMATC

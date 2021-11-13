@@ -1,0 +1,18 @@
+"Id";"Designator";"Package";"Quantity";"Designation";"Supplier and ref";
+1;"D1,D2,D3,D4,D5,D6,D7,D8";"D_DO-35_SOD27_P7.62mm_Horizontal";8;"1N4148";;;
+2;"J1";"PinSocket_1x08_P2.54mm_Vertical";1;"Conn_01x08_Male";;;
+3;"R1,R2,R3,R4";"R_1206_3216Metric_Pad1.42x1.75mm_HandSolder";4;"5.6K";;;
+4;"R5";"R_1206_3216Metric_Pad1.42x1.75mm_HandSolder";1;"56K";;;
+5;"SW1";"SW_PUSH_6mm_H5mm";1;"1";;;
+6;"SW2";"SW_PUSH_6mm_H5mm";1;"4";;;
+7;"SW3";"SW_PUSH_6mm_H5mm";1;"7";;;
+8;"SW4";"SW_PUSH_6mm_H5mm";1;"CLEAR";;;
+9;"SW5";"SW_PUSH_6mm_H5mm";1;"2";;;
+10;"SW6";"SW_PUSH_6mm_H5mm";1;"5";;;
+11;"SW7";"SW_PUSH_6mm_H5mm";1;"8";;;
+12;"SW8";"SW_PUSH_6mm_H5mm";1;"0";;;
+13;"SW9";"SW_PUSH_6mm_H5mm";1;"3";;;
+14;"SW10";"SW_PUSH_6mm_H5mm";1;"6";;;
+15;"SW11";"SW_PUSH_6mm_H5mm";1;"9";;;
+16;"SW12";"SW_PUSH_6mm_H5mm";1;"ENTER";;;
+17;"U1";"SOIC-16_3.9x9.9mm_P1.27mm";1;"74HC595";;;
