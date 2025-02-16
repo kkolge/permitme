@@ -4,6 +4,8 @@ This product was developed during COVID-19 to
 3. The system uses this device as an IoT based data collection unit
 4. It stored the data on a backend server which can be then checked during the next screening
 
-The hardware system was developed in C and the web application was developed in PHP. 
+The hardware system was developed in C, C++ and the web application was developed in PHP. 
 
 Though this system was deployed at 30+ locations, it could not be scaled up due to delay in approvals during COVID. 
+
+Unfortunately the Unit and Integration tests were lost in a system crash and are not part of the repository 
